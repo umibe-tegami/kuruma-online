@@ -403,6 +403,7 @@
             <button class="sbtn" id="tLv50" style="width:auto; padding:0 10px;">Lv50にする</button>
             <button class="sbtn" id="tTicket" style="width:auto; padding:0 10px;">チケット+10</button>
             <button class="sbtn" id="tUnlock" style="width:auto; padding:0 10px;">全武器解放</button>
+            <button class="sbtn" id="tStage" style="width:auto; padding:0 10px;">ステージ+100（背景切替）</button>
             <button class="sbtn" id="tWipe" style="width:auto; padding:0 10px;">テストセーブ消去</button>
           </div>
         </div>
@@ -1608,6 +1609,12 @@
     document.getElementById("tUnlock").addEventListener("click", function(){
       WEAPON_KEYS.forEach(function(k){ ownedWeapons[k] = true; });
       saveGame(); renderShop();
+    });
+    document.getElementById("tStage").addEventListener("click", function(){
+      if (mode !== "solo") setMode("solo");
+      soloIdx += 100; saveGame();
+      spawnCar(soloIdx, false);
+      sndJingle();
     });
     document.getElementById("tWipe").addEventListener("click", function(){
       localStorage.removeItem(SAVE_KEY); location.reload();
