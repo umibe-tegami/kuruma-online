@@ -191,8 +191,45 @@
   .lvLine b { color:#ffd94d; }
   #ptsLine { font-size:13px; color:#bdbde8; margin-top:4px; }
   #ptsLine b { color:#ffd94d; font-size:15px; }
-  #ticketLine { font-size:13px; color:#bdbde8; margin:-4px 0 8px; }
-  #ticketLine b { color:#ffd94d; font-size:15px; }
+  /* ===== SHOP（ぶき／キャラ画面） ===== */
+  .stTabs { display:flex; gap:6px; margin:12px 0 8px; }
+  .stTab {
+    flex:1; padding:8px 0; font-family:inherit; font-size:15px; font-weight:bold; letter-spacing:2px;
+    background:#1b1b3a; color:#7a7ab0; border:2px solid #2c2c52; border-radius:8px; cursor:pointer;
+  }
+  .stTab.sel { background:#3a2d6e; color:#ffd94d; border-color:#ffd94d; }
+  .shopArea { position:relative; border:2px solid #3a3a6e; border-radius:10px; overflow:hidden; }
+  .shopBg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.5; }
+  .shopInner { position:relative; display:flex; gap:10px; padding:10px; align-items:stretch; }
+  .detailBox {
+    flex:1 1 auto; min-width:0; background:rgba(8,8,24,.85); border:2px solid #6e6ea8; border-radius:8px; padding:10px 12px;
+  }
+  .dName { font-size:22px; font-weight:bold; color:#fff; letter-spacing:1px; text-shadow:2px 2px 0 #7a2d00; }
+  .dSub { font-size:12px; color:#bdbde8; margin:2px 0 6px; }
+  .dStars { color:#ffd94d; font-size:14px; letter-spacing:1px; }
+  .barRow { display:flex; align-items:center; gap:8px; margin:4px 0; }
+  .blab { width:76px; font-size:12px; color:#9fe8ff; font-weight:bold; }
+  .btrack { flex:1; height:10px; background:#20060a; border:1px solid #000; outline:1px solid #6e6ea8; overflow:hidden; }
+  .bfill { height:100%; width:0%; background:linear-gradient(#ffe97a,#f5a623 60%,#c77400); transition:width .2s; }
+  .dNote { font-size:11px; color:#7a7ab0; margin-top:6px; min-height:14px; }
+  .actionBtn {
+    width:100%; margin-top:8px; padding:11px 0; font-family:inherit; font-size:16px; font-weight:bold; letter-spacing:1px;
+    background:#3a2d6e; color:#ffd94d; border:2px solid #ffd94d; border-radius:8px; cursor:pointer;
+  }
+  .actionBtn.off { background:#1b1b3a; color:#7a7ab0; border-color:#2c2c52; cursor:default; }
+  .charStand { flex:0 0 32%; display:flex; align-items:flex-end; justify-content:center; }
+  .charStand img { max-width:100%; max-height:250px; object-fit:contain; filter:drop-shadow(0 6px 6px rgba(0,0,0,.6)); }
+  .cardRow { display:flex; gap:8px; overflow-x:auto; padding:10px 2px 4px; }
+  .shopCard {
+    flex:0 0 auto; width:92px; background:#1b1b3a; border:2px solid #2c2c52; border-radius:8px;
+    padding:6px 4px 5px; text-align:center; cursor:pointer;
+  }
+  .shopCard.sel { border-color:#ffd94d; background:#3a2d6e; }
+  .shopCard img { height:62px; max-width:84px; object-fit:contain; }
+  .shopCard .cname { font-size:11px; font-weight:bold; color:#fff; white-space:nowrap; overflow:hidden; }
+  .shopCard .cbadge { font-size:10px; color:#7a7ab0; font-weight:bold; white-space:nowrap; }
+  .shopCard .cbadge.gold { color:#ffd94d; }
+  .shopCard.locked img { filter:brightness(.55); }
   .srow { display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px dashed #2c2c52; }
   .sname { flex:1; font-size:14px; font-weight:bold; }
   .sname small { display:block; font-size:10px; color:#7a7ab0; font-weight:normal; }
@@ -304,28 +341,63 @@
       <div id="xpBarOuter"><div id="xpBar"></div></div>
       <div id="ptsLine">ステータスポイント：<b id="stPts">0</b>　／　チケット：<b id="stTickets">0</b>枚</div>
 
-      <div class="secTitle">ステータス振り分け（上限40）</div>
-      <div class="srow"><div class="sname">パワー<small>ダメージ +3% / pt</small></div><button class="sbtn" data-stat="power" data-d="-1">−</button><div class="sval" id="sv-power">0</div><button class="sbtn" data-stat="power" data-d="1">＋</button></div>
-      <div class="srow"><div class="sname">クリティカル率<small>発生率 +0.6% / pt</small></div><button class="sbtn" data-stat="crit" data-d="-1">−</button><div class="sval" id="sv-crit">0</div><button class="sbtn" data-stat="crit" data-d="1">＋</button></div>
-      <div class="srow"><div class="sname">クリティカル倍率<small>倍率 +5% / pt</small></div><button class="sbtn" data-stat="critD" data-d="-1">−</button><div class="sval" id="sv-critD">0</div><button class="sbtn" data-stat="critD" data-d="1">＋</button></div>
-      <div class="srow"><div class="sname">れんだ<small>コンボ倍率の上限 +0.02 / pt</small></div><button class="sbtn" data-stat="renda" data-d="-1">−</button><div class="sval" id="sv-renda">0</div><button class="sbtn" data-stat="renda" data-d="1">＋</button></div>
-      <div class="srow"><div class="sname">テクニック<small>完破ボーナス（得点・経験値）+6% / pt</small></div><button class="sbtn" data-stat="tech" data-d="-1">−</button><div class="sval" id="sv-tech">0</div><button class="sbtn" data-stat="tech" data-d="1">＋</button></div>
+      <div class="stTabs">
+        <button class="stTab sel" data-tab="weapon">ぶき</button>
+        <button class="stTab" data-tab="char">キャラ</button>
+        <button class="stTab" data-tab="stat">ステータス</button>
+      </div>
 
-      <div class="secTitle">キャラ（試作では全員使用可）</div>
-      <div class="crow sel" data-c="ren"><div class="wname">レン<small>バランス型／全て平均的で扱いやすい</small></div><div class="wstar">★☆☆☆☆</div><div class="weq">使用中</div></div>
-      <div class="crow" data-c="gou"><div class="wname">ゴウ<small>パワー型／ダメージ+25%・振りが少し重い</small></div><div class="wstar">★☆☆☆☆</div><div class="weq"></div></div>
-      <div class="crow" data-c="hayate"><div class="wname">ハヤテ<small>スピード型／振りが速い・ダメージ-15%</small></div><div class="wstar">★☆☆☆☆</div><div class="weq"></div></div>
-      <div class="crow" data-c="kirara"><div class="wname">キララ<small>クリティカル型／クリ率+8%・クリ倍率+30%・ダメージ-10%</small></div><div class="wstar">★☆☆☆☆</div><div class="weq"></div></div>
-      <div class="crow" data-c="satoru"><div class="wname">サトル<small>テクニック型／完破ボーナス+40%・ダメージ-10%</small></div><div class="wstar">★☆☆☆☆</div><div class="weq"></div></div>
+      <div id="tabWeapon" class="tabPage">
+        <div class="shopArea">
+          <img class="shopBg" src="assets/bg_shop.webp" alt="">
+          <div class="shopInner">
+            <div class="detailBox">
+              <div class="dName" id="wpName">素手</div>
+              <div class="dSub"><span id="wpFam">素手系</span>　熟練度 <span class="dStars" id="wpStars">★☆☆☆☆</span></div>
+              <div class="barRow"><span class="blab">パワー</span><div class="btrack"><div class="bfill" id="wpBarPower"></div></div></div>
+              <div class="barRow"><span class="blab">スピード</span><div class="btrack"><div class="bfill" id="wpBarSpeed"></div></div></div>
+              <div class="barRow"><span class="blab">クリティカル</span><div class="btrack"><div class="bfill" id="wpBarCrit"></div></div></div>
+              <div class="dNote" id="wpNote"></div>
+              <button class="actionBtn" id="wpAction">装備する</button>
+            </div>
+            <div class="charStand"><img id="wpStand" src="assets/fighter_idle.webp" alt=""></div>
+          </div>
+        </div>
+        <div class="cardRow" id="wpCards"></div>
+        <div class="noteLine">※ 武器はレベル到達で解放され、チケット1枚と交換して入手。レベル未達でもチケット3枚で先行入手できる（チケットはレベルアップで+1枚）</div>
+      </div>
 
-      <div class="secTitle">そうび（武器）</div>
-      <div id="ticketLine">所持チケット：<b id="stTickets2">0</b>枚</div>
-      <div class="wrow sel" data-w="fist"><div class="wname">素手<small>パワー10・速い／素手系</small></div><div class="wstar">★☆☆☆☆</div><div class="weq">装備中</div></div>
-      <div class="wrow" data-w="harisen"><div class="wname">ハリセン<small>パワー7・最速／ネタ枠</small></div><div class="wstar">★☆☆☆☆</div><div class="weq"></div></div>
-      <div class="wrow" data-w="pan"><div class="wname">フライパン<small>パワー16／ネタ枠</small></div><div class="wstar">★☆☆☆☆</div><div class="weq"></div></div>
-      <div class="wrow" data-w="hammer"><div class="wname">巨大ハンマー<small>パワー34・重い／打撃系</small></div><div class="wstar">★☆☆☆☆</div><div class="weq"></div></div>
-      <div class="noteLine">※ 武器はレベル到達で解放され、チケット1枚と交換して入手。レベル未達でもチケット3枚で先行入手できる（チケットはレベルアップで+1枚）</div>
-      <div class="noteLine">※ 熟練度：使うほどヒット数が貯まって星が上がる（星2=300／星3=1,000／星4=2,500／星5=5,000ヒット）。武器は威力倍率（最大×2.0）、キャラはダメージ+8%/星</div>
+      <div id="tabChar" class="tabPage" style="display:none">
+        <div class="shopArea">
+          <img class="shopBg" src="assets/bg_shop.webp" alt="">
+          <div class="shopInner">
+            <div class="detailBox">
+              <div class="dName" id="chName">レン</div>
+              <div class="dSub"><span id="chDesc">バランス型／全て平均的で扱いやすい</span></div>
+              <div class="dSub">熟練度 <span class="dStars" id="chStars">★☆☆☆☆</span></div>
+              <div class="barRow"><span class="blab">パワー</span><div class="btrack"><div class="bfill" id="chBarPower"></div></div></div>
+              <div class="barRow"><span class="blab">スピード</span><div class="btrack"><div class="bfill" id="chBarSpeed"></div></div></div>
+              <div class="barRow"><span class="blab">クリティカル</span><div class="btrack"><div class="bfill" id="chBarCrit"></div></div></div>
+              <div class="barRow"><span class="blab">ボーナス</span><div class="btrack"><div class="bfill" id="chBarBonus"></div></div></div>
+              <div class="dNote" id="chNote"></div>
+              <button class="actionBtn" id="chAction">このキャラにする</button>
+            </div>
+            <div class="charStand"><img id="chStand" src="assets/fighter_idle.webp" alt=""></div>
+          </div>
+        </div>
+        <div class="cardRow" id="chCards"></div>
+        <div class="noteLine">※ 熟練度：使うほどヒット数が貯まって星が上がる（星2=300／星3=1,000／星4=2,500／星5=5,000ヒット）。キャラはダメージ+8%/星</div>
+      </div>
+
+      <div id="tabStat" class="tabPage" style="display:none">
+        <div class="secTitle">ステータス振り分け（上限40）</div>
+        <div class="srow"><div class="sname">パワー<small>ダメージ +3% / pt</small></div><button class="sbtn" data-stat="power" data-d="-1">−</button><div class="sval" id="sv-power">0</div><button class="sbtn" data-stat="power" data-d="1">＋</button></div>
+        <div class="srow"><div class="sname">クリティカル率<small>発生率 +0.6% / pt</small></div><button class="sbtn" data-stat="crit" data-d="-1">−</button><div class="sval" id="sv-crit">0</div><button class="sbtn" data-stat="crit" data-d="1">＋</button></div>
+        <div class="srow"><div class="sname">クリティカル倍率<small>倍率 +5% / pt</small></div><button class="sbtn" data-stat="critD" data-d="-1">−</button><div class="sval" id="sv-critD">0</div><button class="sbtn" data-stat="critD" data-d="1">＋</button></div>
+        <div class="srow"><div class="sname">れんだ<small>コンボ倍率の上限 +0.02 / pt</small></div><button class="sbtn" data-stat="renda" data-d="-1">−</button><div class="sval" id="sv-renda">0</div><button class="sbtn" data-stat="renda" data-d="1">＋</button></div>
+        <div class="srow"><div class="sname">テクニック<small>完破ボーナス（得点・経験値）+6% / pt</small></div><button class="sbtn" data-stat="tech" data-d="-1">−</button><div class="sval" id="sv-tech">0</div><button class="sbtn" data-stat="tech" data-d="1">＋</button></div>
+        <div class="noteLine">※ 武器の熟練度は威力倍率（最大×2.0）、キャラの熟練度はダメージ+8%/星</div>
+      </div>
     </div>
   </div>
 
@@ -352,7 +424,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v1.10（チケット所持数を武器欄にも表示）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.0（ショップ風ステータス画面）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
 </div>
 
 <script>
@@ -407,10 +479,10 @@
 
   /* 武器定義：音とエフェクトは系統単位で共通、武器ごとに性能と見た目が変わる */
   var WEAPONS = {
-    fist:    { name:"素手",       power:10, cooldown:40,  swingMs:130, critRate:0.05, unlockLv:1 },
-    harisen: { name:"ハリセン",   power:7,  cooldown:30,  swingMs:105, critRate:0.08, unlockLv:2 },
-    pan:     { name:"フライパン", power:16, cooldown:80,  swingMs:150, critRate:0.05, unlockLv:4 },
-    hammer:  { name:"巨大ハンマー", power:34, cooldown:260, swingMs:280, critRate:0.10, unlockLv:6 }
+    fist:    { name:"素手",       power:10, cooldown:40,  swingMs:130, critRate:0.05, unlockLv:1, fam:"素手系" },
+    harisen: { name:"ハリセン",   power:7,  cooldown:30,  swingMs:105, critRate:0.08, unlockLv:2, fam:"ネタ枠" },
+    pan:     { name:"フライパン", power:16, cooldown:80,  swingMs:150, critRate:0.05, unlockLv:4, fam:"ネタ枠" },
+    hammer:  { name:"巨大ハンマー", power:34, cooldown:260, swingMs:280, critRate:0.10, unlockLv:6, fam:"打撃系" }
   };
   var weaponKey = "fist", lastSwingAt = 0;
   var tickets = 1;                          // 武器交換チケット（初期1枚＋レベルアップで+1枚）
@@ -418,11 +490,11 @@
 
   /* キャラ定義：傾向は倍率で個性を付ける */
   var CHARS = {
-    ren:    { name:"レン",   dmgMult:1.0,  cdMult:1.0,  critAdd:0,    critDMult:1.0, bonusMult:1.0 },
-    gou:    { name:"ゴウ",   dmgMult:1.25, cdMult:1.3,  critAdd:0,    critDMult:1.0, bonusMult:1.0 },
-    hayate: { name:"ハヤテ", dmgMult:0.85, cdMult:0.55, critAdd:0,    critDMult:1.0, bonusMult:1.0 },
-    kirara: { name:"キララ", dmgMult:0.9,  cdMult:1.0,  critAdd:0.08, critDMult:1.3, bonusMult:1.0 },
-    satoru: { name:"サトル", dmgMult:0.9,  cdMult:1.0,  critAdd:0,    critDMult:1.0, bonusMult:1.4 }
+    ren:    { name:"レン",   dmgMult:1.0,  cdMult:1.0,  critAdd:0,    critDMult:1.0, bonusMult:1.0, desc:"バランス型／全て平均的で扱いやすい" },
+    gou:    { name:"ゴウ",   dmgMult:1.25, cdMult:1.3,  critAdd:0,    critDMult:1.0, bonusMult:1.0, desc:"パワー型／ダメージ+25%・振りが少し重い" },
+    hayate: { name:"ハヤテ", dmgMult:0.85, cdMult:0.55, critAdd:0,    critDMult:1.0, bonusMult:1.0, desc:"スピード型／振りが速い・ダメージ-15%" },
+    kirara: { name:"キララ", dmgMult:0.9,  cdMult:1.0,  critAdd:0.08, critDMult:1.3, bonusMult:1.0, desc:"クリティカル型／クリ率+8%・クリ倍率+30%・ダメージ-10%" },
+    satoru: { name:"サトル", dmgMult:0.9,  cdMult:1.0,  critAdd:0,    critDMult:1.0, bonusMult:1.4, desc:"テクニック型／完破ボーナス+40%・ダメージ-10%" }
   };
   var charKey = "ren";
   var CHAR_KEYS = ["ren","gou","hayate","kirara","satoru"];
@@ -555,24 +627,75 @@
 
   /* ---------- WEAPON SWITCH（装備変更はステータス画面で） ---------- */
   var weaponInfo = document.getElementById("weaponInfo");
-  function renderWeapons(){
-    var rows = document.querySelectorAll(".wrow");
-    for (var i=0;i<rows.length;i++){
-      var key = rows[i].getAttribute("data-w");
-      var W = WEAPONS[key];
-      var eq = rows[i].querySelector(".weq");
-      var on = key === weaponKey;
-      rows[i].classList.toggle("sel", on);
-      rows[i].classList.toggle("locked", !ownedWeapons[key]);
-      eq.classList.remove("canbuy");
-      if (on) eq.textContent = "装備中";
-      else if (ownedWeapons[key]) eq.textContent = "装備する";
-      else if (level >= W.unlockLv) {
-        if (tickets >= 1) { eq.textContent = "チケット1枚で交換"; eq.classList.add("canbuy"); }
-        else eq.textContent = "チケット1枚（不足）";
-      } else if (tickets >= 3) { eq.textContent = "チケット3枚で先行入手"; eq.classList.add("canbuy"); }
-      else eq.textContent = "Lv" + W.unlockLv + "で解放";
+  var WEAPON_KEYS = ["fist", "harisen", "pan", "hammer"];
+  var selWeapon = "fist", selChar = "ren";
+  function starText(star){ var s=""; for (var i=0;i<5;i++) s += i < star ? "★" : "☆"; return s; }
+  function masteryNote(hits){
+    var st = starOf(hits);
+    if (st >= 5) return "熟練度MAX（" + hits + "ヒット）";
+    return "あと" + (STAR_HITS[st] - hits) + "ヒットで星" + (st + 1) + "（現在" + hits + "ヒット）";
+  }
+  function barPct(v){ return Math.max(3, Math.min(100, Math.round(v))) + "%"; }
+  function makeCard(imgSrc, name, badge, badgeGold, sel, locked, onClick){
+    var d = document.createElement("div");
+    d.className = "shopCard" + (sel ? " sel" : "") + (locked ? " locked" : "");
+    var im = document.createElement("img"); im.src = imgSrc; im.alt = "";
+    var nm = document.createElement("div"); nm.className = "cname"; nm.textContent = name;
+    var bg = document.createElement("div"); bg.className = "cbadge" + (badgeGold ? " gold" : ""); bg.textContent = badge;
+    d.appendChild(im); d.appendChild(nm); d.appendChild(bg);
+    d.addEventListener("click", function(e){ e.stopPropagation(); audio(); onClick(); });
+    return d;
+  }
+  function renderShop(){
+    var W = WEAPONS[selWeapon];
+    document.getElementById("wpName").textContent = W.name;
+    document.getElementById("wpFam").textContent = W.fam;
+    document.getElementById("wpStars").textContent = starText(starOf(weaponHits[selWeapon]));
+    document.getElementById("wpBarPower").style.width = barPct(W.power / 40 * 100);
+    document.getElementById("wpBarSpeed").style.width = barPct((280 - W.cooldown) / 250 * 100);
+    document.getElementById("wpBarCrit").style.width = barPct(W.critRate / 0.12 * 100);
+    document.getElementById("wpNote").textContent = masteryNote(weaponHits[selWeapon]);
+    document.getElementById("wpStand").src = IMG.chars[charKey][selWeapon][0];
+    var act = document.getElementById("wpAction");
+    act.classList.remove("off"); act.disabled = false;
+    if (selWeapon === weaponKey) { act.textContent = "装備中"; act.disabled = true; act.classList.add("off"); }
+    else if (ownedWeapons[selWeapon]) act.textContent = "装備する";
+    else {
+      var early = level < W.unlockLv, price = early ? 3 : 1;
+      if (tickets >= price) act.textContent = early ? "チケット3枚で先行入手" : "チケット1枚で交換";
+      else if (early) { act.textContent = "Lv" + W.unlockLv + "で解放"; act.disabled = true; act.classList.add("off"); }
+      else { act.textContent = "チケット不足"; act.disabled = true; act.classList.add("off"); }
     }
+    var wc = document.getElementById("wpCards");
+    wc.innerHTML = "";
+    WEAPON_KEYS.forEach(function(k){
+      var w = WEAPONS[k], badge, gold = false;
+      if (k === weaponKey) { badge = "装備中"; gold = true; }
+      else if (ownedWeapons[k]) badge = starText(starOf(weaponHits[k]));
+      else if (level >= w.unlockLv) badge = "チケット1枚";
+      else badge = "Lv" + w.unlockLv + "で解放";
+      wc.appendChild(makeCard(IMG.chars[charKey][k][0], w.name, badge, gold, k === selWeapon, !ownedWeapons[k], function(){ selWeapon = k; renderShop(); }));
+    });
+    var C = CHARS[selChar];
+    document.getElementById("chName").textContent = C.name;
+    document.getElementById("chDesc").textContent = C.desc;
+    document.getElementById("chStars").textContent = starText(starOf(charHits[selChar]));
+    document.getElementById("chBarPower").style.width = barPct((C.dmgMult - 0.7) / 0.6 * 100);
+    document.getElementById("chBarSpeed").style.width = barPct(((1 / C.cdMult) - 0.6) / 1.22 * 100);
+    document.getElementById("chBarCrit").style.width = barPct((0.05 + C.critAdd) / 0.15 * 100);
+    document.getElementById("chBarBonus").style.width = barPct((C.bonusMult - 0.9) / 0.5 * 100);
+    document.getElementById("chNote").textContent = masteryNote(charHits[selChar]);
+    document.getElementById("chStand").src = IMG.chars[selChar][weaponKey][0];
+    var ca = document.getElementById("chAction");
+    ca.classList.remove("off"); ca.disabled = false;
+    if (selChar === charKey) { ca.textContent = "使用中"; ca.disabled = true; ca.classList.add("off"); }
+    else ca.textContent = "このキャラにする";
+    var cc = document.getElementById("chCards");
+    cc.innerHTML = "";
+    CHAR_KEYS.forEach(function(k){
+      var badge = (k === charKey) ? "使用中" : starText(starOf(charHits[k]));
+      cc.appendChild(makeCard(IMG.chars[k].fist[0], CHARS[k].name, badge, k === charKey, k === selChar, false, function(){ selChar = k; renderShop(); }));
+    });
   }
   function setWeapon(key){
     if (!WEAPONS[key] || !ownedWeapons[key]) return;
@@ -580,32 +703,23 @@
     fighterImg.src = IMG.chars[charKey][key][0];
     fighterWrap.classList.remove("lunge");
     weaponInfo.textContent = WEAPONS[key].name + "（パワー" + WEAPONS[key].power + "）";
-    renderWeapons();
+    renderShop();
     saveGame();
   }
-  var wrows = document.querySelectorAll(".wrow");
-  for (var j=0;j<wrows.length;j++){
-    wrows[j].addEventListener("click", function(e){
-      e.stopPropagation();
-      var key = this.getAttribute("data-w");
-      var W = WEAPONS[key];
-      audio();
-      if (ownedWeapons[key]) { setWeapon(key); return; }
-      var early = level < W.unlockLv;
-      var price = early ? 3 : 1;
-      if (tickets < price) {
-        if (early) showBanner("まだ解放されていない", W.name + "はLv" + W.unlockLv + "で解放（先行入手はチケット3枚）", 1100);
-        else showBanner("チケットが足りない", "あと" + (price - tickets) + "枚必要です（レベルアップで+1枚）", 1000);
-        return;
-      }
-      tickets -= price;
-      ownedWeapons[key] = true;
-      setWeapon(key);
-      renderGrowth();
-      showBanner(early ? "先行入手した！" : "武器を交換した！", W.name + "（チケット残り" + tickets + "枚）", 1100);
-      sndJingle();
-    });
-  }
+  document.getElementById("wpAction").addEventListener("click", function(e){
+    e.stopPropagation();
+    var key = selWeapon, W = WEAPONS[key];
+    audio();
+    if (ownedWeapons[key]) { setWeapon(key); return; }
+    var early = level < W.unlockLv, price = early ? 3 : 1;
+    if (tickets < price) return;
+    tickets -= price;
+    ownedWeapons[key] = true;
+    setWeapon(key);
+    renderGrowth();
+    showBanner(early ? "先行入手した！" : "武器を交換した！", W.name + "（チケット残り" + tickets + "枚）", 1100);
+    sndJingle();
+  });
 
   /* ---------- CHARACTER SWITCH ---------- */
   var charInfo = document.getElementById("charInfo");
@@ -615,28 +729,25 @@
     fighterImg.src = IMG.chars[key][weaponKey][0];
     fighterWrap.classList.remove("lunge");
     charInfo.textContent = CHARS[key].name;
-    var rows = document.querySelectorAll(".crow");
-    for (var i=0;i<rows.length;i++){
-      var on = rows[i].getAttribute("data-c") === key;
-      rows[i].classList.toggle("sel", on);
-      rows[i].querySelector(".weq").textContent = on ? "使用中" : "";
-    }
+    renderShop();
     saveGame();
   }
-  var crows = document.querySelectorAll(".crow");
-  for (var cj=0;cj<crows.length;cj++){
-    crows[cj].addEventListener("click", function(e){
+  document.getElementById("chAction").addEventListener("click", function(e){
+    e.stopPropagation();
+    audio();
+    setChar(selChar);
+  });
+  var stTabBtns = document.querySelectorAll(".stTab");
+  for (var ti=0; ti<stTabBtns.length; ti++){
+    stTabBtns[ti].addEventListener("click", function(e){
       e.stopPropagation();
-      setChar(this.getAttribute("data-c"));
+      var t = this.getAttribute("data-tab");
+      for (var i=0;i<stTabBtns.length;i++) stTabBtns[i].classList.toggle("sel", stTabBtns[i] === this);
+      document.getElementById("tabWeapon").style.display = t === "weapon" ? "" : "none";
+      document.getElementById("tabChar").style.display = t === "char" ? "" : "none";
+      document.getElementById("tabStat").style.display = t === "stat" ? "" : "none";
       audio();
     });
-  }
-  function starText(star){ var s=""; for (var i=0;i<5;i++) s += i < star ? "★" : "☆"; return s; }
-  function renderMastery(){
-    var wr = document.querySelectorAll(".wrow");
-    for (var i=0;i<wr.length;i++) wr[i].querySelector(".wstar").textContent = starText(starOf(weaponHits[wr[i].getAttribute("data-w")]));
-    var cr = document.querySelectorAll(".crow");
-    for (var j=0;j<cr.length;j++) cr[j].querySelector(".wstar").textContent = starText(starOf(charHits[cr[j].getAttribute("data-c")]));
   }
 
   /* ---------- GROWTH（レベル／ステータス振り分け） ---------- */
@@ -689,10 +800,8 @@
     document.getElementById("xpBar").style.width = pct + "%";
     document.getElementById("stPts").textContent = statPts;
     document.getElementById("stTickets").textContent = tickets;
-    document.getElementById("stTickets2").textContent = tickets;
     STAT_KEYS.forEach(function(k){ document.getElementById("sv-" + k).textContent = stats[k]; });
-    renderMastery();
-    renderWeapons();
+    renderShop();
   }
   function gainXP(amount){
     if (level >= 50 || amount <= 0) { renderGrowth(); return; }
@@ -773,6 +882,8 @@
         menuPanel.classList.remove("open");
       } else if (act === "status") {
         menuPanel.classList.remove("open");
+        selWeapon = weaponKey;
+        selChar = charKey;
         renderGrowth();
         statusPanel.classList.add("open");
       } else if (act === "raid") {
