@@ -191,13 +191,13 @@
   /* ===== STATUS PANEL ===== */
   #statusPanel {
     position:absolute; inset:0; z-index:50; display:none;
-    background:rgba(5,5,20,.9); padding:10px; overflow-y:auto;
+    background:rgba(5,5,20,.9); padding:6px; overflow-y:auto;
   }
   #statusPanel.open { display:block; }
   #statusCard {
-    max-width:560px; margin:0 auto; background:#14142e; border:3px solid #3a3a6e; border-radius:10px; padding:14px;
+    max-width:560px; margin:0 auto; background:#14142e; border:3px solid #3a3a6e; border-radius:10px; padding:8px;
   }
-  #statusCard h2 { font-size:18px; color:#ffd94d; letter-spacing:3px; text-shadow:2px 2px 0 #7a2d00; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+  #statusCard h2 { font-size:16px; color:#ffd94d; letter-spacing:3px; text-shadow:2px 2px 0 #7a2d00; margin-bottom:2px; display:flex; justify-content:space-between; align-items:center; }
   #closeStatus { background:#26264e; color:#fff; border:2px solid #6e6ea8; border-radius:6px; font-family:inherit; font-size:13px; font-weight:bold; padding:4px 12px; cursor:pointer; }
   .secTitle { font-size:13px; color:#9fe8ff; letter-spacing:2px; margin:14px 0 6px; border-bottom:2px solid #3a3a6e; padding-bottom:3px; font-weight:bold; }
   #xpBarOuter { height:12px; background:#20060a; border:2px solid #000; outline:2px solid #6e6ea8; overflow:hidden; margin-top:4px; }
@@ -207,43 +207,43 @@
   #ptsLine { font-size:13px; color:#bdbde8; margin-top:4px; }
   #ptsLine b { color:#ffd94d; font-size:15px; }
   /* ===== SHOP（ぶき／キャラ画面） ===== */
-  .stTabs { display:flex; gap:6px; margin:12px 0 8px; }
+  .stTabs { display:flex; gap:6px; margin:6px 0 6px; }
   .stTab {
-    flex:1; padding:8px 0; font-family:inherit; font-size:15px; font-weight:bold; letter-spacing:2px;
+    flex:1; padding:5px 0; font-family:inherit; font-size:14px; font-weight:bold; letter-spacing:2px;
     background:#1b1b3a; color:#7a7ab0; border:2px solid #2c2c52; border-radius:8px; cursor:pointer;
   }
   .stTab.sel { background:#3a2d6e; color:#ffd94d; border-color:#ffd94d; }
   .shopArea { position:relative; border:2px solid #3a3a6e; border-radius:10px; overflow:hidden; }
   .shopBg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.5; }
-  .shopInner { position:relative; display:flex; gap:10px; padding:10px; align-items:stretch; }
+  .shopInner { position:relative; display:flex; gap:8px; padding:6px; align-items:stretch; }
   .detailBox {
-    flex:1 1 auto; min-width:0; background:rgba(8,8,24,.85); border:2px solid #6e6ea8; border-radius:8px; padding:8px 9px;
+    flex:1 1 auto; min-width:0; background:rgba(8,8,24,.85); border:2px solid #6e6ea8; border-radius:8px; padding:6px 8px;
   }
-  .dName { font-size:20px; font-weight:bold; color:#fff; letter-spacing:1px; text-shadow:2px 2px 0 #7a2d00; }
-  .dSub { font-size:12px; color:#bdbde8; margin:2px 0 6px; }
+  .dName { font-size:17px; font-weight:bold; color:#fff; letter-spacing:1px; text-shadow:2px 2px 0 #7a2d00; }
+  .dSub { font-size:12px; color:#bdbde8; margin:1px 0 4px; }
   .dStars { color:#ffd94d; font-size:14px; letter-spacing:1px; }
-  .barRow { display:flex; align-items:center; gap:8px; margin:4px 0; }
+  .barRow { display:flex; align-items:center; gap:8px; margin:2px 0; }
   .blab { width:60px; font-size:11px; color:#9fe8ff; font-weight:bold; }
   .btrack { flex:1; height:10px; background:#20060a; border:1px solid #000; outline:1px solid #6e6ea8; overflow:hidden; }
   .bfill { height:100%; width:0%; background:linear-gradient(#ffe97a,#f5a623 60%,#c77400); transition:width .2s; flex:none; }
   .btrack { display:flex; overflow:hidden; }
   .bfill.buff { background:linear-gradient(#b6ffb0,#2fd35f 60%,#149a44); }
   .srow .sbtn { width:44px; height:44px; font-size:20px; touch-action:manipulation; }
-  .dNote { font-size:11px; color:#7a7ab0; margin-top:6px; min-height:14px; }
+  .dNote { font-size:11px; color:#7a7ab0; margin-top:3px; min-height:12px; }
   .actionBtn {
-    width:100%; margin-top:8px; padding:11px 0; font-family:inherit; font-size:16px; font-weight:bold; letter-spacing:1px;
+    width:100%; margin-top:5px; padding:7px 0; font-family:inherit; font-size:15px; font-weight:bold; letter-spacing:1px;
     background:#3a2d6e; color:#ffd94d; border:2px solid #ffd94d; border-radius:8px; cursor:pointer;
   }
   .actionBtn.off { background:#1b1b3a; color:#7a7ab0; border-color:#2c2c52; cursor:default; }
-  .charStand { flex:0 0 44%; display:flex; align-items:flex-end; justify-content:center; }
-  .charStand img { max-width:100%; max-height:270px; object-fit:contain; filter:drop-shadow(0 6px 6px rgba(0,0,0,.6)); }
-  .cardRow { display:flex; gap:8px; overflow-x:auto; padding:10px 2px 4px; }
+  .charStand { flex:0 0 36%; display:flex; align-items:flex-end; justify-content:center; }
+  .charStand img { max-width:100%; max-height:185px; object-fit:contain; filter:drop-shadow(0 6px 6px rgba(0,0,0,.6)); }
+  .cardRow { display:flex; gap:6px; overflow-x:auto; padding:5px 2px 2px; }
   .shopCard {
-    flex:0 0 auto; width:92px; background:#1b1b3a; border:2px solid #2c2c52; border-radius:8px;
-    padding:6px 4px 5px; text-align:center; cursor:pointer;
+    flex:0 0 auto; width:76px; background:#1b1b3a; border:2px solid #2c2c52; border-radius:8px;
+    padding:4px 3px 3px; text-align:center; cursor:pointer;
   }
   .shopCard.sel { border-color:#ffd94d; background:#3a2d6e; }
-  .shopCard img { height:62px; max-width:84px; object-fit:contain; }
+  .shopCard img { height:46px; max-width:68px; object-fit:contain; }
   .shopCard .cname { font-size:11px; font-weight:bold; color:#fff; white-space:nowrap; overflow:hidden; }
   .shopCard .cbadge { font-size:10px; color:#7a7ab0; font-weight:bold; white-space:nowrap; }
   .shopCard .cbadge.gold { color:#ffd94d; }
@@ -266,7 +266,7 @@
   .wrow.sel, .crow.sel, .mrow.sel { border-color:#ffd94d; background:#3a2d6e; }
   .wrow.sel .weq, .crow.sel .weq, .mrow.sel .weq { color:#ffd94d; }
   .wstar { color:#ffd94d; font-size:12px; letter-spacing:1px; white-space:nowrap; }
-  .noteLine { font-size:11px; color:#5d5d8f; margin-top:6px; }
+  .noteLine { font-size:11px; color:#5d5d8f; margin-top:3px; }
   .smoke { position:absolute; z-index:3; border-radius:50%; pointer-events:none;
     background:radial-gradient(circle, rgba(200,200,200,.85), rgba(120,120,120,0) 70%); }
 
@@ -361,10 +361,14 @@
 
   <div id="statusPanel">
     <div id="statusCard">
-      <h2>装備・ステータス <button id="closeStatus">閉じる</button></h2>
+      <h2>ステータス <button id="closeStatus">閉じる</button></h2>
+      <div class="stTabs">
+        <button class="stTab sel" data-tab="weapon">ぶき</button>
+        <button class="stTab" data-tab="char">キャラ</button>
+        <button class="stTab" data-tab="stat">ステータス</button>
+      </div>
 
       <div id="tabWeapon" class="tabPage">
-        <div class="secTitle">ぶき</div>
         <div class="shopArea">
           <img class="shopBg" src="assets/bg_shop.webp?v=35" alt="">
           <div class="shopInner">
@@ -385,8 +389,7 @@
         <div class="noteLine">※ 武器はレベル到達で解放され、チケット1枚と交換して入手。レベル未達でもチケット3枚で先行入手できる（チケットはレベルアップで+1枚）</div>
       </div>
 
-      <div id="tabChar" class="tabPage">
-        <div class="secTitle">キャラ</div>
+      <div id="tabChar" class="tabPage" style="display:none">
         <div class="shopArea">
           <img class="shopBg" src="assets/bg_shop.webp?v=35" alt="">
           <div class="shopInner">
@@ -409,8 +412,7 @@
         <div class="noteLine">※ 熟練度：使うほどヒット数が貯まって星が上がる（星2=300／星3=1,000／星4=2,500／星5=5,000ヒット）。バフは武器・キャラ共通で星2+10%／星3+20%／星4+30%／星5+50%（全ステータス）</div>
       </div>
 
-      <div id="tabStat" class="tabPage">
-        <div class="secTitle">ステータス</div>
+      <div id="tabStat" class="tabPage" style="display:none">
         <div class="lvLine">レベル <b id="stLevel">1</b> ／ 次のレベルまで</div>
         <div id="xpBarOuter"><div id="xpBar"></div></div>
         <div id="ptsLine">ステータスポイント：<b id="stPts">0</b>　／　チケット：<b id="stTickets">0</b>枚</div>
@@ -461,7 +463,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.29（ぶき・キャラ・ステータスをタブ無しの1画面に統合）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.30（タブは維持し、詳細・立ち絵・アイコンが1画面に収まるようレイアウトを圧縮）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
 </div>
 
 <script>
@@ -983,7 +985,18 @@
     audio();
     setChar(selChar);
   });
-  // 画面はタブを廃止し、ぶき→キャラ→ステータスを1画面に縦並び（スクロール）で表示する（2026年11月25日ユーザー指示）
+  var stTabBtns = document.querySelectorAll(".stTab");
+  for (var ti=0; ti<stTabBtns.length; ti++){
+    stTabBtns[ti].addEventListener("click", function(e){
+      e.stopPropagation();
+      var t = this.getAttribute("data-tab");
+      for (var i=0;i<stTabBtns.length;i++) stTabBtns[i].classList.toggle("sel", stTabBtns[i] === this);
+      document.getElementById("tabWeapon").style.display = t === "weapon" ? "" : "none";
+      document.getElementById("tabChar").style.display = t === "char" ? "" : "none";
+      document.getElementById("tabStat").style.display = t === "stat" ? "" : "none";
+      audio();
+    });
+  }
 
   /* ---------- GROWTH（レベル／ステータス振り分け） ---------- */
   var TEST_MODE = /[?&]test=1/.test(location.search);
