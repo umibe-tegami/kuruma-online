@@ -424,7 +424,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.0（ショップ風ステータス画面）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.1（武器アイコン）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
 </div>
 
 <script>
@@ -437,6 +437,7 @@
     sport: ["assets/sport0.webp","assets/sport1.webp","assets/sport2.webp","assets/sport3.webp"],
     suv:   ["assets/suv0.webp","assets/suv1.webp","assets/suv2.webp","assets/suv3.webp"],
     truck: ["assets/truck0.webp","assets/truck1.webp","assets/truck2.webp","assets/truck3.webp"],
+    icons: { fist:"assets/icon_w_fist.webp", harisen:"assets/icon_w_harisen.webp", pan:"assets/icon_w_pan.webp", hammer:"assets/icon_w_hammer.webp" },
     chars: {
       ren: {
         fist:    ["assets/fighter_idle.webp", "assets/fighter_punch.webp"],
@@ -674,7 +675,7 @@
       else if (ownedWeapons[k]) badge = starText(starOf(weaponHits[k]));
       else if (level >= w.unlockLv) badge = "チケット1枚";
       else badge = "Lv" + w.unlockLv + "で解放";
-      wc.appendChild(makeCard(IMG.chars[charKey][k][0], w.name, badge, gold, k === selWeapon, !ownedWeapons[k], function(){ selWeapon = k; renderShop(); }));
+      wc.appendChild(makeCard(IMG.icons[k], w.name, badge, gold, k === selWeapon, !ownedWeapons[k], function(){ selWeapon = k; renderShop(); }));
     });
     var C = CHARS[selChar];
     document.getElementById("chName").textContent = C.name;
