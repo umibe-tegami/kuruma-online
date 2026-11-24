@@ -337,10 +337,6 @@
   <div id="statusPanel">
     <div id="statusCard">
       <h2>ステータス <button id="closeStatus">閉じる</button></h2>
-      <div class="lvLine">レベル <b id="stLevel">1</b> ／ 次のレベルまで</div>
-      <div id="xpBarOuter"><div id="xpBar"></div></div>
-      <div id="ptsLine">ステータスポイント：<b id="stPts">0</b>　／　チケット：<b id="stTickets">0</b>枚</div>
-
       <div class="stTabs">
         <button class="stTab sel" data-tab="weapon">ぶき</button>
         <button class="stTab" data-tab="char">キャラ</button>
@@ -390,6 +386,9 @@
       </div>
 
       <div id="tabStat" class="tabPage" style="display:none">
+        <div class="lvLine">レベル <b id="stLevel">1</b> ／ 次のレベルまで</div>
+        <div id="xpBarOuter"><div id="xpBar"></div></div>
+        <div id="ptsLine">ステータスポイント：<b id="stPts">0</b>　／　チケット：<b id="stTickets">0</b>枚</div>
         <div class="secTitle">ステータス振り分け（上限40）</div>
         <div class="srow"><div class="sname">パワー<small>ダメージ +3% / pt</small></div><button class="sbtn" data-stat="power" data-d="-1">−</button><div class="sval" id="sv-power">0</div><button class="sbtn" data-stat="power" data-d="1">＋</button></div>
         <div class="srow"><div class="sname">クリティカル率<small>発生率 +0.6% / pt</small></div><button class="sbtn" data-stat="crit" data-d="-1">−</button><div class="sval" id="sv-crit">0</div><button class="sbtn" data-stat="crit" data-d="1">＋</button></div>
@@ -424,7 +423,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.1（武器アイコン）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.2（レベル表示をステータスタブへ移動）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
 </div>
 
 <script>
