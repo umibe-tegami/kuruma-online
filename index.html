@@ -304,7 +304,7 @@
       <div class="hud-label">CARS</div>
       <div class="hud-value" id="carsVal">0</div>
     </div>
-    <div class="hud-block">
+    <div class="hud-block" id="timeBlock">
       <div class="hud-label">TIME</div>
       <div class="hud-value" id="timeNum">99</div>
     </div>
@@ -463,7 +463,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.23（バフのゲージ目盛りを比例式に統一：緑は必ず元の値の+○%分だけ伸びる）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.24（CARS累計を保存／ソロのTIME表示を廃止）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
 </div>
 
 <script>
@@ -1013,7 +1013,7 @@
   function xpNext(lv){ return Math.round(50 * Math.pow(lv, 1.5)); }
   function saveGame(){
     try {
-      localStorage.setItem(SAVE_KEY, JSON.stringify({ level:level, xp:xp, statPts:statPts, stats:stats, weaponKey:weaponKey, charKey:charKey, weaponHits:weaponHits, charHits:charHits, mode:mode, taBest:taBest, taScores:taScores, tickets:tickets, ownedWeapons:ownedWeapons, soloIdx:soloIdx, carHp:savedCarHp, carParts:savedCarParts, carIdxFor:savedCarIdx, score:score, skillCharge:skillCharge }));
+      localStorage.setItem(SAVE_KEY, JSON.stringify({ level:level, xp:xp, statPts:statPts, stats:stats, weaponKey:weaponKey, charKey:charKey, weaponHits:weaponHits, charHits:charHits, mode:mode, taBest:taBest, taScores:taScores, tickets:tickets, ownedWeapons:ownedWeapons, soloIdx:soloIdx, carHp:savedCarHp, carParts:savedCarParts, carIdxFor:savedCarIdx, score:score, skillCharge:skillCharge, cars:carsDestroyed }));
     } catch(e){}
   }
   function loadGame(){
@@ -1044,6 +1044,7 @@
       if (typeof s.carIdxFor === "number") savedCarIdx = s.carIdxFor;
       if (mode === "solo") setScore(Math.max(0, s.score|0 || 0));  // ソロのスコアも復元する
       if (s.skillCharge) { ["cb", "co", "wb", "wo"].forEach(function(m){ if (s.skillCharge[m]) Object.keys(s.skillCharge[m]).forEach(function(k){ skillCharge[m][k] = Math.max(0, s.skillCharge[m][k]|0 || 0); }); }); }
+      carsDestroyed = Math.max(0, s.cars|0 || 0); carsVal.textContent = carsDestroyed;  // CARSは累計を保存・復元する（リセットしない）
       taBest = Math.max(0, s.taBest|0 || 0);
       if (Array.isArray(s.taScores)) {
         taScores = s.taScores.map(function(v){ return Math.max(0, v|0); }).filter(function(v){ return v > 0; });
@@ -1687,7 +1688,7 @@
     }
     applyBg(idx);
     destroyed = false;
-    if (mode !== "ta") { timeLeft = 99; renderTime(); }
+
     lastHitAt = performance.now();  // コンボは車が替わっても継続：新しいクルマが出た瞬間から猶予1秒を数え直す
     carNameEl.textContent = cur.name + "（" + (idx+1) + "台目）";
     carWrap.style.height = (50 * cur.scale) + "%";
@@ -1883,20 +1884,15 @@
     }
   }, 120);
 
-  // TIME表示（数字のみ・バーなし）。ソロは装飾カウント（0で99に戻る）、taは60秒の実カウント
+  // TIME表示はタイムアタック専用（60秒の実カウント）。ソロでは表示しない（2026年11月25日ユーザー決定）
   var timeLeft = 99;
   function renderTime(){ timeNum.textContent = timeLeft < 10 ? "0" + timeLeft : String(timeLeft); }
   setInterval(function(){
-    if (mode === "ta") {
-      if (taState === "running") {
-        timeLeft--;
-        if (timeLeft <= 0) { timeLeft = 0; renderTime(); timeUp(); return; }
-        renderTime();
-      }
-      return;
+    if (mode === "ta" && taState === "running") {
+      timeLeft--;
+      if (timeLeft <= 0) { timeLeft = 0; renderTime(); timeUp(); return; }
+      renderTime();
     }
-    timeLeft--; if (timeLeft < 0) timeLeft = 99;
-    renderTime();
   }, 1000);
   renderTime();
 
@@ -1904,6 +1900,7 @@
   var modeInfo = document.getElementById("modeInfo");
   function applyModeUI(){
     modeInfo.textContent = MODES[mode].name;
+    document.getElementById("timeBlock").style.display = mode === "ta" ? "" : "none";  // TIMEはTA専用表示
     document.getElementById("menuBtn").textContent = (mode === "ta") ? "諦める" : "メニュー";
     document.getElementById("taBestVal").textContent = taBest;
     document.getElementById("eqSolo").textContent = mode === "solo" ? "選択中" : "";
@@ -1916,7 +1913,6 @@
   }
   function resetRun(){
     setScore(0);
-    carsDestroyed = 0; carsVal.textContent = "0";
     combo = 0; comboEl.style.opacity = 0;
     if (mode === "ta") { taState = "ready"; timeLeft = 60; renderTime(); }
     spawnCar(mode === "solo" ? soloIdx : 0, false);
