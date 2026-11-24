@@ -67,6 +67,13 @@
   #partsBar { display:flex; gap:4px; margin-top:4px; flex-wrap:wrap; }
   .pchip { font-size:10px; padding:2px 7px; border-radius:8px; background:rgba(10,16,28,.72); color:#cfe6ff; border:1px solid rgba(140,190,255,.45); letter-spacing:.5px; }
   .pchip.broken { background:rgba(70,14,8,.8); color:#ff9a8a; border-color:rgba(255,110,90,.6); text-decoration:line-through; }
+  #skillBar { display:flex; gap:6px; justify-content:center; margin-top:4px; }
+  .skillChip { flex:1; max-width:320px; background:rgba(10,10,30,.55); border:1px solid #4a4a86; border-radius:6px; padding:2px 6px; font-size:10px; color:#cfd2ff; min-height:14px; }
+  .skillChip .skRow { display:flex; justify-content:space-between; gap:6px; white-space:nowrap; }
+  .skillChip .skGauge { height:4px; background:#23233f; border-radius:2px; overflow:hidden; margin:1px 0 2px; }
+  .skillChip .skFill { height:100%; background:linear-gradient(90deg,#2fd35f,#b6ffb0); }
+  .skillChip.ready { border-color:#ffd94d; color:#ffd94d; }
+  #skillFlash { position:absolute; inset:0; background:#fff8d0; opacity:0; pointer-events:none; z-index:30; }
   .sprite { position:absolute; pointer-events:none; image-rendering:pixelated; }
   #fighterWrap { position:absolute; right:50%; margin-right:19%; bottom:11%; height:54%; z-index:3; transition:transform .06s ease-out; }
   #fighterWrap.lunge { transform:translateX(95%); }
@@ -287,6 +294,7 @@
       <div id="carName">軽自動車</div>
       <div id="hpBarOuter"><div id="hpBar"></div></div>
       <div id="partsBar"></div>
+  <div id="skillBar"><div class="skillChip" id="skillChipC"></div><div class="skillChip" id="skillChipW"></div></div>
     </div>
     <div class="hud-block">
       <div class="hud-label">CARS</div>
@@ -308,6 +316,7 @@
     <div id="fighterWrap"><img id="fighterImg" src="assets/fighter_idle.webp?v=35" alt="" draggable="false"></div>
     <div id="combo"><div id="comboNum">0</div><div id="comboTxt">HITS!</div></div>
     <div id="banner"><div id="bannerMain"></div><div id="bannerSub"></div></div>
+    <div id="skillFlash"></div>
   </div>
 
   <div id="menuBar">
@@ -364,6 +373,7 @@
               <div class="barRow"><span class="blab">スピード</span><div class="btrack"><div class="bfill" id="wpBarSpeed"></div><div class="bfill buff" id="wpBarSpeedBuff"></div></div></div>
               <div class="barRow"><span class="blab">クリティカル</span><div class="btrack"><div class="bfill" id="wpBarCrit"></div><div class="bfill buff" id="wpBarCritBuff"></div></div></div>
               <div class="dNote" id="wpNote"></div>
+              <div class="dNote" id="wpSkill"></div>
               <button class="actionBtn" id="wpAction">装備する</button>
             </div>
             <div class="charStand"><img id="wpStand" src="assets/fighter_idle.webp?v=35" alt=""></div>
@@ -386,6 +396,7 @@
               <div class="barRow"><span class="blab">クリティカル</span><div class="btrack"><div class="bfill" id="chBarCrit"></div></div></div>
               <div class="barRow"><span class="blab">ボーナス</span><div class="btrack"><div class="bfill" id="chBarBonus"></div></div></div>
               <div class="dNote" id="chNote"></div>
+              <div class="dNote" id="chSkill"></div>
               <button class="actionBtn" id="chAction">このキャラにする</button>
             </div>
             <div class="charStand"><img id="chStand" src="assets/fighter_idle.webp?v=35" alt=""></div>
@@ -416,6 +427,7 @@
         <div class="srow"><div class="sname">クリティカル倍率<small>倍率 +5% / pt</small></div><button class="sbtn" data-stat="critD" data-d="-1">−</button><div class="sval" id="sv-critD">0</div><button class="sbtn" data-stat="critD" data-d="1">＋</button></div>
         <div class="srow"><div class="sname">れんだ<small>コンボ倍率の上限 +0.02 / pt</small></div><button class="sbtn" data-stat="renda" data-d="-1">−</button><div class="sval" id="sv-renda">0</div><button class="sbtn" data-stat="renda" data-d="1">＋</button></div>
         <div class="srow"><div class="sname">テクニック<small>完破ボーナス（得点・経験値）+6% / pt</small></div><button class="sbtn" data-stat="tech" data-d="-1">−</button><div class="sval" id="sv-tech">0</div><button class="sbtn" data-stat="tech" data-d="1">＋</button></div>
+        <div class="srow"><div class="sname">技クールタイム減少<small>必殺技の必要ヒット数 -1% / pt</small></div><button class="sbtn" data-stat="skillCd" data-d="-1">−</button><div class="sval" id="sv-skillCd">0</div><button class="sbtn" data-stat="skillCd" data-d="1">＋</button></div>
         <div class="noteLine">※ 武器の熟練度は威力倍率（最大×2.0）、キャラの熟練度はダメージ+8%/星</div>
       </div>
     </div>
@@ -444,7 +456,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.19（キャラ熟練度も武器と同じ倍率で全ステータスにバフ）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.20（必殺技を実装：基本技＋奥義、チャージはヒット数制／新ステータス「技クールタイム減少」）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
 </div>
 
 <script>
@@ -872,6 +884,7 @@
     var critBuff = Math.max(0, Math.min(W.critRate * (wMultNow - 1) / 0.12 * 100, 100 - Math.min(100, critBase)));
     document.getElementById("wpBarCritBuff").style.width = (wMultNow > 1 && critBuff > 0 ? Math.max(2, Math.round(critBuff)) : 0) + "%";
     document.getElementById("wpNote").textContent = masteryNote(weaponHits[selWeapon]);
+    document.getElementById("wpSkill").textContent = skillInfo("w", selWeapon, weaponHits[selWeapon]);
     document.getElementById("wpStand").src = IMG.chars[charKey][selWeapon][0];
     var act = document.getElementById("wpAction");
     act.classList.remove("off"); act.disabled = false;
@@ -904,6 +917,8 @@
     document.getElementById("chBarCrit").style.width = barPct((0.05 + C.critAdd) / 0.15 * 100);
     document.getElementById("chBarBonus").style.width = barPct((C.bonusMult - 0.9) / 0.5 * 100);
     document.getElementById("chNote").textContent = masteryNote(charHits[selChar]);
+    document.getElementById("chSkill").textContent = skillInfo("c", selChar, charHits[selChar]);
+    renderSkillChips();
     document.getElementById("chStand").src = IMG.chars[selChar][weaponKey][0];
     var ca = document.getElementById("chAction");
     ca.classList.remove("off"); ca.disabled = false;
@@ -973,12 +988,18 @@
   var TEST_MODE = /[?&]test=1/.test(location.search);
   var SAVE_KEY = TEST_MODE ? "kuruma_proto_save_test" : "kuruma_proto_save";
   var level = 1, xp = 0, statPts = 0, xpFrac = 0;
-  var stats = { power:0, crit:0, critD:0, renda:0, tech:0 };
-  var STAT_KEYS = ["power","crit","critD","renda","tech"];
+  var stats = { power:0, crit:0, critD:0, renda:0, tech:0, skillCd:0 };
+  var STAT_KEYS = ["power","crit","critD","renda","tech","skillCd"];
+  function levelUpPoints(newLevel){  // レベルアップの獲得ポイント：基本3＋節目ボーナス（Lv10/20/30/40で+5、Lv50で+3＝Lv50までの総追加+23）
+    var p = 3;
+    if (newLevel === 10 || newLevel === 20 || newLevel === 30 || newLevel === 40) p += 5;
+    if (newLevel === 50) p += 3;
+    return p;
+  }
   function xpNext(lv){ return Math.round(50 * Math.pow(lv, 1.5)); }
   function saveGame(){
     try {
-      localStorage.setItem(SAVE_KEY, JSON.stringify({ level:level, xp:xp, statPts:statPts, stats:stats, weaponKey:weaponKey, charKey:charKey, weaponHits:weaponHits, charHits:charHits, mode:mode, taBest:taBest, taScores:taScores, tickets:tickets, ownedWeapons:ownedWeapons, soloIdx:soloIdx, carHp:savedCarHp, carParts:savedCarParts, carIdxFor:savedCarIdx, score:score }));
+      localStorage.setItem(SAVE_KEY, JSON.stringify({ level:level, xp:xp, statPts:statPts, stats:stats, weaponKey:weaponKey, charKey:charKey, weaponHits:weaponHits, charHits:charHits, mode:mode, taBest:taBest, taScores:taScores, tickets:tickets, ownedWeapons:ownedWeapons, soloIdx:soloIdx, carHp:savedCarHp, carParts:savedCarParts, carIdxFor:savedCarIdx, score:score, skillCharge:skillCharge }));
     } catch(e){}
   }
   function loadGame(){
@@ -1008,6 +1029,7 @@
       if (s.carParts && typeof s.carParts === "object") savedCarParts = s.carParts;
       if (typeof s.carIdxFor === "number") savedCarIdx = s.carIdxFor;
       if (mode === "solo") setScore(Math.max(0, s.score|0 || 0));  // ソロのスコアも復元する
+      if (s.skillCharge) { ["cb", "co", "wb", "wo"].forEach(function(m){ if (s.skillCharge[m]) Object.keys(s.skillCharge[m]).forEach(function(k){ skillCharge[m][k] = Math.max(0, s.skillCharge[m][k]|0 || 0); }); }); }
       taBest = Math.max(0, s.taBest|0 || 0);
       if (Array.isArray(s.taScores)) {
         taScores = s.taScores.map(function(v){ return Math.max(0, v|0); }).filter(function(v){ return v > 0; });
@@ -1032,14 +1054,14 @@
   function gainXP(amount){
     if (level >= 50 || amount <= 0) { renderGrowth(); return; }
     xp += amount;
-    var leveled = false, gained = 0;
+    var leveled = false, gained = 0, ptsGained = 0;
     while (level < 50 && xp >= xpNext(level)) {
       xp -= xpNext(level);
-      level++; statPts += 3; gained++; leveled = true;
+      level++; var lp = levelUpPoints(level); statPts += lp; ptsGained += lp; gained++; leveled = true;
     }
     if (leveled) {
       tickets += gained;
-      showBanner("LEVEL UP!", "Lv." + level + "　ポイント +" + (3 * gained) + "　チケット +" + gained, 1300);
+      showBanner("LEVEL UP!", "Lv." + level + "　ポイント +" + ptsGained + "　チケット +" + gained, 1300);
       sndJingle();
     }
     renderGrowth();
@@ -1337,7 +1359,7 @@
     P.hp -= Math.max(1, Math.round(dmg * mult));
     if (P.hp > 0) return;
     P.broken = true;
-    var bonus = Math.round(maxHp * 0.05);
+    var bonus = Math.round(maxHp * 0.05 * partBonusMult);
     hp -= bonus;
     setScore(score + bonus);
     spawnDmg(x, y - 46, PART_DEF[key].name + "破壊！ +" + bonus, true, PART_DEF[key].color);
@@ -1355,6 +1377,210 @@
     if (theme === curBgTheme) return;
     curBgTheme = theme;
     if (bgImgEl) bgImgEl.src = BG_SRCS[theme];
+  }
+  // ===== 必殺技（基本技はキャラ・武器ごとに固定付与／星5は固有の奥義。チャージはヒット数制でセーブされ、メニュー・再起動でもリセットされない） =====
+  var CHAR_BASIC = {
+    ren:    { name:"闘気解放", cd:300, kind:"buff", buff:{ dur:10, dmg:1.3, spd:1.5 } },
+    gou:    { name:"気合撃", cd:200, kind:"next", mult:5, crit:true },
+    hayate: { name:"連打の極意", cd:350, kind:"combo", add:30, protect:10 },
+    kirara: { name:"職人の勘", cd:400, kind:"buff", buff:{ dur:15, critAdd:0.25 } },
+    satoru: { name:"破壊衝動", cd:450, kind:"part", part:"random" }
+  };
+  var CHAR_ORIG = {
+    ren:    { name:"破天連撃", cd:800, kind:"multi", n:30, pct:0.8, interval:100 },
+    gou:    { name:"剛腕・山砕き", cd:900, kind:"pct", pct:0.08 },
+    hayate: { name:"疾風千手", cd:700, kind:"buff", buff:{ dur:5, noCd:true, comboPerHit:2 } },
+    kirara: { name:"星屑の乱舞", cd:850, kind:"multi", n:12, pct:1.0, interval:110, critAll:true },
+    satoru: { name:"解体の美学", cd:1000, kind:"part", part:"all" }
+  };
+  var WP_BASIC_DEFS = {
+    next4:  { name:"一点集中", cd:250, kind:"next", mult:4 },
+    chain:  { name:"連鎖", cd:350, kind:"chain" },
+    rapid:  { name:"怒涛の連撃", cd:300, kind:"multi", n:8, pct:0.6, interval:80 },
+    swing:  { name:"フルスイング", cd:250, kind:"pct", pct:0.03 },
+    partAim:{ name:"部位狙い", cd:300, kind:"partDmg" },
+    weak:   { name:"急所突き", cd:350, kind:"pct", pct:0.02, partKey:"engine" },
+    heat:   { name:"過熱", cd:450, kind:"buff", buff:{ dur:8, noCd:true } },
+    xp:     { name:"経験値ブースト", cd:600, kind:"xp", frac:0.15 },
+    spd:    { name:"疾風", cd:350, kind:"buff", buff:{ dur:6, spd:1.6 } },
+    critB:  { name:"会心", cd:400, kind:"buff", buff:{ dur:10, critAdd:0.2 } }
+  };
+  var WP_BASIC = { fist:"next4", shinbunshi:"chain", harisen:"rapid", kakuzai:"swing", driver:"partAim", gunte:"xp", pan:"heat", drill:"weak", hammer:"swing", shinai:"next4", glove2:"spd", pliers:"partAim", bokken:"rapid", slipper:"chain", boxglove:"next4", pikopiko:"chain", wrench:"weak", grinder:"heat", bat:"swing", monkey:"partAim", leather:"critB" };
+  var WP_ORIG = {
+    fist:      { name:"正拳・一点突破", cd:700, kind:"pct", pct:0.05, partBreak:"random" },
+    shinbunshi:{ name:"紙吹雪・千枚張り", cd:500, kind:"multi", n:20, pct:0.1, interval:50, comboAdd:20 },
+    harisen:   { name:"愛の平手・百裂", cd:550, kind:"multi", n:4, pct:1.0, interval:160 },
+    kakuzai:   { name:"大工の本気・棟上げ", cd:650, kind:"pct", pct:0.04, partKey:"door" },
+    driver:    { name:"精密解体", cd:750, kind:"part", part:"random", pbm:2 },
+    gunte:     { name:"職人の手さばき", cd:600, kind:"buff", buff:{ dur:6, spd:2.0 } },
+    pan:       { name:"鉄板・大炎上", cd:700, kind:"pct", pct:0.03, buff:{ dur:5, dotPct:0.002 } },
+    drill:     { name:"穿孔・コア抜き", cd:800, kind:"pct", pct:0.06, partKey:"engine" },
+    hammer:    { name:"鉄槌・天誅", cd:750, kind:"pct", pct:0.05, partKey:"tire" },
+    shinai:    { name:"剣道・面！", cd:600, kind:"multi", n:3, pct:1.2, interval:200, critAll:true },
+    glove2:    { name:"安全第一・全力投球", cd:650, kind:"buff", buff:{ dur:8, dmg:1.4 } },
+    pliers:    { name:"引き抜きの極意", cd:700, kind:"part", part:"random" },
+    bokken:    { name:"剣術・龍尾", cd:650, kind:"pct", pct:0.04, comboAdd:15 },
+    slipper:   { name:"母の愛・雷", cd:500, kind:"multi", n:10, pct:0.3, interval:60 },
+    boxglove:  { name:"チャンピオンの右", cd:850, kind:"pct", pct:0.07, crit:true },
+    pikopiko:  { name:"ピコピコ・ラッシュ", cd:600, kind:"multi", n:30, pct:0.15, interval:40 },
+    wrench:    { name:"締め上げ・トルクマックス", cd:700, kind:"pct", pct:0.04, partKey:"engine" },
+    grinder:   { name:"火花・切断", cd:800, kind:"multiPct", n:20, pct:0.003, interval:100 },
+    bat:       { name:"場外・ホームラン", cd:800, kind:"pct", pct:0.06 },
+    monkey:    { name:"万能の顎", cd:750, kind:"part", part:"max" },
+    leather:   { name:"紳士の鉄拳", cd:750, kind:"pct", pct:0.05, crit:true }
+  };
+  var skillCharge = { cb:{}, co:{}, wb:{}, wo:{} };
+  function effCd(base){ return Math.max(1, Math.ceil(base * (1 - 0.01 * (stats.skillCd || 0)))); }  // 技クールタイム減少：必要ヒット数 -1%/pt
+  var activeBuffs = [];
+  var armedNext = null;
+  var comboProtectUntil = 0;
+  var partBonusMult = 1;
+  var skillChainTimer = null;
+  var skillFlashEl = document.getElementById("skillFlash");
+  var skillChipC = document.getElementById("skillChipC");
+  var skillChipW = document.getElementById("skillChipW");
+  function addBuff(b){ var c = {}; for (var k in b) c[k] = b[k]; c.until = performance.now() + (b.dur || 0) * 1000; activeBuffs.push(c); }
+  function buffAgg(){
+    var now = performance.now();
+    activeBuffs = activeBuffs.filter(function(b){ return b.until > now; });
+    var a = { dmg:1, spd:1, critAdd:0, noCd:false, dotPct:0, comboPerHit:0 };
+    activeBuffs.forEach(function(b){
+      a.dmg *= (b.dmg || 1); a.spd *= (b.spd || 1); a.critAdd += (b.critAdd || 0);
+      if (b.noCd) a.noCd = true; a.dotPct += (b.dotPct || 0); a.comboPerHit += (b.comboPerHit || 0);
+    });
+    return a;
+  }
+  function sndSkillPower(){ tone("sawtooth", 90, 40, 0.35, 0.45); noise(0.25, "lowpass", 500, 300, 0.5); setTimeout(function(){ tone("sine", 1200, 2400, 0.18, 0.18); }, 60); }
+  function sndSkillBuff(){ [523, 659, 784, 1046].forEach(function(f, i){ setTimeout(function(){ tone("triangle", f, f, 0.12, 0.16); }, i * 70); }); }
+  function sndSkillRapid(){ noise(0.15, "highpass", 3000, 5000, 0.22); tone("square", 1800, 900, 0.12, 0.1); }
+  function flashStage(){ if (!skillFlashEl) return; skillFlashEl.style.transition = "none"; skillFlashEl.style.opacity = 0.55; setTimeout(function(){ skillFlashEl.style.transition = "opacity .45s"; skillFlashEl.style.opacity = 0; }, 30); }
+  function skillHitBase(){
+    var W = WEAPONS[weaponKey], C = CHARS[charKey];
+    return W.power * WSTAR_MULT[starOf(weaponHits[weaponKey]) - 1] * charStarMult(starOf(charHits[charKey])) * C.dmgMult * (1 + 0.03 * stats.power) * buffAgg().dmg;
+  }
+  function dealSkillDamage(dmg, x, y, color){
+    if (destroyed || dmg <= 0) return;
+    hp -= dmg;
+    setScore(score + dmg);
+    gainHitXP(dmg);
+    spawnDmg(x, y, dmg.toLocaleString("ja-JP"), false, color || "#ffd94d");
+    renderCar();
+    if (hp <= 0) destroyCar();
+  }
+  function skillMulti(def){
+    var i = 0;
+    var iv = setInterval(function(){
+      if (destroyed || i >= def.n) { clearInterval(iv); return; }
+      i++;
+      var dmg;
+      if (def.kind === "multiPct") dmg = Math.max(1, Math.round(maxHp * def.pct));
+      else { dmg = Math.max(1, Math.round(skillHitBase() * def.pct * (0.9 + Math.random() * 0.2))); if (def.critAll) dmg = Math.round(dmg * 1.5); }
+      dealSkillDamage(dmg, carWrap.offsetLeft + carWrap.offsetWidth * (0.25 + Math.random() * 0.5), carWrap.offsetTop + carWrap.offsetHeight * 0.4, def.critAll ? "#ff5e5e" : "#ffd94d");
+      punchFX();
+      if (i >= def.n) clearInterval(iv);
+    }, def.interval || 90);
+  }
+  function skillPart(def){
+    var cx = carWrap.offsetLeft + carWrap.offsetWidth / 2, cy = carWrap.offsetTop + carWrap.offsetHeight / 2;
+    if (def.pbm) partBonusMult = def.pbm;
+    if (def.part === "all") {
+      PART_KEYS.forEach(function(k){ if (parts[k] && !parts[k].broken) applyPartDamage(k, 99999999, cx, cy); });
+    } else {
+      var key = def.part;
+      if (key === "random" || key === "max") {
+        var alive = PART_KEYS.filter(function(k){ return parts[k] && !parts[k].broken; });
+        if (!alive.length) { dealSkillDamage(Math.round(maxHp * 0.03), cx, cy); partBonusMult = 1; return; }
+        if (key === "random") key = alive[Math.floor(Math.random() * alive.length)];
+        else { var bv = -1; alive.forEach(function(k){ if (parts[k].hp > bv) { bv = parts[k].hp; key = k; } }); }
+      }
+      applyPartDamage(key, 99999999, cx, cy);
+    }
+    partBonusMult = 1;
+  }
+  function fireSkill(def){
+    showBanner("必殺技！", def.name, 1000);
+    flashStage();
+    if (def.kind === "buff" || def.kind === "combo") sndSkillBuff();
+    else if (def.kind === "multi" || def.kind === "multiPct") sndSkillRapid();
+    else sndSkillPower();
+    var cx = carWrap.offsetLeft + carWrap.offsetWidth / 2, cy = carWrap.offsetTop + carWrap.offsetHeight / 2;
+    if (def.kind === "pct") {
+      dealSkillDamage(Math.max(1, Math.round(maxHp * def.pct)), cx, cy, def.crit ? "#ff5e5e" : "#ffd94d");
+      if (def.partKey) applyPartDamage(def.partKey, Math.round(maxHp * 0.2), cx, cy);
+      if (def.partBreak) skillPart({ part: def.partBreak });
+      if (def.buff) addBuff(def.buff);
+      shake("shakeL");
+    }
+    else if (def.kind === "multi" || def.kind === "multiPct") skillMulti(def);
+    else if (def.kind === "part") skillPart(def);
+    else if (def.kind === "partDmg") {
+      var alive2 = PART_KEYS.filter(function(k){ return parts[k] && !parts[k].broken; });
+      if (alive2.length) applyPartDamage(alive2[Math.floor(Math.random() * alive2.length)], Math.round(maxHp * 0.15), cx, cy);
+      else dealSkillDamage(Math.round(maxHp * 0.02), cx, cy);
+    }
+    else if (def.kind === "buff") { addBuff(def.buff); spawnParticles(cx, cy, 18, 1.2, { colors:["#7dff9a", "#ffffff"] }); }
+    else if (def.kind === "next") { armedNext = { mult: def.mult, crit: !!def.crit }; spawnDmg(cx, cy - 30, "次の1撃に力を溜めた！", false, "#7dff9a"); }
+    else if (def.kind === "xp") { gainXP(Math.round(xpNext(level) * def.frac)); }
+    else if (def.kind === "combo") { combo += def.add; comboNum.textContent = combo; comboEl.style.opacity = 1; if (def.protect) comboProtectUntil = performance.now() + def.protect * 1000; }
+    else if (def.kind === "chain") { dealSkillDamage(Math.max(1, Math.round(maxHp * Math.min(0.06, 0.01 + combo * 0.0004))), cx, cy); }
+    if (def.comboAdd) { combo += def.comboAdd; comboNum.textContent = combo; comboEl.style.opacity = 1; }
+    saveGame();
+  }
+  function readySkills(){
+    var list = [];
+    var cs = starOf(charHits[charKey]), ws = starOf(weaponHits[weaponKey]);
+    if (cs >= 3 && (skillCharge.cb[charKey] || 0) >= effCd(CHAR_BASIC[charKey].cd)) list.push({ def: CHAR_BASIC[charKey], cd: CHAR_BASIC[charKey].cd, map: "cb", key: charKey });
+    if (cs >= 5 && (skillCharge.co[charKey] || 0) >= effCd(CHAR_ORIG[charKey].cd)) list.push({ def: CHAR_ORIG[charKey], cd: CHAR_ORIG[charKey].cd, map: "co", key: charKey });
+    if (ws >= 3 && (skillCharge.wb[weaponKey] || 0) >= effCd(WP_BASIC_DEFS[WP_BASIC[weaponKey]].cd)) list.push({ def: WP_BASIC_DEFS[WP_BASIC[weaponKey]], cd: WP_BASIC_DEFS[WP_BASIC[weaponKey]].cd, map: "wb", key: weaponKey });
+    if (ws >= 5 && (skillCharge.wo[weaponKey] || 0) >= effCd(WP_ORIG[weaponKey].cd)) list.push({ def: WP_ORIG[weaponKey], cd: WP_ORIG[weaponKey].cd, map: "wo", key: weaponKey });
+    list.sort(function(a, b){ return b.cd - a.cd; });
+    return list;
+  }
+  function maybeFireSkills(){
+    if (destroyed) return;
+    var list = readySkills();
+    if (!list.length) { renderSkillChips(); return; }
+    if (skillChainTimer) return;
+    var s = list[0];
+    skillCharge[s.map][s.key] = 0;
+    fireSkill(s.def);
+    renderSkillChips();
+    if (list.length > 1) skillChainTimer = setTimeout(function(){ skillChainTimer = null; maybeFireSkills(); }, 900);
+  }
+  function addSkillCharge(){
+    var cs = starOf(charHits[charKey]), ws = starOf(weaponHits[weaponKey]);
+    if (cs >= 3) skillCharge.cb[charKey] = Math.min(effCd(CHAR_BASIC[charKey].cd), (skillCharge.cb[charKey] || 0) + 1);
+    if (cs >= 5) skillCharge.co[charKey] = Math.min(effCd(CHAR_ORIG[charKey].cd), (skillCharge.co[charKey] || 0) + 1);
+    if (ws >= 3) skillCharge.wb[weaponKey] = Math.min(effCd(WP_BASIC_DEFS[WP_BASIC[weaponKey]].cd), (skillCharge.wb[weaponKey] || 0) + 1);
+    if (ws >= 5) skillCharge.wo[weaponKey] = Math.min(effCd(WP_ORIG[weaponKey].cd), (skillCharge.wo[weaponKey] || 0) + 1);
+    maybeFireSkills();
+  }
+  function skillRow(label, name, charge, cd, unlocked){
+    if (!unlocked) return '<div class="skRow"><span>' + label + ' ' + name + '</span><span>未解放</span></div>';
+    var pct = Math.min(100, Math.round(charge / cd * 100));
+    return '<div class="skRow"><span>' + label + ' ' + name + '</span><span>' + (charge >= cd ? '発動！' : charge + '/' + cd) + '</span></div><div class="skGauge"><div class="skFill" style="width:' + pct + '%"></div></div>';
+  }
+  function renderSkillChips(){
+    if (!skillChipC || !skillChipW) return;
+    var cs = starOf(charHits[charKey]), ws = starOf(weaponHits[weaponKey]);
+    skillChipC.innerHTML = skillRow("基本", CHAR_BASIC[charKey].name, skillCharge.cb[charKey] || 0, effCd(CHAR_BASIC[charKey].cd), cs >= 3)
+      + skillRow("奥義", CHAR_ORIG[charKey].name, skillCharge.co[charKey] || 0, effCd(CHAR_ORIG[charKey].cd), cs >= 5);
+    skillChipW.innerHTML = skillRow("基本", WP_BASIC_DEFS[WP_BASIC[weaponKey]].name, skillCharge.wb[weaponKey] || 0, effCd(WP_BASIC_DEFS[WP_BASIC[weaponKey]].cd), ws >= 3)
+      + skillRow("奥義", WP_ORIG[weaponKey].name, skillCharge.wo[weaponKey] || 0, effCd(WP_ORIG[weaponKey].cd), ws >= 5);
+    var rs = readySkills();
+    skillChipC.classList.toggle("ready", rs.some(function(s){ return s.map === "cb" || s.map === "co"; }));
+    skillChipW.classList.toggle("ready", rs.some(function(s){ return s.map === "wb" || s.map === "wo"; }));
+  }
+  function skillInfo(owner, key, hits){
+    var st = starOf(hits);
+    var basic = owner === "c" ? CHAR_BASIC[key] : WP_BASIC_DEFS[WP_BASIC[key]];
+    var orig = owner === "c" ? CHAR_ORIG[key] : WP_ORIG[key];
+    var cb = owner === "c" ? skillCharge.cb : skillCharge.wb;
+    var co = owner === "c" ? skillCharge.co : skillCharge.wo;
+    var t = "必殺技：";
+    t += st >= 3 ? "基本「" + basic.name + "」あと" + Math.max(0, effCd(basic.cd) - (cb[key] || 0)) + "ヒット" : "基本技は星3で解放";
+    t += st >= 5 ? "／奥義「" + orig.name + "」あと" + Math.max(0, effCd(orig.cd) - (co[key] || 0)) + "ヒット" : "／奥義は星5で解放";
+    return t;
   }
   function renderCar(){
     carImg.src = IMG[cur.set][stageIndex()];
@@ -1403,6 +1629,8 @@
         { transform:"translateX(0)", opacity:1 }
       ], { duration:480, easing:"cubic-bezier(.2,.8,.3,1)" });
     }
+    renderSkillChips();
+    setTimeout(function(){ maybeFireSkills(); }, 700);  // 貯まっていた必殺技は新しい車にも発動する
   }
   function destroyCar(){
     destroyed = true;
@@ -1456,10 +1684,11 @@
     var now = performance.now();
     var W = WEAPONS[weaponKey];
     var C = CHARS[charKey];
+    var agg = buffAgg();
     var wMultGate = WSTAR_MULT[starOf(weaponHits[weaponKey]) - 1] * charStarMult(starOf(charHits[charKey]));
-    if (now - lastSwingAt < W.cooldown * C.cdMult / wMultGate) return;  // 重い武器・重いキャラは連打できない（武器＋キャラの熟練度バフはスピードにも効く）
+    if (!agg.noCd && now - lastSwingAt < W.cooldown * C.cdMult / (wMultGate * agg.spd)) return;  // 重い武器・重いキャラは連打できない（熟練度バフ＋必殺技バフはスピードにも効く）
     lastSwingAt = now;
-    combo = (now - lastHitAt <= 1000) ? combo + 1 : 1;
+    combo = (now - lastHitAt <= 1000 || now < comboProtectUntil) ? combo + 1 + agg.comboPerHit : 1;
     lastHitAt = now;
     // ヒット数表示は本体側で即時更新する（エフェクトの成否に影響されない場所）
     comboNum.textContent = combo;
@@ -1467,10 +1696,11 @@
 
     var wStar = starOf(weaponHits[weaponKey]);
     var cStar = starOf(charHits[charKey]);
-    var crit = Math.random() < (W.critRate * WSTAR_MULT[wStar-1] * charStarMult(cStar) + C.critAdd + 0.006 * stats.crit);  // 熟練度バフはクリティカルにも効く（武器＋キャラ）
-    var base = W.power * WSTAR_MULT[wStar-1] * charStarMult(cStar) * C.dmgMult * (1 + 0.03 * stats.power) * (0.85 + Math.random()*0.3);
+    var crit = Math.random() < (W.critRate * WSTAR_MULT[wStar-1] * charStarMult(cStar) + C.critAdd + agg.critAdd + 0.006 * stats.crit);  // 熟練度バフはクリティカルにも効く（武器＋キャラ＋必殺技バフ）
+    var base = W.power * WSTAR_MULT[wStar-1] * charStarMult(cStar) * C.dmgMult * (1 + 0.03 * stats.power) * (0.85 + Math.random()*0.3) * agg.dmg;
     var comboMult = Math.min(1 + combo * 0.01, 1.5 + 0.02 * stats.renda);       // コンボ倍率（上限はれんだで伸びる）
     var dmg = Math.max(1, Math.round(base * comboMult * (crit ? ((1.5 + 0.05 * stats.critD) * C.critDMult) : 1)));
+    if (armedNext) { dmg = Math.max(1, Math.round(dmg * armedNext.mult)); if (armedNext.crit) crit = true; armedNext = null; }  // 必殺技「次の1撃」系の消費
 
     // 部位判定：タップ位置で部位が決まる。エンジンは弱点（×1.3、破壊済みは除く）
     var pcr = carWrap.getBoundingClientRect();
@@ -1492,6 +1722,8 @@
       var nowC = performance.now();
       if (nowC - lastCarCapture > 2000) { lastCarCapture = nowC; captureCarState(); saveGame(); }
     }
+    if (agg.dotPct > 0 && hp > 0 && !destroyed) dealSkillDamage(Math.max(1, Math.round(maxHp * agg.dotPct)), px, py, "#ff8c3a");  // 炎上などの継続ダメージ
+    addSkillCharge();  // 必殺技のチャージ（必殺技自身のヒットでは貯まらない）
     gainHitXP(dmg);
     setScore(score + dmg);
     renderCar();
@@ -1664,10 +1896,10 @@
     document.getElementById("testBadge").style.display = "block";
     document.getElementById("testTools").style.display = "block";
     document.getElementById("tLvUp").addEventListener("click", function(){
-      if (level < 50) { level++; statPts += 3; tickets += 1; saveGame(); renderGrowth(); }
+      if (level < 50) { level++; statPts += levelUpPoints(level); tickets += 1; saveGame(); renderGrowth(); }
     });
     document.getElementById("tLv50").addEventListener("click", function(){
-      while (level < 50) { level++; statPts += 3; tickets += 1; }
+      while (level < 50) { level++; statPts += levelUpPoints(level); tickets += 1; }
       saveGame(); renderGrowth();
     });
     document.getElementById("tTicket").addEventListener("click", function(){
