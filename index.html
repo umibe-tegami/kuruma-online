@@ -441,7 +441,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.15（部位破壊＋実写背景：100ステージごとに世界各国の有名な場所へ）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.16（車のHPも保存：途中で閉じても削った続きから再開できる）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
 </div>
 
 <script>
@@ -665,6 +665,21 @@
   var score = 0, carsDestroyed = 0;
   var carIdx = 0, cur = null, hp = 0, maxHp = 0;
   var soloIdx = 0;  // ソロの到達ステージ（保存して次回ここから再開する）
+  var savedCarHp = null;     // 途中で閉じた時の車の残りHP（ソロのみ・復元用）
+  var savedCarParts = null;  // その車の部位の状態
+  var savedCarIdx = -1;      // その車のステージ番号（別の車に誤って復元しないため）
+  var lastCarCapture = 0;
+  function captureCarState(){
+    if (mode !== "solo" || destroyed || hp <= 0 || hp >= maxHp) return;
+    savedCarHp = hp;
+    savedCarIdx = carIdx;
+    savedCarParts = {};
+    PART_KEYS.forEach(function(k){ if (parts[k]) savedCarParts[k] = { hp: parts[k].hp, broken: !!parts[k].broken }; });
+  }
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden) { captureCarState(); saveGame(); }
+  });
+  window.addEventListener("pagehide", function(){ captureCarState(); saveGame(); });
   var combo = 0, lastHitAt = 0, destroyed = false, punchTimer = null;
 
   /* ---------- SOUND (WebAudio, generated) ---------- */
@@ -947,7 +962,7 @@
   function xpNext(lv){ return Math.round(50 * Math.pow(lv, 1.5)); }
   function saveGame(){
     try {
-      localStorage.setItem(SAVE_KEY, JSON.stringify({ level:level, xp:xp, statPts:statPts, stats:stats, weaponKey:weaponKey, charKey:charKey, weaponHits:weaponHits, charHits:charHits, mode:mode, taBest:taBest, taScores:taScores, tickets:tickets, ownedWeapons:ownedWeapons, soloIdx:soloIdx }));
+      localStorage.setItem(SAVE_KEY, JSON.stringify({ level:level, xp:xp, statPts:statPts, stats:stats, weaponKey:weaponKey, charKey:charKey, weaponHits:weaponHits, charHits:charHits, mode:mode, taBest:taBest, taScores:taScores, tickets:tickets, ownedWeapons:ownedWeapons, soloIdx:soloIdx, carHp:savedCarHp, carParts:savedCarParts, carIdxFor:savedCarIdx }));
     } catch(e){}
   }
   function loadGame(){
@@ -973,6 +988,9 @@
       if (s.charHits) Object.keys(charHits).forEach(function(k){ charHits[k] = Math.max(0, s.charHits[k]|0 || 0); });
       if (s.mode && MODES[s.mode]) mode = s.mode;
       soloIdx = Math.max(0, s.soloIdx|0 || 0);
+      if (typeof s.carHp === "number" && s.carHp > 0) savedCarHp = s.carHp;
+      if (s.carParts && typeof s.carParts === "object") savedCarParts = s.carParts;
+      if (typeof s.carIdxFor === "number") savedCarIdx = s.carIdxFor;
       taBest = Math.max(0, s.taBest|0 || 0);
       if (Array.isArray(s.taScores)) {
         taScores = s.taScores.map(function(v){ return Math.max(0, v|0); }).filter(function(v){ return v > 0; });
@@ -1329,6 +1347,17 @@
     cur = carSpec(idx);
     maxHp = cur.hp; hp = cur.hp;
     initParts();
+    if (mode === "solo" && idx === soloIdx && savedCarIdx === idx && savedCarHp !== null && savedCarHp > 0 && savedCarHp < maxHp) {
+      hp = savedCarHp;  // 前回途中で閉じた車の続きから
+      if (savedCarParts) {
+        PART_KEYS.forEach(function(k){
+          var sp = savedCarParts[k];
+          if (sp && parts[k]) { parts[k].hp = Math.max(0, sp.hp|0); parts[k].broken = !!sp.broken; }
+        });
+        renderParts();
+      }
+      savedCarHp = null; savedCarParts = null; savedCarIdx = -1;
+    }
     applyBg(idx);
     destroyed = false;
     if (mode !== "ta") { timeLeft = 99; renderTime(); }
@@ -1345,6 +1374,7 @@
   }
   function destroyCar(){
     destroyed = true;
+    savedCarHp = null; savedCarParts = null; savedCarIdx = -1;  // 壊し切った車は復元しない
     hp = 0; renderCar();
     carsDestroyed++;
     carsVal.textContent = carsDestroyed;
@@ -1425,6 +1455,10 @@
     charHits[charKey]++;
     hp -= dmg;
     applyPartDamage(partKey, dmg, px, py);
+    if (mode === "solo") {  // プレイ中も2秒ごとに車の状態を控える（突然閉じても続きから）
+      var nowC = performance.now();
+      if (nowC - lastCarCapture > 2000) { lastCarCapture = nowC; captureCarState(); saveGame(); }
+    }
     gainHitXP(dmg);
     setScore(score + dmg);
     renderCar();
