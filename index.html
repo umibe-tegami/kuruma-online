@@ -444,7 +444,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.18（スコア・武器解放・装備を保存／熟練度バフはパワー・スピード・クリティカルの全部に効く）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.19（キャラ熟練度も武器と同じ倍率で全ステータスにバフ）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
 </div>
 
 <script>
@@ -626,7 +626,7 @@
   var STAR_HITS = [0, 300, 1000, 2500, 5000];
   var WSTAR_MULT = [1, 1.1, 1.2, 1.3, 1.5];  // 武器熟練度バフ：星1なし／星2 +10%／星3 +20%／星4 +30%／星5 +50%（2026年11月24日にユーザーが改定）
   function starOf(hits){ var s=1; for (var i=1;i<STAR_HITS.length;i++) if (hits >= STAR_HITS[i]) s = i+1; return s; }
-  function charStarMult(star){ return 1 + 0.08 * (star - 1); }
+  function charStarMult(star){ return WSTAR_MULT[star - 1]; }  // キャラ熟練度も武器と同じ倍率表で全ステータスに効く（2026年11月24日にユーザーが決定）
   var weaponHits = { fist:0, harisen:0, pan:0, hammer:0, kakuzai:0, driver:0, gunte:0, drill:0, shinai:0, glove2:0, pliers:0, bokken:0, slipper:0, boxglove:0, wrench:0, shinbunshi:0, pikopiko:0, grinder:0, bat:0, monkey:0, leather:0 };
   var charHits = { ren:0, gou:0, hayate:0, kirara:0, satoru:0 };
 
@@ -896,7 +896,9 @@
     var C = CHARS[selChar];
     document.getElementById("chName").textContent = C.name;
     document.getElementById("chDesc").textContent = C.desc;
-    document.getElementById("chStars").textContent = starText(starOf(charHits[selChar]));
+    var cStarNow = starOf(charHits[selChar]);
+    var cMultNow = charStarMult(cStarNow);
+    document.getElementById("chStars").textContent = starText(cStarNow) + (cMultNow > 1 ? "（全ステータス+" + Math.round((cMultNow - 1) * 100) + "%）" : "");
     document.getElementById("chBarPower").style.width = barPct((C.dmgMult - 0.7) / 0.6 * 100);
     document.getElementById("chBarSpeed").style.width = barPct(((1 / C.cdMult) - 0.6) / 1.22 * 100);
     document.getElementById("chBarCrit").style.width = barPct((0.05 + C.critAdd) / 0.15 * 100);
@@ -1454,8 +1456,8 @@
     var now = performance.now();
     var W = WEAPONS[weaponKey];
     var C = CHARS[charKey];
-    var wMultGate = WSTAR_MULT[starOf(weaponHits[weaponKey]) - 1];
-    if (now - lastSwingAt < W.cooldown * C.cdMult / wMultGate) return;  // 重い武器・重いキャラは連打できない（熟練度バフはスピードにも効く）
+    var wMultGate = WSTAR_MULT[starOf(weaponHits[weaponKey]) - 1] * charStarMult(starOf(charHits[charKey]));
+    if (now - lastSwingAt < W.cooldown * C.cdMult / wMultGate) return;  // 重い武器・重いキャラは連打できない（武器＋キャラの熟練度バフはスピードにも効く）
     lastSwingAt = now;
     combo = (now - lastHitAt <= 1000) ? combo + 1 : 1;
     lastHitAt = now;
@@ -1465,7 +1467,7 @@
 
     var wStar = starOf(weaponHits[weaponKey]);
     var cStar = starOf(charHits[charKey]);
-    var crit = Math.random() < (W.critRate * WSTAR_MULT[wStar-1] + C.critAdd + 0.006 * stats.crit);  // 熟練度バフはクリティカルにも効く
+    var crit = Math.random() < (W.critRate * WSTAR_MULT[wStar-1] * charStarMult(cStar) + C.critAdd + 0.006 * stats.crit);  // 熟練度バフはクリティカルにも効く（武器＋キャラ）
     var base = W.power * WSTAR_MULT[wStar-1] * charStarMult(cStar) * C.dmgMult * (1 + 0.03 * stats.power) * (0.85 + Math.random()*0.3);
     var comboMult = Math.min(1 + combo * 0.01, 1.5 + 0.02 * stats.renda);       // コンボ倍率（上限はれんだで伸びる）
     var dmg = Math.max(1, Math.round(base * comboMult * (crit ? ((1.5 + 0.05 * stats.critD) * C.critDMult) : 1)));
@@ -1551,7 +1553,7 @@
     holdTimer = setInterval(function(){
       if (mode === "ta" && taState === "ended") { stopHold(); return; }
       onHit(holdX, holdY);
-    }, Math.max(40, Math.round(W.holdMs / WSTAR_MULT[starOf(weaponHits[weaponKey]) - 1])));  // 長押し連打の間隔にも熟練度バフ
+    }, Math.max(40, Math.round(W.holdMs / (WSTAR_MULT[starOf(weaponHits[weaponKey]) - 1] * charStarMult(starOf(charHits[charKey]))))));  // 長押し連打の間隔にも熟練度バフ（武器＋キャラ）
   }
   window.addEventListener("pointerup", stopHold);
   window.addEventListener("pointercancel", stopHold);
