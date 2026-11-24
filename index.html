@@ -463,7 +463,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.24（CARS累計を保存／ソロのTIME表示を廃止）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.25（初期5キャラをノーマルとして弱体化・バランス調整／ガチャ実装に備えた下地）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
 </div>
 
 <script>
@@ -632,11 +632,11 @@
 
   /* キャラ定義：傾向は倍率で個性を付ける */
   var CHARS = {
-    ren:    { name:"レン",   dmgMult:1.0,  cdMult:1.0,  critAdd:0,    critDMult:1.0, bonusMult:1.0, desc:"バランス型／全て平均的で扱いやすい" },
-    gou:    { name:"ゴウ",   dmgMult:1.25, cdMult:1.3,  critAdd:0,    critDMult:1.0, bonusMult:1.0, desc:"パワー型／ダメージ+25%・振りが少し重い" },
-    hayate: { name:"ハヤテ", dmgMult:0.85, cdMult:0.55, critAdd:0,    critDMult:1.0, bonusMult:1.0, desc:"スピード型／振りが速い・ダメージ-15%" },
-    kirara: { name:"キララ", dmgMult:0.9,  cdMult:1.0,  critAdd:0.08, critDMult:1.3, bonusMult:1.0, desc:"クリティカル型／クリ率+8%・クリ倍率+30%・ダメージ-10%" },
-    satoru: { name:"サトル", dmgMult:0.9,  cdMult:1.0,  critAdd:0,    critDMult:1.0, bonusMult:1.4, desc:"テクニック型／完破ボーナス+40%・ダメージ-10%" }
+    ren:    { name:"レン",   dmgMult:0.92, cdMult:1.0,  critAdd:0,    critDMult:1.0, bonusMult:1.0, desc:"バランス型／全て平均的で扱いやすい" },
+    gou:    { name:"ゴウ",   dmgMult:1.15, cdMult:1.3,  critAdd:0,    critDMult:1.0, bonusMult:1.0, desc:"パワー型／ダメージ+15%・振りが少し重い" },
+    hayate: { name:"ハヤテ", dmgMult:0.8,  cdMult:0.7,  critAdd:0,    critDMult:1.0, bonusMult:1.0, desc:"スピード型／振りが速い・ダメージ-20%" },
+    kirara: { name:"キララ", dmgMult:0.85, cdMult:1.0,  critAdd:0.06, critDMult:1.25, bonusMult:1.0, desc:"クリティカル型／クリ率+6%・クリ倍率+25%・ダメージ-15%" },
+    satoru: { name:"サトル", dmgMult:0.85, cdMult:1.0,  critAdd:0,    critDMult:1.0, bonusMult:1.3, desc:"テクニック型／完破ボーナス+30%・ダメージ-15%" }
   };
   var charKey = "ren";
   var CHAR_KEYS = ["ren","gou","hayate","kirara","satoru"];
