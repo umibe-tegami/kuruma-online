@@ -463,7 +463,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.33（必殺技の詳細を2列にして詳細画面の高さを圧縮）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー6）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.34（大きなスコアが再読み込みで壊れる復元バグを修正）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー6）</span></div>
 </div>
 
 <script>
@@ -1042,12 +1042,12 @@
       if (typeof s.carHp === "number" && s.carHp > 0) savedCarHp = s.carHp;
       if (s.carParts && typeof s.carParts === "object") savedCarParts = s.carParts;
       if (typeof s.carIdxFor === "number") savedCarIdx = s.carIdxFor;
-      if (mode === "solo") setScore(Math.max(0, s.score|0 || 0));  // ソロのスコアも復元する
+      if (mode === "solo") setScore(Math.max(0, Math.floor(Number(s.score) || 0)));  // ソロのスコアも復元する（|0は32bit化して大きなスコアを壊すので使わない）
       if (s.skillCharge) { ["cb", "co", "wb", "wo"].forEach(function(m){ if (s.skillCharge[m]) Object.keys(s.skillCharge[m]).forEach(function(k){ skillCharge[m][k] = Math.max(0, s.skillCharge[m][k]|0 || 0); }); }); }
       carsDestroyed = Math.max(0, s.cars|0 || 0); carsVal.textContent = carsDestroyed;  // CARSは累計を保存・復元する（リセットしない）
-      taBest = Math.max(0, s.taBest|0 || 0);
+      taBest = Math.max(0, Math.floor(Number(s.taBest) || 0));
       if (Array.isArray(s.taScores)) {
-        taScores = s.taScores.map(function(v){ return Math.max(0, v|0); }).filter(function(v){ return v > 0; });
+        taScores = s.taScores.map(function(v){ return Math.max(0, Math.floor(Number(v) || 0)); }).filter(function(v){ return v > 0; });
         taScores.sort(function(a,b){ return b - a; });
         taScores = taScores.slice(0, 10);
       }
