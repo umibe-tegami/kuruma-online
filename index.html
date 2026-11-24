@@ -463,7 +463,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.26（スコアは桁数に応じて自動で文字が小さくなる）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.27（ノーマル全体をさらに弱体化／キャラゲージに上位レア分の余白を追加）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
 </div>
 
 <script>
@@ -632,11 +632,11 @@
 
   /* キャラ定義：傾向は倍率で個性を付ける */
   var CHARS = {
-    ren:    { name:"レン",   dmgMult:0.92, cdMult:1.0,  critAdd:0,    critDMult:1.0, bonusMult:1.0, desc:"バランス型／全て平均的で扱いやすい" },
-    gou:    { name:"ゴウ",   dmgMult:1.15, cdMult:1.3,  critAdd:0,    critDMult:1.0, bonusMult:1.0, desc:"パワー型／ダメージ+15%・振りが少し重い" },
-    hayate: { name:"ハヤテ", dmgMult:0.8,  cdMult:0.7,  critAdd:0,    critDMult:1.0, bonusMult:1.0, desc:"スピード型／振りが速い・ダメージ-20%" },
-    kirara: { name:"キララ", dmgMult:0.85, cdMult:1.0,  critAdd:0.06, critDMult:1.25, bonusMult:1.0, desc:"クリティカル型／クリ率+6%・クリ倍率+25%・ダメージ-15%" },
-    satoru: { name:"サトル", dmgMult:0.85, cdMult:1.0,  critAdd:0,    critDMult:1.0, bonusMult:1.3, desc:"テクニック型／完破ボーナス+30%・ダメージ-15%" }
+    ren:    { name:"レン",   dmgMult:0.8,  cdMult:1.0,  critAdd:0,    critDMult:1.0, bonusMult:1.0, desc:"バランス型／全て平均的で扱いやすい" },
+    gou:    { name:"ゴウ",   dmgMult:1.0,  cdMult:1.35, critAdd:0,    critDMult:1.0, bonusMult:1.0, desc:"パワー型／一撃が重い・振りが少し重い" },
+    hayate: { name:"ハヤテ", dmgMult:0.7,  cdMult:0.8,  critAdd:0,    critDMult:1.0, bonusMult:1.0, desc:"スピード型／振りが速い・一撃は軽い" },
+    kirara: { name:"キララ", dmgMult:0.75, cdMult:1.0,  critAdd:0.05, critDMult:1.25, bonusMult:1.0, desc:"クリティカル型／クリ率+5%・クリ倍率+25%・一撃は軽い" },
+    satoru: { name:"サトル", dmgMult:0.75, cdMult:1.0,  critAdd:0,    critDMult:1.0, bonusMult:1.25, desc:"テクニック型／完破ボーナス+25%・一撃は軽い" }
   };
   var charKey = "ren";
   var CHAR_KEYS = ["ren","gou","hayate","kirara","satoru"];
@@ -920,13 +920,13 @@
     var cStarNow = starOf(charHits[selChar]);
     var cMultNow = charStarMult(cStarNow);
     document.getElementById("chStars").textContent = starText(cStarNow) + (cMultNow > 1 ? "（全ステータス+" + Math.round((cMultNow - 1) * 100) + "%）" : "");
-    var cpW = barWidths(C.dmgMult, C.dmgMult * (cMultNow - 1), 1.3);
+    var cpW = barWidths(C.dmgMult, C.dmgMult * (cMultNow - 1), 1.7);
     document.getElementById("chBarPower").style.width = cpW[0] + "%";
     document.getElementById("chBarPowerBuff").style.width = cpW[1] + "%";
-    var csW = barWidths(1 / C.cdMult, (1 / C.cdMult) * (cMultNow - 1), 1 / 0.55);
+    var csW = barWidths(1 / C.cdMult, (1 / C.cdMult) * (cMultNow - 1), 2.8);
     document.getElementById("chBarSpeed").style.width = csW[0] + "%";
     document.getElementById("chBarSpeedBuff").style.width = csW[1] + "%";
-    var ccW = barWidths(0.05 + C.critAdd, (0.05 + C.critAdd) * (cMultNow - 1), 0.15);
+    var ccW = barWidths(0.05 + C.critAdd, (0.05 + C.critAdd) * (cMultNow - 1), 0.22);
     document.getElementById("chBarCrit").style.width = ccW[0] + "%";
     document.getElementById("chBarCritBuff").style.width = ccW[1] + "%";
     document.getElementById("chBarBonus").style.width = barPct((C.bonusMult - 0.9) / 0.5 * 100);
