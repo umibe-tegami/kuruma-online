@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>クルマを壊すオンライン（試作v0.9）</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { background:#0b0b18; }
+  body {
+    font-family:"Courier New", monospace; color:#fff;
+    display:flex; flex-direction:column; align-items:center;
+    height:100vh; height:100dvh; padding:6px; user-select:none; -webkit-user-select:none;
+    overflow:hidden;
+  }
+  #wrap { width:100%; max-width:1400px; flex:1; display:flex; flex-direction:column; min-height:0; position:relative; }
+
+  /* ===== HUD ===== */
+  #hud {
+    background:linear-gradient(#1b1b3a,#101024);
+    border:3px solid #3a3a6e; border-bottom:none; border-radius:10px 10px 0 0;
+    padding:5px 10px 6px;
+    display:flex; align-items:flex-end; gap:14px;
+  }
+  .hud-block { flex:0 0 auto; }
+  .hud-label { font-size:11px; letter-spacing:2px; color:#ffd94d; text-shadow:2px 2px 0 #7a2d00; font-weight:bold; }
+  .hud-value { font-size:22px; font-weight:bold; letter-spacing:2px; text-shadow:2px 2px 0 #000; line-height:1; }
+  #scoreVal.pop { animation:scorePop .18s ease-out; display:inline-block; }
+  @keyframes scorePop { 40% { transform:scale(1.25); color:#ffd94d; } }
+  #hpBlock { flex:1 1 auto; min-width:120px; }
+  #carName { font-size:13px; color:#9fe8ff; letter-spacing:1px; text-shadow:1px 1px 0 #000; margin-bottom:3px; font-weight:bold; }
+  #hpBarOuter {
+    height:16px; background:#20060a; border:2px solid #000; outline:2px solid #6e6ea8;
+    position:relative; overflow:hidden;
+  }
+  #hpBar {
+    height:100%; width:100%;
+    background:linear-gradient(#b6ff7a,#4fc52e 55%,#2f8f1c);
+    transition:background .3s;
+  }
+  #hpBarOuter::after {
+    content:""; position:absolute; inset:0;
+    background:repeating-linear-gradient(90deg, transparent 0 14px, rgba(0,0,0,.45) 14px 16px);
+    pointer-events:none;
+  }
+
+  #soundBtn {
+    background:#26264e; color:#fff; border:2px solid #6e6ea8; border-radius:6px;
+    font-family:inherit; font-size:11px; font-weight:bold; padding:5px 8px; cursor:pointer;
+  }
+
+  /* ===== STAGE ===== */
+  #stage {
+    position:relative; width:100%; flex:1 1 auto; min-height:0;
+    border:3px solid #3a3a6e; border-radius:0 0 10px 10px;
+    overflow:hidden; touch-action:none; cursor:pointer;
+    background:#000;
+  }
+  #stage.shakeS { animation:shakeS .12s linear; }
+  #stage.shakeM { animation:shakeM .3s linear; }
+  #stage.shakeL { animation:shakeL .45s linear; }
+  @keyframes shakeS { 25%{transform:translate(2px,-1px)} 50%{transform:translate(-2px,1px)} 75%{transform:translate(1px,1px)} }
+  @keyframes shakeM { 15%{transform:translate(-5px,3px)} 35%{transform:translate(5px,-3px)} 55%{transform:translate(-4px,-2px)} 75%{transform:translate(3px,2px)} 90%{transform:translate(-1px,0)} }
+  @keyframes shakeL { 10%{transform:translate(-9px,4px)} 25%{transform:translate(8px,-5px)} 40%{transform:translate(-7px,-3px)} 55%{transform:translate(6px,4px)} 70%{transform:translate(-4px,2px)} 85%{transform:translate(3px,-1px)} }
+  #bgImg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 100%; pointer-events:none; }
+  .sprite { position:absolute; pointer-events:none; image-rendering:pixelated; }
+  #fighterWrap { position:absolute; right:50%; margin-right:19%; bottom:11%; height:54%; z-index:3; transition:transform .06s ease-out; }
+  #fighterWrap.lunge { transform:translateX(95%); }
+  #fighterWrap img { height:100%; display:block; filter:drop-shadow(6px 6px 0 rgba(0,0,0,.35)); }
+  #carWrap { position:absolute; left:50%; translate:-42% 0; bottom:11%; height:50%; z-index:2; }
+  #carWrap img { height:100%; width:auto; display:block; filter:drop-shadow(8px 8px 0 rgba(0,0,0,.35)); }
+  #carWrap.hit { animation:carHit .13s ease-out; }
+  @keyframes carHit { 30% { transform:translateX(7px) rotate(.5deg); } 65% { transform:translateX(-2px); } }
+
+  #combo {
+    position:absolute; top:12px; right:14px; z-index:5; text-align:right;
+    font-weight:bold; color:#ffd94d; text-shadow:3px 3px 0 #7a2d00, -1px -1px 0 #000;
+    opacity:0; transform-origin:right top; pointer-events:none;
+  }
+  #comboNum { font-size:56px; line-height:.95; }
+  #comboTxt { font-size:17px; letter-spacing:3px; }
+  #banner {
+    position:absolute; left:0; right:0; top:30%; z-index:6; text-align:center;
+    font-weight:bold; pointer-events:none; opacity:0;
+    color:#fff; text-shadow:4px 4px 0 #c22e00, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+  }
+  #bannerMain { font-size:52px; letter-spacing:4px; }
+  #bannerSub { font-size:24px; color:#ffd94d; margin-top:4px; text-shadow:3px 3px 0 #7a2d00, -1px -1px 0 #000; }
+  .dmg {
+    position:absolute; z-index:7; font-weight:bold; pointer-events:none;
+    color:#fff; text-shadow:2px 2px 0 #000, -1px -1px 0 #000; font-size:24px; white-space:nowrap;
+  }
+  .dmg.crit { color:#ffb02e; font-size:36px; text-shadow:3px 3px 0 #a11d00, -1px -1px 0 #000; }
+  .flash {
+    position:absolute; z-index:4; border-radius:50%; pointer-events:none;
+    background:radial-gradient(circle, #fff 0%, #ffe95e 30%, #ff9a2e 55%, rgba(255,90,0,0) 72%);
+  }
+  .flash.haris { background:radial-gradient(circle, #fff 0%, #fff6bf 35%, #ffd94d 60%, rgba(255,217,77,0) 75%); }
+  .flash.pan { background:radial-gradient(circle, #fff 0%, #cfeaff 30%, #6ec3ff 55%, rgba(110,195,255,0) 72%); }
+  .flash.hammer { background:radial-gradient(circle, #fff 0%, #ffd94d 25%, #ff7a2e 50%, rgba(200,40,0,0) 75%); }
+  .particle { position:absolute; z-index:4; pointer-events:none; }
+  .particle.star { clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%); }
+  .ring { position:absolute; z-index:4; border-radius:50%; pointer-events:none; border:4px solid #9fe8ff; box-sizing:border-box; }
+
+  /* ===== MENU BAR ===== */
+  #menuBar { display:flex; gap:8px; margin-top:8px; align-items:center; }
+  #lvInfo { font-size:16px; font-weight:bold; color:#ffd94d; text-shadow:2px 2px 0 #000; letter-spacing:1px; white-space:nowrap; }
+  #xpMini { flex:1; height:10px; background:#20060a; border:2px solid #000; outline:2px solid #6e6ea8; overflow:hidden; }
+  #xpMiniBar { height:100%; width:0%; background:linear-gradient(#9fe8ff,#2e9fd9 55%,#1668a1); }
+  #statusBtn, #menuBtn {
+    background:#3a2d6e; color:#ffd94d; border:2px solid #ffd94d; border-radius:8px;
+    padding:8px 18px; font-family:inherit; font-size:14px; font-weight:bold; cursor:pointer; letter-spacing:2px;
+  }
+
+  /* ===== MENU PANEL ===== */
+  #menuPanel {
+    position:absolute; inset:0; z-index:50; display:none;
+    background:rgba(5,5,20,.9); padding:10px; overflow-y:auto;
+  }
+  #menuPanel.open { display:block; }
+  #menuCard {
+    max-width:560px; margin:0 auto; background:#14142e; border:3px solid #3a3a6e; border-radius:10px; padding:14px;
+  }
+  #menuCard h2 { font-size:18px; color:#ffd94d; letter-spacing:3px; text-shadow:2px 2px 0 #7a2d00; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
+  #closeMenu { background:#26264e; color:#fff; border:2px solid #6e6ea8; border-radius:6px; font-family:inherit; font-size:13px; font-weight:bold; padding:4px 12px; cursor:pointer; }
+  .menuItem { display:flex; align-items:center; gap:12px; padding:10px; border:2px solid #2c2c52; border-radius:10px; margin-bottom:10px; cursor:pointer; background:#1b1b3a; }
+  .menuItem:active { background:#26264e; }
+  .menuItem.sel { border-color:#ffd94d; background:#3a2d6e; }
+  .menuItem.locked { opacity:.75; }
+  .menuItem .micon { width:52px; height:52px; image-rendering:pixelated; flex:none; }
+  .menuItem .wname { flex:1; font-size:17px; font-weight:bold; }
+  .menuItem .wname small { display:block; font-size:11px; color:#7a7ab0; font-weight:normal; margin-top:2px; }
+  .menuItem .weq { font-size:11px; color:#7a7ab0; font-weight:bold; letter-spacing:1px; white-space:nowrap; }
+  .menuItem.sel .weq { color:#ffd94d; }
+
+  /* ===== RESULT PANEL（TA結果・ランキング表） ===== */
+  #resultPanel {
+    position:absolute; inset:0; z-index:60; display:none;
+    background:rgba(5,5,20,.92); padding:10px; overflow-y:auto;
+  }
+  #resultPanel.open { display:block; }
+  #resultCard {
+    max-width:480px; margin:0 auto; background:#14142e; border:3px solid #ffd94d; border-radius:10px; padding:16px; text-align:center;
+  }
+  #resultCard h2 { font-size:30px; color:#fff; letter-spacing:4px; text-shadow:3px 3px 0 #d43a00; margin-bottom:8px; }
+  #resMain { font-size:16px; color:#bdbde8; }
+  #resMain b { font-size:30px; color:#ffd94d; }
+  #resRankLine { font-size:15px; color:#bdbde8; margin-top:2px; }
+  #resRankLine b { font-size:22px; color:#ffd94d; }
+  #resultCard .secTitle { text-align:left; }
+  .rrow { display:flex; align-items:center; gap:10px; padding:5px 10px; border:2px solid #2c2c52; border-radius:8px; margin-bottom:5px; background:#1b1b3a; }
+  .rrow .rrank { width:44px; text-align:left; font-weight:bold; color:#9fe8ff; white-space:nowrap; }
+  .rrow .rscore { flex:1; text-align:right; font-size:17px; font-weight:bold; }
+  .rrow .rnow { font-size:11px; color:#ffd94d; font-weight:bold; white-space:nowrap; }
+  .rrow.now { border-color:#ffd94d; background:#3a2d6e; }
+  #resNav { margin-top:10px; font-size:14px; color:#ffd94d; letter-spacing:1px; min-height:20px; }
+
+  /* ===== QUIT CONFIRM PANEL（TAの諦める確認） ===== */
+  #quitPanel {
+    position:absolute; inset:0; z-index:60; display:none;
+    background:rgba(5,5,20,.92); padding:10px;
+  }
+  #quitPanel.open { display:block; }
+  #quitCard {
+    max-width:420px; margin:12vh auto 0; background:#14142e; border:3px solid #ffd94d; border-radius:10px; padding:18px; text-align:center;
+  }
+  #quitCard h2 { font-size:22px; color:#fff; letter-spacing:2px; text-shadow:2px 2px 0 #7a2d00; margin-bottom:8px; }
+  #quitCard p { font-size:14px; color:#bdbde8; margin-bottom:14px; }
+  .quitBtns { display:flex; gap:10px; }
+  .quitBtns button {
+    flex:1; padding:12px 0; font-family:inherit; font-size:16px; font-weight:bold; border-radius:8px; cursor:pointer; letter-spacing:1px;
+  }
+  #quitYes { background:#6e1f1f; color:#ffb3b3; border:2px solid #d43a00; }
+  #quitNo { background:#3a2d6e; color:#ffd94d; border:2px solid #ffd94d; }
+
+  /* ===== STATUS PANEL ===== */
+  #statusPanel {
+    position:absolute; inset:0; z-index:50; display:none;
+    background:rgba(5,5,20,.9); padding:10px; overflow-y:auto;
+  }
+  #statusPanel.open { display:block; }
+  #statusCard {
+    max-width:560px; margin:0 auto; background:#14142e; border:3px solid #3a3a6e; border-radius:10px; padding:14px;
+  }
+  #statusCard h2 { font-size:18px; color:#ffd94d; letter-spacing:3px; text-shadow:2px 2px 0 #7a2d00; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+  #closeStatus { background:#26264e; color:#fff; border:2px solid #6e6ea8; border-radius:6px; font-family:inherit; font-size:13px; font-weight:bold; padding:4px 12px; cursor:pointer; }
+  .secTitle { font-size:13px; color:#9fe8ff; letter-spacing:2px; margin:14px 0 6px; border-bottom:2px solid #3a3a6e; padding-bottom:3px; font-weight:bold; }
+  #xpBarOuter { height:12px; background:#20060a; border:2px solid #000; outline:2px solid #6e6ea8; overflow:hidden; margin-top:4px; }
+  #xpBar { height:100%; width:0%; background:linear-gradient(#9fe8ff,#2e9fd9 55%,#1668a1); }
+  .lvLine { font-size:14px; }
+  .lvLine b { color:#ffd94d; }
+  #ptsLine { font-size:13px; color:#bdbde8; margin-top:4px; }
+  #ptsLine b { color:#ffd94d; font-size:15px; }
+  .srow { display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px dashed #2c2c52; }
+  .sname { flex:1; font-size:14px; font-weight:bold; }
+  .sname small { display:block; font-size:10px; color:#7a7ab0; font-weight:normal; }
+  .sval { width:34px; text-align:center; font-size:16px; font-weight:bold; color:#ffd94d; }
+  .sbtn {
+    width:32px; height:32px; background:#26264e; color:#fff; border:2px solid #6e6ea8; border-radius:6px;
+    font-family:inherit; font-size:16px; font-weight:bold; cursor:pointer; line-height:1;
+  }
+  .sbtn:active { background:#3a2d6e; }
+  .wrow, .crow, .mrow { display:flex; align-items:center; gap:8px; padding:6px 8px; border:2px solid #2c2c52; border-radius:8px; margin-bottom:6px; cursor:pointer; background:#1b1b3a; }
+  .wrow .wname, .crow .wname, .mrow .wname { flex:1; font-size:14px; font-weight:bold; }
+  .wrow .wname small, .crow .wname small, .mrow .wname small { display:block; font-size:10px; color:#7a7ab0; font-weight:normal; }
+  .wrow .weq, .crow .weq, .mrow .weq { font-size:11px; color:#7a7ab0; font-weight:bold; letter-spacing:1px; white-space:nowrap; }
+  .wrow.locked { opacity:.55; }
+  .wrow .weq.canbuy { color:#ffd94d; }
+  .wrow.sel, .crow.sel, .mrow.sel { border-color:#ffd94d; background:#3a2d6e; }
+  .wrow.sel .weq, .crow.sel .weq, .mrow.sel .weq { color:#ffd94d; }
+  .wstar { color:#ffd94d; font-size:12px; letter-spacing:1px; white-space:nowrap; }
+  .noteLine { font-size:11px; color:#5d5d8f; margin-top:6px; }
+  .smoke { position:absolute; z-index:3; border-radius:50%; pointer-events:none;
+    background:radial-gradient(circle, rgba(200,200,200,.85), rgba(120,120,120,0) 70%); }
+
+  #hint { text-align:center; margin-top:10px; font-size:14px; color:#bdbde8; letter-spacing:1px; }
+  #hint b { color:#ffd94d; }
+  #foot { text-align:center; margin-top:4px; font-size:11px; color:#5d5d8f; }
+
+  /* ===== 強制横画面：縦持ち時は画面ごと90度回転して常に横画面表示にする ===== */
+  @media (orientation:portrait) {
+    body { display:block; padding:0; }
+    #wrap {
+      position:fixed; left:0; top:-100vw; top:-100dvw;
+      width:100vh; width:100dvh; height:100vw; height:100dvw; max-width:none;
+      transform:rotate(90deg); transform-origin:bottom left;
+      display:flex; flex-direction:column;
+      padding:6px;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="hud">
+    <div class="hud-block">
+      <div class="hud-label">SCORE</div>
+      <div class="hud-value"><span id="scoreVal">000000</span></div>
+    </div>
+    <div class="hud-block" id="hpBlock">
+      <div id="carName">軽自動車</div>
+      <div id="hpBarOuter"><div id="hpBar"></div></div>
+    </div>
+    <div class="hud-block">
+      <div class="hud-label">CARS</div>
+      <div class="hud-value" id="carsVal">0</div>
+    </div>
+    <div class="hud-block">
+      <div class="hud-label">TIME</div>
+      <div class="hud-value" id="timeNum">99</div>
+    </div>
+    <div class="hud-block">
+      <button id="soundBtn">SOUND ON</button>
+    </div>
+  </div>
+
+  <div id="stage">
+    <img id="bgImg" src="assets/bg.webp" alt="">
+    <div id="carWrap"><img id="carImg" src="assets/car0.webp" alt=""></div>
+    <div id="fighterWrap"><img id="fighterImg" src="assets/fighter_idle.webp" alt=""></div>
+    <div id="combo"><div id="comboNum">0</div><div id="comboTxt">HITS!</div></div>
+    <div id="banner"><div id="bannerMain"></div><div id="bannerSub"></div></div>
+  </div>
+
+  <div id="menuBar">
+    <div id="lvInfo">Lv.1</div>
+    <div id="xpMini"><div id="xpMiniBar"></div></div>
+    <button id="menuBtn">メニュー</button>
+  </div>
+
+  <div id="menuPanel">
+    <div id="menuCard">
+      <h2>メニュー <button id="closeMenu">閉じる</button></h2>
+      <div class="menuItem" data-act="solo">
+        <img class="micon" src="assets/icon_solo.webp" alt="">
+        <div class="wname">ソロ<small>壊すたびに次のクルマが大きくなる階段制</small></div>
+        <div class="weq" id="eqSolo">選択中</div>
+      </div>
+      <div class="menuItem" data-act="ta">
+        <img class="micon" src="assets/icon_ta.webp" alt="">
+        <div class="wname">タイムアタック<small>60秒でスコアを競う／ベスト：<span id="taBestVal">0</span></small></div>
+        <div class="weq" id="eqTa"></div>
+      </div>
+      <div class="menuItem locked" data-act="raid">
+        <img class="micon" src="assets/icon_raid.webp" alt="">
+        <div class="wname">レイド<small>世界で1台のクルマを全員で壊す</small></div>
+        <div class="weq">準備中</div>
+      </div>
+      <div class="menuItem" data-act="status">
+        <img class="micon" src="assets/icon_status.webp" alt="">
+        <div class="wname">ステータス<small>振り分け・キャラ・武器・熟練度</small></div>
+        <div class="weq"></div>
+      </div>
+      <div class="noteLine" id="menuNote">※ モードを切り替えるとスコアはリセットされます。レイドはサーバー接続が必要なため準備中です</div>
+    </div>
+  </div>
+
+  <div id="statusPanel">
+    <div id="statusCard">
+      <h2>ステータス <button id="closeStatus">閉じる</button></h2>
+      <div class="lvLine">レベル <b id="stLevel">1</b> ／ 次のレベルまで</div>
+      <div id="xpBarOuter"><div id="xpBar"></div></div>
+      <div id="ptsLine">ステータスポイント：<b id="stPts">0</b>　／　チケット：<b id="stTickets">0</b>枚</div>
+
+      <div class="secTitle">ステータス振り分け（上限40）</div>
+      <div class="srow"><div class="sname">パワー<small>ダメージ +3% / pt</small></div><button class="sbtn" data-stat="power" data-d="-1">−</button><div class="sval" id="sv-power">0</div><button class="sbtn" data-stat="power" data-d="1">＋</button></div>
+      <div class="srow"><div class="sname">クリティカル率<small>発生率 +0.6% / pt</small></div><button class="sbtn" data-stat="crit" data-d="-1">−</button><div class="sval" id="sv-crit">0</div><button class="sbtn" data-stat="crit" data-d="1">＋</button></div>
+      <div class="srow"><div class="sname">クリティカル倍率<small>倍率 +5% / pt</small></div><button class="sbtn" data-stat="critD" data-d="-1">−</button><div class="sval" id="sv-critD">0</div><button class="sbtn" data-stat="critD" data-d="1">＋</button></div>
+      <div class="srow"><div class="sname">れんだ<small>コンボ倍率の上限 +0.02 / pt</small></div><button class="sbtn" data-stat="renda" data-d="-1">−</button><div class="sval" id="sv-renda">0</div><button class="sbtn" data-stat="renda" data-d="1">＋</button></div>
+      <div class="srow"><div class="sname">テクニック<small>完破ボーナス（得点・経験値）+6% / pt</small></div><button class="sbtn" data-stat="tech" data-d="-1">−</button><div class="sval" id="sv-tech">0</div><button class="sbtn" data-stat="tech" data-d="1">＋</button></div>
+
+      <div class="secTitle">キャラ（試作では全員使用可）</div>
+      <div class="crow sel" data-c="ren"><div class="wname">レン<small>バランス型／全て平均的で扱いやすい</small></div><div class="wstar">★☆☆☆☆</div><div class="weq">使用中</div></div>
+      <div class="crow" data-c="gou"><div class="wname">ゴウ<small>パワー型／ダメージ+25%・振りが少し重い</small></div><div class="wstar">★☆☆☆☆</div><div class="weq"></div></div>
+      <div class="crow" data-c="hayate"><div class="wname">ハヤテ<small>スピード型／振りが速い・ダメージ-15%</small></div><div class="wstar">★☆☆☆☆</div><div class="weq"></div></div>
+      <div class="crow" data-c="kirara"><div class="wname">キララ<small>クリティカル型／クリ率+8%・クリ倍率+30%・ダメージ-10%</small></div><div class="wstar">★☆☆☆☆</div><div class="weq"></div></div>
+      <div class="crow" data-c="satoru"><div class="wname">サトル<small>テクニック型／完破ボーナス+40%・ダメージ-10%</small></div><div class="wstar">★☆☆☆☆</div><div class="weq"></div></div>
+
+      <div class="secTitle">そうび（武器）</div>
+      <div class="wrow sel" data-w="fist"><div class="wname">素手<small>パワー10・速い／素手系</small></div><div class="wstar">★☆☆☆☆</div><div class="weq">装備中</div></div>
+      <div class="wrow" data-w="harisen"><div class="wname">ハリセン<small>パワー7・最速／ネタ枠</small></div><div class="wstar">★☆☆☆☆</div><div class="weq"></div></div>
+      <div class="wrow" data-w="pan"><div class="wname">フライパン<small>パワー16／ネタ枠</small></div><div class="wstar">★☆☆☆☆</div><div class="weq"></div></div>
+      <div class="wrow" data-w="hammer"><div class="wname">巨大ハンマー<small>パワー34・重い／打撃系</small></div><div class="wstar">★☆☆☆☆</div><div class="weq"></div></div>
+      <div class="noteLine">※ 武器はレベル到達で解放され、チケット1枚と交換して入手。レベル未達でもチケット3枚で先行入手できる（チケットはレベルアップで+1枚）</div>
+      <div class="noteLine">※ 熟練度：使うほどヒット数が貯まって星が上がる（星2=300／星3=1,000／星4=2,500／星5=5,000ヒット）。武器は威力倍率（最大×2.0）、キャラはダメージ+8%/星</div>
+    </div>
+  </div>
+
+  <div id="resultPanel">
+    <div id="resultCard">
+      <h2>TIME UP!</h2>
+      <div id="resMain">今回のスコア <b id="resScore">0</b></div>
+      <div id="resRankLine">ランキング <b id="resRank">1</b> 位（端末内）</div>
+      <div class="secTitle">ランキング表</div>
+      <div id="resRows"></div>
+      <div id="resNav">……</div>
+    </div>
+  </div>
+
+  <div id="quitPanel">
+    <div id="quitCard">
+      <h2>本当に諦めますか？</h2>
+      <p>タイムアタックを中断してメニューに戻ります。<br>今回のスコアは記録されません</p>
+      <div class="quitBtns">
+        <button id="quitYes">諦める</button>
+        <button id="quitNo">続ける</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
+  <div id="foot">クルマを壊すオンライン 試作v1.8（武器解放＋チケット交換）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var IMG = {
+    car:  ["assets/car0.webp","assets/car1.webp","assets/car2.webp","assets/car3.webp"],
+    car2: ["assets/car2_0.webp","assets/car2_1.webp","assets/car2_2.webp","assets/car2_3.webp"],
+    sedan: ["assets/sedan0.webp","assets/sedan1.webp","assets/sedan2.webp","assets/sedan3.webp"],
+    sport: ["assets/sport0.webp","assets/sport1.webp","assets/sport2.webp","assets/sport3.webp"],
+    suv:   ["assets/suv0.webp","assets/suv1.webp","assets/suv2.webp","assets/suv3.webp"],
+    truck: ["assets/truck0.webp","assets/truck1.webp","assets/truck2.webp","assets/truck3.webp"],
+    chars: {
+      ren: {
+        fist:    ["assets/fighter_idle.webp", "assets/fighter_punch.webp"],
+        harisen: ["assets/fighter_harisen_idle.webp", "assets/fighter_harisen_punch.webp"],
+        pan:     ["assets/fighter_pan_idle.webp", "assets/fighter_pan_punch.webp"],
+        hammer:  ["assets/fighter_hammer_idle.webp", "assets/fighter_hammer_punch.webp"]
+      },
+      gou: {
+        fist:    ["assets/fighter_gou_fist_idle.webp", "assets/fighter_gou_fist_punch.webp"],
+        harisen: ["assets/fighter_gou_harisen_idle.webp", "assets/fighter_gou_harisen_punch.webp"],
+        pan:     ["assets/fighter_gou_pan_idle.webp", "assets/fighter_gou_pan_punch.webp"],
+        hammer:  ["assets/fighter_gou_hammer_idle.webp", "assets/fighter_gou_hammer_punch.webp"]
+      },
+      hayate: {
+        fist:    ["assets/fighter_hayate_fist_idle.webp", "assets/fighter_hayate_fist_punch.webp"],
+        harisen: ["assets/fighter_hayate_harisen_idle.webp", "assets/fighter_hayate_harisen_punch.webp"],
+        pan:     ["assets/fighter_hayate_pan_idle.webp", "assets/fighter_hayate_pan_punch.webp"],
+        hammer:  ["assets/fighter_hayate_hammer_idle.webp", "assets/fighter_hayate_hammer_punch.webp"]
+      },
+      kirara: {
+        fist:    ["assets/fighter_kirara_fist_idle.webp", "assets/fighter_kirara_fist_punch.webp"],
+        harisen: ["assets/fighter_kirara_harisen_idle.webp", "assets/fighter_kirara_harisen_punch.webp"],
+        pan:     ["assets/fighter_kirara_pan_idle.webp", "assets/fighter_kirara_pan_punch.webp"],
+        hammer:  ["assets/fighter_kirara_hammer_idle.webp", "assets/fighter_kirara_hammer_punch.webp"]
+      },
+      satoru: {
+        fist:    ["assets/fighter_satoru_fist_idle.webp", "assets/fighter_satoru_fist_punch.webp"],
+        harisen: ["assets/fighter_satoru_harisen_idle.webp", "assets/fighter_satoru_harisen_punch.webp"],
+        pan:     ["assets/fighter_satoru_pan_idle.webp", "assets/fighter_satoru_pan_punch.webp"],
+        hammer:  ["assets/fighter_satoru_hammer_idle.webp", "assets/fighter_satoru_hammer_punch.webp"]
+      }
+    }
+  };
+  // preload（入れ子を全部たどる）
+  (function preload(v){
+    if (typeof v === "string") { var i=new Image(); i.src=v; }
+    else if (Array.isArray(v)) v.forEach(preload);
+    else Object.keys(v).forEach(function(k){ preload(v[k]); });
+  })(IMG);
+
+  /* 武器定義：音とエフェクトは系統単位で共通、武器ごとに性能と見た目が変わる */
+  var WEAPONS = {
+    fist:    { name:"素手",       power:10, cooldown:40,  swingMs:130, critRate:0.05, unlockLv:1 },
+    harisen: { name:"ハリセン",   power:7,  cooldown:30,  swingMs:105, critRate:0.08, unlockLv:2 },
+    pan:     { name:"フライパン", power:16, cooldown:80,  swingMs:150, critRate:0.05, unlockLv:4 },
+    hammer:  { name:"巨大ハンマー", power:34, cooldown:260, swingMs:280, critRate:0.10, unlockLv:6 }
+  };
+  var weaponKey = "fist", lastSwingAt = 0;
+  var tickets = 1;                          // 武器交換チケット（初期1枚＋レベルアップで+1枚）
+  var ownedWeapons = { fist:true };         // 所持している武器
+
+  /* キャラ定義：傾向は倍率で個性を付ける */
+  var CHARS = {
+    ren:    { name:"レン",   dmgMult:1.0,  cdMult:1.0,  critAdd:0,    critDMult:1.0, bonusMult:1.0 },
+    gou:    { name:"ゴウ",   dmgMult:1.25, cdMult:1.3,  critAdd:0,    critDMult:1.0, bonusMult:1.0 },
+    hayate: { name:"ハヤテ", dmgMult:0.85, cdMult:0.55, critAdd:0,    critDMult:1.0, bonusMult:1.0 },
+    kirara: { name:"キララ", dmgMult:0.9,  cdMult:1.0,  critAdd:0.08, critDMult:1.3, bonusMult:1.0 },
+    satoru: { name:"サトル", dmgMult:0.9,  cdMult:1.0,  critAdd:0,    critDMult:1.0, bonusMult:1.4 }
+  };
+  var charKey = "ren";
+  var CHAR_KEYS = ["ren","gou","hayate","kirara","satoru"];
+
+  /* 熟練度：ヒット数で星が上がる（武器・キャラ共通の階段） */
+  var STAR_HITS = [0, 300, 1000, 2500, 5000];
+  var WSTAR_MULT = [1, 1.2, 1.45, 1.7, 2.0];
+  function starOf(hits){ var s=1; for (var i=1;i<STAR_HITS.length;i++) if (hits >= STAR_HITS[i]) s = i+1; return s; }
+  function charStarMult(star){ return 1 + 0.08 * (star - 1); }
+  var weaponHits = { fist:0, harisen:0, pan:0, hammer:0 };
+  var charHits = { ren:0, gou:0, hayate:0, kirara:0, satoru:0 };
+
+  var LADDER = [
+    {name:"軽自動車",     hp:300,  pts:100, set:"car",  scale:1.00},
+    {name:"コンパクトカー", hp:500,  pts:200, set:"car2", scale:1.07},
+    {name:"セダン",       hp:900,  pts:300, set:"sedan", scale:1.14},
+    {name:"スポーツカー", hp:1500, pts:400, set:"sport", scale:1.20},
+    {name:"SUV",         hp:2400, pts:500, set:"suv",   scale:1.28}
+  ];
+  var EXTRA_NAMES = ["ミニバン","小型トラック","大型トラック","ダンプカー","路線バス","ブルドーザー","ショベルカー","クレーン車"];
+  var EXTRA_SETS  = ["suv","truck","truck","truck","suv","truck","truck","truck"];
+
+  /* モード：solo=階段制／ta=60秒タイムアタック */
+  var MODES = { solo:{ name:"ソロ" }, ta:{ name:"タイムアタック" } };
+  var mode = "solo";
+  var taState = "ready";   // ta専用：ready（初タップで開始）→running→ended
+  var taBest = 0;
+  var taScores = [];       // taのスコア履歴（端末内ランキング用、上位10件）
+  var resultShownAt = 0;   // TA結果表を出した時刻（表示直後の連打を2秒吸収する）
+  var quitPrevState = null; // TAの諦める確認を出す前の taState（続ける時に戻す）
+
+  var stage = document.getElementById("stage");
+  var carWrap = document.getElementById("carWrap");
+  var carImg = document.getElementById("carImg");
+  var fighterWrap = document.getElementById("fighterWrap");
+  var fighterImg = document.getElementById("fighterImg");
+  var scoreVal = document.getElementById("scoreVal");
+  var carsVal = document.getElementById("carsVal");
+  var carNameEl = document.getElementById("carName");
+  var hpBar = document.getElementById("hpBar");
+  var timeNum = document.getElementById("timeNum");
+  var comboEl = document.getElementById("combo");
+  var comboNum = document.getElementById("comboNum");
+  var banner = document.getElementById("banner");
+  var bannerMain = document.getElementById("bannerMain");
+  var bannerSub = document.getElementById("bannerSub");
+
+  var score = 0, carsDestroyed = 0;
+  var carIdx = 0, cur = null, hp = 0, maxHp = 0;
+  var combo = 0, lastHitAt = 0, destroyed = false, punchTimer = null;
+
+  /* ---------- SOUND (WebAudio, generated) ---------- */
+  var AC = null, noiseBuf = null, muted = false;
+  function audio(){
+    if (!AC) {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return null;
+      AC = new Ctx();
+      noiseBuf = AC.createBuffer(1, AC.sampleRate * 0.5, AC.sampleRate);
+      var d = noiseBuf.getChannelData(0);
+      for (var i=0;i<d.length;i++) d[i] = Math.random()*2-1;
+    }
+    if (AC.state === "suspended") AC.resume();
+    return AC;
+  }
+  function noise(dur, filterType, f0, f1, gain){
+    var ac = audio(); if (!ac || muted) return;
+    var src = ac.createBufferSource(); src.buffer = noiseBuf;
+    var flt = ac.createBiquadFilter(); flt.type = filterType;
+    flt.frequency.setValueAtTime(f0, ac.currentTime);
+    flt.frequency.exponentialRampToValueAtTime(Math.max(f1,1), ac.currentTime + dur);
+    var g = ac.createGain();
+    g.gain.setValueAtTime(gain, ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + dur);
+    src.connect(flt); flt.connect(g); g.connect(ac.destination);
+    src.start(); src.stop(ac.currentTime + dur);
+  }
+  function tone(type, f0, f1, dur, gain){
+    var ac = audio(); if (!ac || muted) return;
+    var o = ac.createOscillator(); o.type = type;
+    o.frequency.setValueAtTime(f0, ac.currentTime);
+    o.frequency.exponentialRampToValueAtTime(Math.max(f1,1), ac.currentTime + dur);
+    var g = ac.createGain();
+    g.gain.setValueAtTime(gain, ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + dur);
+    o.connect(g); g.connect(ac.destination);
+    o.start(); o.stop(ac.currentTime + dur);
+  }
+  function sndHit(crit){ // 素手：鈍い打撃音
+    noise(0.07, "bandpass", crit?1600:800, 200, crit?0.5:0.32);
+    tone("sine", crit?220:160, 50, 0.09, crit?0.5:0.35);
+    if (crit) tone("square", 920, 240, 0.12, 0.16);
+  }
+  function sndHarisen(crit){ // ハリセン：紙の「パァン！」
+    noise(0.05, "highpass", 1800, 3000, crit?0.55:0.42);
+    tone("square", crit?1500:1150, 260, 0.06, crit?0.22:0.16);
+  }
+  function sndPan(crit){ // フライパン：金属の「カァーン！」
+    var base = crit ? 1.18 : 1;
+    tone("triangle", 1180*base, 1140*base, 0.28, 0.20);
+    tone("triangle", 1568*base, 1500*base, 0.22, 0.14);
+    tone("triangle", 2349*base, 2200*base, 0.15, 0.09);
+    noise(0.04, "bandpass", 2600, 1800, 0.18);
+  }
+  function sndHammer(crit){ // 巨大ハンマー：重い轟音
+    noise(0.22, "lowpass", crit?2400:1600, 120, crit?0.65:0.5);
+    tone("sine", crit?150:120, 30, 0.3, crit?0.6:0.48);
+    tone("square", 90, 40, 0.12, 0.12);
+  }
+  function sndWeapon(crit){
+    if (weaponKey === "harisen") sndHarisen(crit);
+    else if (weaponKey === "pan") sndPan(crit);
+    else if (weaponKey === "hammer") sndHammer(crit);
+    else sndHit(crit);
+  }
+  function sndBoom(){
+    noise(0.55, "lowpass", 3200, 90, 0.6);
+    tone("sine", 130, 28, 0.55, 0.55);
+  }
+  function sndJingle(){
+    tone("square", 660, 660, 0.09, 0.12);
+    setTimeout(function(){ tone("square", 990, 990, 0.13, 0.12); }, 90);
+  }
+  document.getElementById("soundBtn").addEventListener("click", function(e){
+    e.stopPropagation();
+    muted = !muted;
+    this.textContent = muted ? "SOUND OFF" : "SOUND ON";
+    if (!muted) audio();
+  });
+
+  /* ---------- WEAPON SWITCH（装備変更はステータス画面で） ---------- */
+  var weaponInfo = document.getElementById("weaponInfo");
+  function renderWeapons(){
+    var rows = document.querySelectorAll(".wrow");
+    for (var i=0;i<rows.length;i++){
+      var key = rows[i].getAttribute("data-w");
+      var W = WEAPONS[key];
+      var eq = rows[i].querySelector(".weq");
+      var on = key === weaponKey;
+      rows[i].classList.toggle("sel", on);
+      rows[i].classList.toggle("locked", !ownedWeapons[key]);
+      eq.classList.remove("canbuy");
+      if (on) eq.textContent = "装備中";
+      else if (ownedWeapons[key]) eq.textContent = "装備する";
+      else if (level >= W.unlockLv) {
+        if (tickets >= 1) { eq.textContent = "チケット1枚で交換"; eq.classList.add("canbuy"); }
+        else eq.textContent = "チケット1枚（不足）";
+      } else if (tickets >= 3) { eq.textContent = "チケット3枚で先行入手"; eq.classList.add("canbuy"); }
+      else eq.textContent = "Lv" + W.unlockLv + "で解放";
+    }
+  }
+  function setWeapon(key){
+    if (!WEAPONS[key] || !ownedWeapons[key]) return;
+    weaponKey = key;
+    fighterImg.src = IMG.chars[charKey][key][0];
+    fighterWrap.classList.remove("lunge");
+    weaponInfo.textContent = WEAPONS[key].name + "（パワー" + WEAPONS[key].power + "）";
+    renderWeapons();
+    saveGame();
+  }
+  var wrows = document.querySelectorAll(".wrow");
+  for (var j=0;j<wrows.length;j++){
+    wrows[j].addEventListener("click", function(e){
+      e.stopPropagation();
+      var key = this.getAttribute("data-w");
+      var W = WEAPONS[key];
+      audio();
+      if (ownedWeapons[key]) { setWeapon(key); return; }
+      var early = level < W.unlockLv;
+      var price = early ? 3 : 1;
+      if (tickets < price) {
+        if (early) showBanner("まだ解放されていない", W.name + "はLv" + W.unlockLv + "で解放（先行入手はチケット3枚）", 1100);
+        else showBanner("チケットが足りない", "あと" + (price - tickets) + "枚必要です（レベルアップで+1枚）", 1000);
+        return;
+      }
+      tickets -= price;
+      ownedWeapons[key] = true;
+      setWeapon(key);
+      renderGrowth();
+      showBanner(early ? "先行入手した！" : "武器を交換した！", W.name + "（チケット残り" + tickets + "枚）", 1100);
+      sndJingle();
+    });
+  }
+
+  /* ---------- CHARACTER SWITCH ---------- */
+  var charInfo = document.getElementById("charInfo");
+  function setChar(key){
+    if (!CHARS[key]) return;
+    charKey = key;
+    fighterImg.src = IMG.chars[key][weaponKey][0];
+    fighterWrap.classList.remove("lunge");
+    charInfo.textContent = CHARS[key].name;
+    var rows = document.querySelectorAll(".crow");
+    for (var i=0;i<rows.length;i++){
+      var on = rows[i].getAttribute("data-c") === key;
+      rows[i].classList.toggle("sel", on);
+      rows[i].querySelector(".weq").textContent = on ? "使用中" : "";
+    }
+    saveGame();
+  }
+  var crows = document.querySelectorAll(".crow");
+  for (var cj=0;cj<crows.length;cj++){
+    crows[cj].addEventListener("click", function(e){
+      e.stopPropagation();
+      setChar(this.getAttribute("data-c"));
+      audio();
+    });
+  }
+  function starText(star){ var s=""; for (var i=0;i<5;i++) s += i < star ? "★" : "☆"; return s; }
+  function renderMastery(){
+    var wr = document.querySelectorAll(".wrow");
+    for (var i=0;i<wr.length;i++) wr[i].querySelector(".wstar").textContent = starText(starOf(weaponHits[wr[i].getAttribute("data-w")]));
+    var cr = document.querySelectorAll(".crow");
+    for (var j=0;j<cr.length;j++) cr[j].querySelector(".wstar").textContent = starText(starOf(charHits[cr[j].getAttribute("data-c")]));
+  }
+
+  /* ---------- GROWTH（レベル／ステータス振り分け） ---------- */
+  var level = 1, xp = 0, statPts = 0, xpFrac = 0;
+  var stats = { power:0, crit:0, critD:0, renda:0, tech:0 };
+  var STAT_KEYS = ["power","crit","critD","renda","tech"];
+  function xpNext(lv){ return Math.round(50 * Math.pow(lv, 1.5)); }
+  function saveGame(){
+    try {
+      localStorage.setItem("kuruma_proto_save", JSON.stringify({ level:level, xp:xp, statPts:statPts, stats:stats, weaponKey:weaponKey, charKey:charKey, weaponHits:weaponHits, charHits:charHits, mode:mode, taBest:taBest, taScores:taScores, tickets:tickets, ownedWeapons:ownedWeapons }));
+    } catch(e){}
+  }
+  function loadGame(){
+    try {
+      var s = JSON.parse(localStorage.getItem("kuruma_proto_save") || "null");
+      if (!s) return;
+      level = Math.min(50, Math.max(1, s.level|0 || 1));
+      xp = Math.max(0, s.xp|0);
+      statPts = Math.max(0, s.statPts|0);
+      STAT_KEYS.forEach(function(k){ stats[k] = Math.min(40, Math.max(0, (s.stats && s.stats[k])|0 || 0)); });
+      if (s.ownedWeapons) {
+        Object.keys(ownedWeapons).forEach(function(k){ ownedWeapons[k] = !!s.ownedWeapons[k]; });
+        ownedWeapons.fist = true;
+        tickets = Math.max(0, s.tickets|0 || 0);
+      } else {
+        // 旧セーブ移行：今ある武器はそのまま所持扱いにし、チケットはレベル分を付与する
+        Object.keys(ownedWeapons).forEach(function(k){ ownedWeapons[k] = true; });
+        tickets = Math.max(1, level);
+      }
+      if (s.weaponKey && WEAPONS[s.weaponKey] && ownedWeapons[s.weaponKey]) weaponKey = s.weaponKey;
+      if (s.charKey && CHARS[s.charKey]) charKey = s.charKey;
+      if (s.weaponHits) Object.keys(weaponHits).forEach(function(k){ weaponHits[k] = Math.max(0, s.weaponHits[k]|0 || 0); });
+      if (s.charHits) Object.keys(charHits).forEach(function(k){ charHits[k] = Math.max(0, s.charHits[k]|0 || 0); });
+      if (s.mode && MODES[s.mode]) mode = s.mode;
+      taBest = Math.max(0, s.taBest|0 || 0);
+      if (Array.isArray(s.taScores)) {
+        taScores = s.taScores.map(function(v){ return Math.max(0, v|0); }).filter(function(v){ return v > 0; });
+        taScores.sort(function(a,b){ return b - a; });
+        taScores = taScores.slice(0, 10);
+      }
+    } catch(e){}
+  }
+  var lvInfo = document.getElementById("lvInfo");
+  var xpMiniBar = document.getElementById("xpMiniBar");
+  function renderGrowth(){
+    lvInfo.textContent = "Lv." + level;
+    var pct = level >= 50 ? 100 : Math.min(100, xp / xpNext(level) * 100);
+    xpMiniBar.style.width = pct + "%";
+    document.getElementById("stLevel").textContent = level;
+    document.getElementById("xpBar").style.width = pct + "%";
+    document.getElementById("stPts").textContent = statPts;
+    document.getElementById("stTickets").textContent = tickets;
+    STAT_KEYS.forEach(function(k){ document.getElementById("sv-" + k).textContent = stats[k]; });
+    renderMastery();
+    renderWeapons();
+  }
+  function gainXP(amount){
+    if (level >= 50 || amount <= 0) { renderGrowth(); return; }
+    xp += amount;
+    var leveled = false, gained = 0;
+    while (level < 50 && xp >= xpNext(level)) {
+      xp -= xpNext(level);
+      level++; statPts += 3; gained++; leveled = true;
+    }
+    if (leveled) {
+      tickets += gained;
+      showBanner("LEVEL UP!", "Lv." + level + "　ポイント +" + (3 * gained) + "　チケット +" + gained, 1300);
+      sndJingle();
+    }
+    renderGrowth();
+    saveGame();
+  }
+  function gainHitXP(dmg){
+    xpFrac += dmg / 20;
+    var whole = Math.floor(xpFrac);
+    if (whole > 0) { xpFrac -= whole; gainXP(whole); }
+  }
+  var statusPanel = document.getElementById("statusPanel");
+  var menuPanel = document.getElementById("menuPanel");
+  var resultPanel = document.getElementById("resultPanel");
+  function closeResultToMenu(){
+    if (mode !== "ta" || taState !== "ended") return;
+    if (performance.now() - resultShownAt < 2000) return;  // 結果表示から2秒は連打を受け付けない
+    resultPanel.classList.remove("open");
+    banner.style.opacity = 0;
+    resetRun();
+    applyModeUI();
+    menuPanel.classList.add("open");
+  }
+  resultPanel.addEventListener("click", function(e){
+    e.stopPropagation();
+    closeResultToMenu();
+  });
+  var quitPanel = document.getElementById("quitPanel");
+  document.getElementById("menuBtn").addEventListener("click", function(e){
+    e.stopPropagation();
+    // タイムアタックのプレイ中は「諦める」ボタンとして働く（タイマーを止めて確認を出す）
+    if (mode === "ta" && (taState === "ready" || taState === "running")) {
+      quitPrevState = taState;
+      taState = "paused";
+      quitPanel.classList.add("open");
+      return;
+    }
+    applyModeUI();
+    menuPanel.classList.add("open");
+  });
+  document.getElementById("quitNo").addEventListener("click", function(e){
+    e.stopPropagation();
+    quitPanel.classList.remove("open");
+    if (taState === "paused") taState = quitPrevState || "ready";
+    quitPrevState = null;
+  });
+  document.getElementById("quitYes").addEventListener("click", function(e){
+    e.stopPropagation();
+    quitPanel.classList.remove("open");
+    quitPrevState = null;
+    resetRun();
+    applyModeUI();
+    menuPanel.classList.add("open");
+  });
+  document.getElementById("closeMenu").addEventListener("click", function(e){
+    e.stopPropagation();
+    menuPanel.classList.remove("open");
+  });
+  var menuItems = document.querySelectorAll(".menuItem");
+  for (var qi=0; qi<menuItems.length; qi++){
+    menuItems[qi].addEventListener("click", function(e){
+      e.stopPropagation();
+      var act = this.getAttribute("data-act");
+      audio();
+      if (act === "solo" || act === "ta") {
+        setMode(act);
+        menuPanel.classList.remove("open");
+      } else if (act === "status") {
+        menuPanel.classList.remove("open");
+        renderGrowth();
+        statusPanel.classList.add("open");
+      } else if (act === "raid") {
+        showBanner("レイドは準備中", "サーバー接続の実装後に開放されます", 1400);
+      }
+    });
+  }
+  document.getElementById("closeStatus").addEventListener("click", function(e){
+    e.stopPropagation();
+    statusPanel.classList.remove("open");
+    applyModeUI();
+    menuPanel.classList.add("open");
+  });
+  var sbtns = document.querySelectorAll(".sbtn");
+  for (var si=0; si<sbtns.length; si++){
+    sbtns[si].addEventListener("click", function(e){
+      e.stopPropagation();
+      var k = this.getAttribute("data-stat"), d = parseInt(this.getAttribute("data-d"), 10);
+      if (d > 0 && statPts > 0 && stats[k] < 40) { stats[k]++; statPts--; }
+      else if (d < 0 && stats[k] > 0) { stats[k]--; statPts++; }
+      else return;
+      renderGrowth();
+      saveGame();
+    });
+  }
+
+  /* ---------- FX helpers ---------- */
+  // アニメーションは環境によって失敗することがあるため、必ずこの窓口を通す（失敗してもゲーム本体は止めない）
+  function anim(el, frames, opts){
+    try { if (el && el.animate) return el.animate(frames, opts); } catch(e){}
+    return null;
+  }
+  function shake(cls){
+    stage.classList.remove("shakeS","shakeL");
+    void stage.offsetWidth;
+    stage.classList.add(cls);
+    setTimeout(function(){ stage.classList.remove(cls); }, 500);
+  }
+  function vibrate(p){ try { if (navigator.vibrate) navigator.vibrate(p); } catch(e){} }
+  // 画面座標→ステージ内座標。縦持ち時は全体が90度回転しているため軸を入れ替える
+  function toLocal(clientX, clientY){
+    var r = stage.getBoundingClientRect();
+    if (window.matchMedia("(orientation: portrait)").matches) {
+      return { x: clientY - r.top, y: r.right - clientX };
+    }
+    return { x: clientX - r.left, y: clientY - r.top };
+  }
+  function spawnFlash(x, y, size, cls){
+    var f = document.createElement("div");
+    f.className = "flash" + (cls ? " " + cls : "");
+    f.style.width = f.style.height = size + "px";
+    f.style.left = (x - size/2) + "px";
+    f.style.top = (y - size/2) + "px";
+    stage.appendChild(f);
+    var fa = anim(f, [
+      { transform:"scale(.3) rotate(0deg)", opacity:1 },
+      { transform:"scale(1.35) rotate(35deg)", opacity:0 }
+    ], { duration:180, easing:"ease-out" });
+    if (fa) fa.onfinish = function(){ f.remove(); };
+    else setTimeout(function(){ f.remove(); }, 200);
+  }
+  var PARTICLE_COLORS = ["#ffd94d","#ff9a2e","#ffffff","#c9c9c9","#8a8a8a","#ffe95e"];
+  function spawnParticles(x, y, n, power, opt){
+    opt = opt || {};
+    var colors = opt.colors || PARTICLE_COLORS;
+    var smin = opt.smin || 3, smax = opt.smax || 9;
+    for (var i=0;i<n;i++){
+      var p = document.createElement("div");
+      p.className = "particle" + (opt.star ? " star" : "");
+      var s = smin + Math.random()*(smax-smin);
+      p.style.width = s+"px"; p.style.height = s+"px";
+      p.style.background = colors[(Math.random()*colors.length)|0];
+      p.style.left = x+"px"; p.style.top = y+"px";
+      stage.appendChild(p);
+      var ang = Math.random()*Math.PI*2;
+      var v = (40 + Math.random()*130) * power;
+      var dx = Math.cos(ang)*v, dy = Math.sin(ang)*v - 60*power;
+      var pa = anim(p, [
+        { transform:"translate(0,0) rotate(0deg)", opacity:1 },
+        { transform:"translate("+dx+"px,"+(dy+150)+"px) rotate("+(Math.random()*540-270)+"deg)", opacity:0 }
+      ], { duration:380+Math.random()*280, easing:"cubic-bezier(.17,.67,.4,1)" });
+      if (pa) pa.onfinish = (function(el){ return function(){ el.remove(); }; })(p);
+      else setTimeout((function(el){ return function(){ el.remove(); }; })(p), 500);
+    }
+  }
+  function spawnSmoke(x, y, n){
+    for (var i=0;i<n;i++){
+      var s = document.createElement("div");
+      s.className = "smoke";
+      var sz = 40 + Math.random()*70;
+      s.style.width = s.style.height = sz+"px";
+      s.style.left = (x - sz/2 + (Math.random()*90-45)) + "px";
+      s.style.top = (y - sz/2) + "px";
+      stage.appendChild(s);
+      var sa = anim(s, [
+        { transform:"translateY(0) scale(.5)", opacity:.85 },
+        { transform:"translateY(-"+(70+Math.random()*70)+"px) scale(1.5)", opacity:0 }
+      ], { duration:1100+Math.random()*700, delay:Math.random()*250, easing:"ease-out", fill:"backwards" });
+      if (sa) sa.onfinish = (function(el){ return function(){ el.remove(); }; })(s);
+      else setTimeout((function(el){ return function(){ el.remove(); }; })(s), 1500);
+    }
+  }
+  function spawnRing(x, y, size){
+    var r = document.createElement("div");
+    r.className = "ring";
+    r.style.width = r.style.height = size + "px";
+    r.style.left = (x - size/2) + "px";
+    r.style.top = (y - size/2) + "px";
+    stage.appendChild(r);
+    var ra = anim(r, [
+      { transform:"scale(.25)", opacity:.95 },
+      { transform:"scale(1.5)", opacity:0 }
+    ], { duration:260, easing:"ease-out" });
+    if (ra) ra.onfinish = function(){ r.remove(); };
+    else setTimeout(function(){ r.remove(); }, 300);
+  }
+  function spawnDmg(x, y, text, crit, color){
+    var d = document.createElement("div");
+    d.className = "dmg" + (crit ? " crit" : "");
+    if (!crit && color) d.style.color = color;
+    d.textContent = text;
+    d.style.left = x+"px"; d.style.top = y+"px";
+    stage.appendChild(d);
+    var da = anim(d, [
+      { transform:"translate(-50%,0) scale("+(crit?1.35:0.8)+")", opacity:1 },
+      { transform:"translate(-50%,-58px) scale(1)", opacity:0 }
+    ], { duration: crit?750:600, easing:"ease-out" });
+    if (da) da.onfinish = function(){ d.remove(); };
+    else setTimeout(function(){ d.remove(); }, 650);
+  }
+  function showBanner(main, sub, holdMs){
+    bannerMain.textContent = main;
+    bannerSub.textContent = sub || "";
+    var ba = anim(banner, [
+      { opacity:0, transform:"scale(2.1)" },
+      { opacity:1, transform:"scale(1)", offset:.18 },
+      { opacity:1, offset:.8 },
+      { opacity:0, transform:"scale(.96)" }
+    ], { duration:holdMs, easing:"ease-out", fill:"forwards" });
+    if (!ba) {
+      banner.style.opacity = 1;
+      setTimeout(function(){ banner.style.opacity = 0; }, holdMs);
+    }
+  }
+
+  /* ---------- GAME ---------- */
+  function carSpec(idx){
+    if (idx < LADDER.length) return LADDER[idx];
+    var prev = carSpec(idx-1);
+    var n = EXTRA_NAMES[(idx - LADDER.length) % EXTRA_NAMES.length];
+    var cycle = Math.floor((idx - LADDER.length) / EXTRA_NAMES.length);
+    return {
+      name: n + (cycle>0 ? "・強化型" : ""),
+      hp: Math.round(prev.hp * 1.5 / 10) * 10,
+      pts: prev.pts + 100,
+      set: EXTRA_SETS[(idx - LADDER.length) % EXTRA_NAMES.length],
+      scale: Math.min(1.35, prev.scale + 0.03)
+    };
+  }
+  function stageIndex(){
+    var r = hp / maxHp;
+    if (r > 0.75) return 0;
+    if (r > 0.50) return 1;
+    if (r > 0.25) return 2;
+    return 3;
+  }
+  function renderCar(){
+    carImg.src = IMG[cur.set][stageIndex()];
+    var r = Math.max(hp,0) / maxHp;
+    hpBar.style.width = (r*100) + "%";
+    hpBar.style.background = r > 0.5
+      ? "linear-gradient(#b6ff7a,#4fc52e 55%,#2f8f1c)"
+      : (r > 0.25
+        ? "linear-gradient(#ffe95e,#ffb02e 55%,#d97c06)"
+        : "linear-gradient(#ff9a7a,#f0442e 55%,#a11d00)");
+  }
+  function setScore(v){
+    score = v;
+    var s = String(score);
+    while (s.length < 6) s = "0" + s;
+    scoreVal.textContent = s;
+    scoreVal.classList.remove("pop"); void scoreVal.offsetWidth; scoreVal.classList.add("pop");
+  }
+  function spawnCar(idx, animateIn){
+    carIdx = idx;
+    cur = carSpec(idx);
+    maxHp = cur.hp; hp = cur.hp;
+    destroyed = false;
+    if (mode !== "ta") { timeLeft = 99; renderTime(); }
+    lastHitAt = performance.now();  // コンボは車が替わっても継続：新しいクルマが出た瞬間から猶予1秒を数え直す
+    carNameEl.textContent = cur.name + "（" + (idx+1) + "台目）";
+    carWrap.style.height = (50 * cur.scale) + "%";
+    renderCar();
+    if (animateIn) {
+      anim(carWrap, [
+        { transform:"translateX(70%)", opacity:0 },
+        { transform:"translateX(0)", opacity:1 }
+      ], { duration:480, easing:"cubic-bezier(.2,.8,.3,1)" });
+    }
+  }
+  function destroyCar(){
+    destroyed = true;
+    hp = 0; renderCar();
+    carsDestroyed++;
+    carsVal.textContent = carsDestroyed;
+    var bonusPts = (mode === "ta")
+      ? 500
+      : Math.round(cur.pts * (1 + 0.06 * stats.tech) * CHARS[charKey].bonusMult);
+    setScore(score + bonusPts);
+    gainXP(Math.round(cur.pts / 5 * (1 + 0.06 * stats.tech) * CHARS[charKey].bonusMult));
+    var cx = stage.clientWidth * 0.62, cy = stage.clientHeight * 0.55;
+    spawnFlash(cx, cy, 300);
+    spawnParticles(cx, cy, 42, 2.1);
+    spawnSmoke(cx, cy - 20, 7);
+    shake("shakeL"); vibrate([50,40,80]);
+    sndBoom();
+    showBanner("DESTROYED!", "+" + bonusPts + " PTS", 1250);
+    setTimeout(function(){
+      if (mode === "ta" && taState === "ended") return;  // タイムアップ後は次の車を出さない
+      spawnCar(carIdx + 1, true);
+      sndJingle();
+      var nx = carSpec(carIdx);
+      showBanner(nx.name, "", 900);
+    }, 1350);
+  }
+  function punchFX(){
+    fighterImg.src = IMG.chars[charKey][weaponKey][1];
+    fighterWrap.classList.add("lunge");
+    if (punchTimer) clearTimeout(punchTimer);
+    punchTimer = setTimeout(function(){
+      fighterImg.src = IMG.chars[charKey][weaponKey][0];
+      fighterWrap.classList.remove("lunge");
+    }, Math.round(WEAPONS[weaponKey].swingMs * CHARS[charKey].cdMult));
+  }
+  function onHit(clientX, clientY){
+    if (mode === "ta" && taState === "ended") { closeResultToMenu(); return; }
+    if (destroyed) return;
+    if (mode === "ta" && taState === "ready") taState = "running";
+    audio();
+    var now = performance.now();
+    var W = WEAPONS[weaponKey];
+    var C = CHARS[charKey];
+    if (now - lastSwingAt < W.cooldown * C.cdMult) return;  // 重い武器・重いキャラは連打できない
+    lastSwingAt = now;
+    combo = (now - lastHitAt <= 1000) ? combo + 1 : 1;
+    lastHitAt = now;
+    // ヒット数表示は本体側で即時更新する（エフェクトの成否に影響されない場所）
+    comboNum.textContent = combo;
+    comboEl.style.opacity = 1;
+
+    var crit = Math.random() < (W.critRate + C.critAdd + 0.006 * stats.crit);
+    var wStar = starOf(weaponHits[weaponKey]);
+    var cStar = starOf(charHits[charKey]);
+    var base = W.power * WSTAR_MULT[wStar-1] * charStarMult(cStar) * C.dmgMult * (1 + 0.03 * stats.power) * (0.85 + Math.random()*0.3);
+    var comboMult = Math.min(1 + combo * 0.01, 1.5 + 0.02 * stats.renda);       // コンボ倍率（上限はれんだで伸びる）
+    var dmg = Math.max(1, Math.round(base * comboMult * (crit ? ((1.5 + 0.05 * stats.critD) * C.critDMult) : 1)));
+
+    weaponHits[weaponKey]++;
+    charHits[charKey]++;
+    hp -= dmg;
+    gainHitXP(dmg);
+    setScore(score + dmg);
+    renderCar();
+    if (hp <= 0) { punchFX(); sndWeapon(crit); destroyCar(); return; }
+
+    try {
+    punchFX();
+
+    var cr = carWrap.getBoundingClientRect();
+    var x, y;
+    if (clientX >= cr.left && clientX <= cr.right && clientY >= cr.top && clientY <= cr.bottom) {
+      var p = toLocal(clientX, clientY); x = p.x; y = p.y;
+    } else {
+      x = carWrap.offsetLeft + carWrap.offsetWidth * (0.08 + Math.random()*0.45);
+      y = carWrap.offsetTop + carWrap.offsetHeight * (0.3 + Math.random()*0.4);
+    }
+    // エフェクトは武器（系統）ごとに変える
+    if (weaponKey === "harisen") {
+      spawnFlash(x, y, crit ? 115 : 72, "haris");
+      spawnParticles(x, y, crit ? 17 : 12, 0.8, { colors:["#ffffff","#fff6bf","#ffd94d"], smin:6, smax:13, star:true });
+    } else if (weaponKey === "pan") {
+      spawnFlash(x, y, crit ? 145 : 98, "pan");
+      spawnRing(x, y, crit ? 120 : 84);
+      spawnParticles(x, y, crit ? 18 : 12, 1.1, { colors:["#cfeaff","#6ec3ff","#ffffff","#ffd94d"] });
+    } else if (weaponKey === "hammer") {
+      spawnFlash(x, y, crit ? 235 : 175, "hammer");
+      spawnParticles(x, y, crit ? 26 : 18, 1.7, { colors:["#c9a06a","#8a8a8a","#5d5d5d","#ffd94d"], smin:5, smax:14 });
+    } else {
+      spawnFlash(x, y, crit ? 130 : 84, "");
+      spawnParticles(x, y, crit ? 18 : 11, crit ? 1.5 : 1);
+    }
+    var dmgColor = weaponKey === "harisen" ? "#fff6bf" : (weaponKey === "pan" ? "#9fe8ff" : (weaponKey === "hammer" ? "#ffb02e" : ""));
+    spawnDmg(x, y - 14, crit ? dmg + " CRIT!" : String(dmg), crit, dmgColor);
+    sndWeapon(crit);
+    vibrate(weaponKey === "hammer" ? (crit ? 60 : 30) : (crit ? 35 : 10));
+    if (weaponKey === "hammer") shake("shakeM");
+    else if (weaponKey === "pan" || crit) shake("shakeS");
+    carWrap.classList.remove("hit"); void carWrap.offsetWidth; carWrap.classList.add("hit");
+
+    anim(comboEl, [
+      { transform:"scale(1.3) rotate(-2deg)" },
+      { transform:"scale(1) rotate(0deg)" }
+    ], { duration:120, easing:"ease-out" });
+    } catch(e){}
+  }
+  stage.addEventListener("pointerdown", function(e){
+    e.preventDefault();
+    onHit(e.clientX, e.clientY);
+  });
+  stage.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+
+  // combo fade-out watcher（クルマが壊れている間は消さない：次のクルマが出るまでコンボを保持する）
+  setInterval(function(){
+    if (combo > 0 && !destroyed && performance.now() - lastHitAt > 1000) {
+      combo = 0; comboEl.style.opacity = 0;
+    }
+  }, 120);
+
+  // TIME表示（数字のみ・バーなし）。ソロは装飾カウント（0で99に戻る）、taは60秒の実カウント
+  var timeLeft = 99;
+  function renderTime(){ timeNum.textContent = timeLeft < 10 ? "0" + timeLeft : String(timeLeft); }
+  setInterval(function(){
+    if (mode === "ta") {
+      if (taState === "running") {
+        timeLeft--;
+        if (timeLeft <= 0) { timeLeft = 0; renderTime(); timeUp(); return; }
+        renderTime();
+      }
+      return;
+    }
+    timeLeft--; if (timeLeft < 0) timeLeft = 99;
+    renderTime();
+  }, 1000);
+  renderTime();
+
+  /* ---------- MODE ---------- */
+  var modeInfo = document.getElementById("modeInfo");
+  function applyModeUI(){
+    modeInfo.textContent = MODES[mode].name;
+    document.getElementById("menuBtn").textContent = (mode === "ta") ? "諦める" : "メニュー";
+    document.getElementById("taBestVal").textContent = taBest;
+    document.getElementById("eqSolo").textContent = mode === "solo" ? "選択中" : "";
+    document.getElementById("eqTa").textContent = mode === "ta" ? "選択中" : "";
+    var items = document.querySelectorAll(".menuItem");
+    for (var i=0;i<items.length;i++){
+      var act = items[i].getAttribute("data-act");
+      items[i].classList.toggle("sel", act === mode);
+    }
+  }
+  function resetRun(){
+    setScore(0);
+    carsDestroyed = 0; carsVal.textContent = "0";
+    combo = 0; comboEl.style.opacity = 0;
+    if (mode === "ta") { taState = "ready"; timeLeft = 60; renderTime(); }
+    spawnCar(0, false);
+  }
+  function setMode(m){
+    if (!MODES[m]) return;
+    mode = m;
+    applyModeUI();
+    resetRun();
+    saveGame();
+  }
+  function timeUp(){
+    taState = "ended";
+    destroyed = true;
+    // 端末内ランキング：順位を確定し、その位置へ挿入して今回の行を特定できるようにする
+    var rank = 1;
+    for (var i=0;i<taScores.length;i++) if (taScores[i] > score) rank++;
+    taScores.splice(rank - 1, 0, score);
+    taScores = taScores.slice(0, 10);
+    var nowIdx = (rank - 1 < taScores.length && taScores[rank - 1] === score) ? rank - 1 : -1;
+    if (score > taBest) taBest = score;
+    saveGame();
+    applyModeUI();
+    // 結果はバナーの文字でなく、ランキング表パネルで見せる
+    try { if (banner.getAnimations) banner.getAnimations().forEach(function(a){ a.cancel(); }); } catch(e){}
+    banner.style.opacity = 0;
+    document.getElementById("resScore").textContent = score.toLocaleString("ja-JP");
+    document.getElementById("resRank").textContent = rank;
+    var rowsHtml = "";
+    for (var r=0;r<taScores.length;r++){
+      rowsHtml += '<div class="rrow' + (r === nowIdx ? ' now' : '') + '"><span class="rrank">' + (r + 1) + '位</span><span class="rscore">' + taScores[r].toLocaleString("ja-JP") + '</span>' + (r === nowIdx ? '<span class="rnow">◀ 今回</span>' : '') + '</div>';
+    }
+    document.getElementById("resRows").innerHTML = rowsHtml;
+    var nav = document.getElementById("resNav");
+    nav.textContent = "……";
+    resultPanel.classList.add("open");
+    resultShownAt = performance.now();
+    setTimeout(function(){
+      if (resultPanel.classList.contains("open")) nav.textContent = "タップでメニューへ";
+    }, 2000);
+    sndBoom();
+    vibrate([60,40,60]);
+  }
+  loadGame();
+  setWeapon(weaponKey);
+  setChar(charKey);
+  renderGrowth();
+  applyModeUI();
+  if (mode === "ta") { taState = "ready"; timeLeft = 60; renderTime(); }
+  spawnCar(0, false);
+})();
+</script>
+</body>
+</html>
