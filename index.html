@@ -24,7 +24,7 @@
   }
   .hud-block { flex:0 0 auto; }
   .hud-label { font-size:11px; letter-spacing:2px; color:#ffd94d; text-shadow:2px 2px 0 #7a2d00; font-weight:bold; }
-  .hud-value { font-size:22px; font-weight:bold; letter-spacing:2px; text-shadow:2px 2px 0 #000; line-height:1; }
+  .hud-value { font-size:22px; font-weight:bold; letter-spacing:2px; text-shadow:2px 2px 0 #000; line-height:1; white-space:nowrap; }
   #scoreVal.pop { animation:scorePop .18s ease-out; display:inline-block; }
   @keyframes scorePop { 40% { transform:scale(1.25); color:#ffd94d; } }
   #hpBlock { flex:1 1 auto; min-width:120px; }
@@ -463,7 +463,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.25（初期5キャラをノーマルとして弱体化・バランス調整／ガチャ実装に備えた下地）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.26（スコアは桁数に応じて自動で文字が小さくなる）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
 </div>
 
 <script>
@@ -1667,6 +1667,9 @@
     var s = String(score);
     while (s.length < 6) s = "0" + s;
     scoreVal.textContent = s;
+    var d = s.length;  // 桁が増えたら自動で文字を小さくして枠に収める
+    scoreVal.style.fontSize = (d <= 6 ? 22 : d === 7 ? 19 : d === 8 ? 17 : d === 9 ? 15 : 13) + "px";
+    scoreVal.style.letterSpacing = (d <= 6 ? 2 : 1) + "px";
     scoreVal.classList.remove("pop"); void scoreVal.offsetWidth; scoreVal.classList.add("pop");
   }
   function spawnCar(idx, animateIn){
