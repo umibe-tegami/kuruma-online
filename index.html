@@ -462,7 +462,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.31（カードを横に広げて折り返しを減らし、キャラ画面も1画面に収まるよう追加圧縮）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.32（武器パワーを全体で半分に弱体化／武器ゲージの目盛りも適正化）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー6）</span></div>
 </div>
 
 <script>
@@ -603,27 +603,27 @@
 
   /* 武器定義：音とエフェクトは系統単位で共通、武器ごとに性能と見た目が変わる */
   var WEAPONS = {
-    fist:    { name:"素手",       power:10, cooldown:40,  swingMs:130, critRate:0.05, unlockLv:1, fam:"素手系" },
-    harisen: { name:"ハリセン",   power:7,  cooldown:30,  swingMs:105, critRate:0.08, unlockLv:2, fam:"ネタ枠" },
-    pan:     { name:"フライパン", power:16, cooldown:80,  swingMs:150, critRate:0.05, unlockLv:4, fam:"ネタ枠" },
-    hammer:  { name:"巨大ハンマー", power:34, cooldown:260, swingMs:280, critRate:0.10, unlockLv:6, fam:"打撃系" },
-    kakuzai: { name:"角材", power:14, cooldown:120, swingMs:180, critRate:0.05, unlockLv:2, fam:"打撃系" },
-    driver:  { name:"ドライバー", power:13, cooldown:60, swingMs:120, critRate:0.06, unlockLv:3, fam:"工具系", trait:"part" },
-    gunte:   { name:"軍手", power:12, cooldown:35, swingMs:125, critRate:0.05, unlockLv:4, fam:"素手系" },
-    drill:   { name:"電動ドリル", power:15, cooldown:55, swingMs:110, critRate:0.05, unlockLv:5, fam:"電動・重機系", holdMs:140 },
-    shinai:  { name:"竹刀", power:17, cooldown:110, swingMs:150, critRate:0.05, unlockLv:7, fam:"打撃系" },
-    glove2:  { name:"作業グローブ", power:14, cooldown:35, swingMs:125, critRate:0.05, unlockLv:8, fam:"素手系", trait:"part" },
-    pliers:  { name:"ペンチ", power:16, cooldown:55, swingMs:110, critRate:0.06, unlockLv:9, fam:"工具系", trait:"part" },
-    bokken:  { name:"木刀", power:20, cooldown:120, swingMs:170, critRate:0.05, unlockLv:11, fam:"打撃系" },
-    slipper: { name:"スリッパ", power:9, cooldown:35, swingMs:100, critRate:0.08, unlockLv:12, fam:"ネタ枠" },
-    boxglove:{ name:"ボクシンググローブ", power:18, cooldown:60, swingMs:130, critRate:0.06, unlockLv:13, fam:"素手系" },
-    wrench:  { name:"レンチ", power:19, cooldown:65, swingMs:120, critRate:0.06, unlockLv:14, fam:"工具系" },
-    shinbunshi:{ name:"新聞紙", power:6, cooldown:30, swingMs:90, critRate:0.08, unlockLv:1, fam:"ネタ枠" },
-    pikopiko:{ name:"ピコピコハンマー", power:15, cooldown:22, swingMs:80, critRate:0.10, unlockLv:13, fam:"ネタ枠" },
-    grinder: { name:"グラインダー", power:24, cooldown:95, swingMs:150, critRate:0.05, unlockLv:15, fam:"電動・重機系", holdMs:130, trait:"part" },
-    bat:     { name:"木のバット", power:26, cooldown:140, swingMs:190, critRate:0.06, unlockLv:16, fam:"打撃系" },
-    monkey:  { name:"モンキーレンチ", power:24, cooldown:110, swingMs:140, critRate:0.06, unlockLv:17, fam:"工具系" },
-    leather: { name:"革グローブ", power:22, cooldown:75, swingMs:130, critRate:0.06, unlockLv:20, fam:"素手系" }
+    fist:    { name:"素手",       power:6, cooldown:40,  swingMs:130, critRate:0.05, unlockLv:1, fam:"素手系" },
+    harisen: { name:"ハリセン",   power:4,  cooldown:30,  swingMs:105, critRate:0.08, unlockLv:2, fam:"ネタ枠" },
+    pan:     { name:"フライパン", power:8, cooldown:80,  swingMs:150, critRate:0.05, unlockLv:4, fam:"ネタ枠" },
+    hammer:  { name:"巨大ハンマー", power:17, cooldown:260, swingMs:280, critRate:0.10, unlockLv:6, fam:"打撃系" },
+    kakuzai: { name:"角材", power:7, cooldown:120, swingMs:180, critRate:0.05, unlockLv:2, fam:"打撃系" },
+    driver:  { name:"ドライバー", power:7, cooldown:60, swingMs:120, critRate:0.06, unlockLv:3, fam:"工具系", trait:"part" },
+    gunte:   { name:"軍手", power:6, cooldown:35, swingMs:125, critRate:0.05, unlockLv:4, fam:"素手系" },
+    drill:   { name:"電動ドリル", power:8, cooldown:55, swingMs:110, critRate:0.05, unlockLv:5, fam:"電動・重機系", holdMs:140 },
+    shinai:  { name:"竹刀", power:9, cooldown:110, swingMs:150, critRate:0.05, unlockLv:7, fam:"打撃系" },
+    glove2:  { name:"作業グローブ", power:7, cooldown:35, swingMs:125, critRate:0.05, unlockLv:8, fam:"素手系", trait:"part" },
+    pliers:  { name:"ペンチ", power:8, cooldown:55, swingMs:110, critRate:0.06, unlockLv:9, fam:"工具系", trait:"part" },
+    bokken:  { name:"木刀", power:10, cooldown:120, swingMs:170, critRate:0.05, unlockLv:11, fam:"打撃系" },
+    slipper: { name:"スリッパ", power:5, cooldown:35, swingMs:100, critRate:0.08, unlockLv:12, fam:"ネタ枠" },
+    boxglove:{ name:"ボクシンググローブ", power:9, cooldown:60, swingMs:130, critRate:0.06, unlockLv:13, fam:"素手系" },
+    wrench:  { name:"レンチ", power:10, cooldown:65, swingMs:120, critRate:0.06, unlockLv:14, fam:"工具系" },
+    shinbunshi:{ name:"新聞紙", power:3, cooldown:30, swingMs:90, critRate:0.08, unlockLv:1, fam:"ネタ枠" },
+    pikopiko:{ name:"ピコピコハンマー", power:8, cooldown:22, swingMs:80, critRate:0.10, unlockLv:13, fam:"ネタ枠" },
+    grinder: { name:"グラインダー", power:12, cooldown:95, swingMs:150, critRate:0.05, unlockLv:15, fam:"電動・重機系", holdMs:130, trait:"part" },
+    bat:     { name:"木のバット", power:13, cooldown:140, swingMs:190, critRate:0.06, unlockLv:16, fam:"打撃系" },
+    monkey:  { name:"モンキーレンチ", power:12, cooldown:110, swingMs:140, critRate:0.06, unlockLv:17, fam:"工具系" },
+    leather: { name:"革グローブ", power:11, cooldown:75, swingMs:130, critRate:0.06, unlockLv:20, fam:"素手系" }
   };
   var weaponKey = "fist", lastSwingAt = 0;
   var tickets = 1;                          // 武器交換チケット（初期1枚＋レベルアップで+1枚）
@@ -881,13 +881,13 @@
     var wStarNow = starOf(weaponHits[selWeapon]);
     var wMultNow = WSTAR_MULT[wStarNow - 1];
     document.getElementById("wpStars").textContent = starText(wStarNow) + (wMultNow > 1 ? "（全ステータス+" + Math.round((wMultNow - 1) * 100) + "%）" : "");
-    var wpW = barWidths(W.power, W.power * (wMultNow - 1), 40);
+    var wpW = barWidths(W.power, W.power * (wMultNow - 1), 34);
     document.getElementById("wpBarPower").style.width = wpW[0] + "%";
     document.getElementById("wpBarPowerBuff").style.width = wpW[1] + "%";
-    var wsW = barWidths(60 / W.cooldown, (60 / W.cooldown) * (wMultNow - 1), 1);
+    var wsW = barWidths(60 / W.cooldown, (60 / W.cooldown) * (wMultNow - 1), 4.2);
     document.getElementById("wpBarSpeed").style.width = wsW[0] + "%";
     document.getElementById("wpBarSpeedBuff").style.width = wsW[1] + "%";
-    var wcW = barWidths(W.critRate, W.critRate * (wMultNow - 1), 0.12);
+    var wcW = barWidths(W.critRate, W.critRate * (wMultNow - 1), 0.2);
     document.getElementById("wpBarCrit").style.width = wcW[0] + "%";
     document.getElementById("wpBarCritBuff").style.width = wcW[1] + "%";
     document.getElementById("wpNote").textContent = masteryNote(weaponHits[selWeapon]);
