@@ -191,6 +191,8 @@
   .lvLine b { color:#ffd94d; }
   #ptsLine { font-size:13px; color:#bdbde8; margin-top:4px; }
   #ptsLine b { color:#ffd94d; font-size:15px; }
+  #ticketLine { font-size:13px; color:#bdbde8; margin:-4px 0 8px; }
+  #ticketLine b { color:#ffd94d; font-size:15px; }
   .srow { display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px dashed #2c2c52; }
   .sname { flex:1; font-size:14px; font-weight:bold; }
   .sname small { display:block; font-size:10px; color:#7a7ab0; font-weight:normal; }
@@ -317,6 +319,7 @@
       <div class="crow" data-c="satoru"><div class="wname">サトル<small>テクニック型／完破ボーナス+40%・ダメージ-10%</small></div><div class="wstar">★☆☆☆☆</div><div class="weq"></div></div>
 
       <div class="secTitle">そうび（武器）</div>
+      <div id="ticketLine">所持チケット：<b id="stTickets2">0</b>枚</div>
       <div class="wrow sel" data-w="fist"><div class="wname">素手<small>パワー10・速い／素手系</small></div><div class="wstar">★☆☆☆☆</div><div class="weq">装備中</div></div>
       <div class="wrow" data-w="harisen"><div class="wname">ハリセン<small>パワー7・最速／ネタ枠</small></div><div class="wstar">★☆☆☆☆</div><div class="weq"></div></div>
       <div class="wrow" data-w="pan"><div class="wname">フライパン<small>パワー16／ネタ枠</small></div><div class="wstar">★☆☆☆☆</div><div class="weq"></div></div>
@@ -349,7 +352,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v1.9（連打ズーム対策）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v1.10（チケット所持数を武器欄にも表示）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
 </div>
 
 <script>
@@ -686,6 +689,7 @@
     document.getElementById("xpBar").style.width = pct + "%";
     document.getElementById("stPts").textContent = statPts;
     document.getElementById("stTickets").textContent = tickets;
+    document.getElementById("stTickets2").textContent = tickets;
     STAT_KEYS.forEach(function(k){ document.getElementById("sv-" + k).textContent = stats[k]; });
     renderMastery();
     renderWeapons();
