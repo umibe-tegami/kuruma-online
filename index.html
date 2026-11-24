@@ -361,8 +361,8 @@
               <div class="dName" id="wpName">素手</div>
               <div class="dSub"><span id="wpFam">素手系</span>　熟練度 <span class="dStars" id="wpStars">★☆☆☆☆</span></div>
               <div class="barRow"><span class="blab">パワー</span><div class="btrack"><div class="bfill" id="wpBarPower"></div><div class="bfill buff" id="wpBarPowerBuff"></div></div></div>
-              <div class="barRow"><span class="blab">スピード</span><div class="btrack"><div class="bfill" id="wpBarSpeed"></div></div></div>
-              <div class="barRow"><span class="blab">クリティカル</span><div class="btrack"><div class="bfill" id="wpBarCrit"></div></div></div>
+              <div class="barRow"><span class="blab">スピード</span><div class="btrack"><div class="bfill" id="wpBarSpeed"></div><div class="bfill buff" id="wpBarSpeedBuff"></div></div></div>
+              <div class="barRow"><span class="blab">クリティカル</span><div class="btrack"><div class="bfill" id="wpBarCrit"></div><div class="bfill buff" id="wpBarCritBuff"></div></div></div>
               <div class="dNote" id="wpNote"></div>
               <button class="actionBtn" id="wpAction">装備する</button>
             </div>
@@ -444,7 +444,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.17（ステータスボタンの感度改善＋熟練度バフ改定：星2 +10%／星3 +20%／星4 +30%／星5 +50%）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.18（スコア・武器解放・装備を保存／熟練度バフはパワー・スピード・クリティカルの全部に効く）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
 </div>
 
 <script>
@@ -858,13 +858,19 @@
     document.getElementById("wpFam").textContent = W.fam + (W.holdMs ? "／長押し連打" : "");
     var wStarNow = starOf(weaponHits[selWeapon]);
     var wMultNow = WSTAR_MULT[wStarNow - 1];
-    document.getElementById("wpStars").textContent = starText(wStarNow) + (wMultNow > 1 ? "（パワー+" + Math.round((wMultNow - 1) * 100) + "%）" : "");
+    document.getElementById("wpStars").textContent = starText(wStarNow) + (wMultNow > 1 ? "（全ステータス+" + Math.round((wMultNow - 1) * 100) + "%）" : "");
     var basePct = W.power / 40 * 100;
     document.getElementById("wpBarPower").style.width = barPct(basePct);
     var buffPct = Math.max(0, Math.min(W.power * (wMultNow - 1) / 40 * 100, 100 - Math.min(100, basePct)));
     document.getElementById("wpBarPowerBuff").style.width = (wMultNow > 1 && buffPct > 0 ? Math.max(2, Math.round(buffPct)) : 0) + "%";
-    document.getElementById("wpBarSpeed").style.width = barPct((280 - W.cooldown) / 250 * 100);
-    document.getElementById("wpBarCrit").style.width = barPct(W.critRate / 0.12 * 100);
+    var spdBase = (280 - W.cooldown) / 250 * 100;
+    document.getElementById("wpBarSpeed").style.width = barPct(spdBase);
+    var spdBuff = Math.max(0, Math.min((W.cooldown - W.cooldown / wMultNow) / 250 * 100, 100 - Math.min(100, spdBase)));
+    document.getElementById("wpBarSpeedBuff").style.width = (wMultNow > 1 && spdBuff > 0 ? Math.max(2, Math.round(spdBuff)) : 0) + "%";
+    var critBase = W.critRate / 0.12 * 100;
+    document.getElementById("wpBarCrit").style.width = barPct(critBase);
+    var critBuff = Math.max(0, Math.min(W.critRate * (wMultNow - 1) / 0.12 * 100, 100 - Math.min(100, critBase)));
+    document.getElementById("wpBarCritBuff").style.width = (wMultNow > 1 && critBuff > 0 ? Math.max(2, Math.round(critBuff)) : 0) + "%";
     document.getElementById("wpNote").textContent = masteryNote(weaponHits[selWeapon]);
     document.getElementById("wpStand").src = IMG.chars[charKey][selWeapon][0];
     var act = document.getElementById("wpAction");
@@ -970,7 +976,7 @@
   function xpNext(lv){ return Math.round(50 * Math.pow(lv, 1.5)); }
   function saveGame(){
     try {
-      localStorage.setItem(SAVE_KEY, JSON.stringify({ level:level, xp:xp, statPts:statPts, stats:stats, weaponKey:weaponKey, charKey:charKey, weaponHits:weaponHits, charHits:charHits, mode:mode, taBest:taBest, taScores:taScores, tickets:tickets, ownedWeapons:ownedWeapons, soloIdx:soloIdx, carHp:savedCarHp, carParts:savedCarParts, carIdxFor:savedCarIdx }));
+      localStorage.setItem(SAVE_KEY, JSON.stringify({ level:level, xp:xp, statPts:statPts, stats:stats, weaponKey:weaponKey, charKey:charKey, weaponHits:weaponHits, charHits:charHits, mode:mode, taBest:taBest, taScores:taScores, tickets:tickets, ownedWeapons:ownedWeapons, soloIdx:soloIdx, carHp:savedCarHp, carParts:savedCarParts, carIdxFor:savedCarIdx, score:score }));
     } catch(e){}
   }
   function loadGame(){
@@ -982,7 +988,7 @@
       statPts = Math.max(0, s.statPts|0);
       STAT_KEYS.forEach(function(k){ stats[k] = Math.min(40, Math.max(0, (s.stats && s.stats[k])|0 || 0)); });
       if (s.ownedWeapons) {
-        Object.keys(ownedWeapons).forEach(function(k){ ownedWeapons[k] = !!s.ownedWeapons[k]; });
+        WEAPON_KEYS.forEach(function(k){ ownedWeapons[k] = !!s.ownedWeapons[k]; });  // 初期値{fist}のキーだけ見ると購入した武器が復元されない不具合があった
         ownedWeapons.fist = true;
         tickets = Math.max(0, s.tickets|0 || 0);
       } else {
@@ -999,6 +1005,7 @@
       if (typeof s.carHp === "number" && s.carHp > 0) savedCarHp = s.carHp;
       if (s.carParts && typeof s.carParts === "object") savedCarParts = s.carParts;
       if (typeof s.carIdxFor === "number") savedCarIdx = s.carIdxFor;
+      if (mode === "solo") setScore(Math.max(0, s.score|0 || 0));  // ソロのスコアも復元する
       taBest = Math.max(0, s.taBest|0 || 0);
       if (Array.isArray(s.taScores)) {
         taScores = s.taScores.map(function(v){ return Math.max(0, v|0); }).filter(function(v){ return v > 0; });
@@ -1447,7 +1454,8 @@
     var now = performance.now();
     var W = WEAPONS[weaponKey];
     var C = CHARS[charKey];
-    if (now - lastSwingAt < W.cooldown * C.cdMult) return;  // 重い武器・重いキャラは連打できない
+    var wMultGate = WSTAR_MULT[starOf(weaponHits[weaponKey]) - 1];
+    if (now - lastSwingAt < W.cooldown * C.cdMult / wMultGate) return;  // 重い武器・重いキャラは連打できない（熟練度バフはスピードにも効く）
     lastSwingAt = now;
     combo = (now - lastHitAt <= 1000) ? combo + 1 : 1;
     lastHitAt = now;
@@ -1455,9 +1463,9 @@
     comboNum.textContent = combo;
     comboEl.style.opacity = 1;
 
-    var crit = Math.random() < (W.critRate + C.critAdd + 0.006 * stats.crit);
     var wStar = starOf(weaponHits[weaponKey]);
     var cStar = starOf(charHits[charKey]);
+    var crit = Math.random() < (W.critRate * WSTAR_MULT[wStar-1] + C.critAdd + 0.006 * stats.crit);  // 熟練度バフはクリティカルにも効く
     var base = W.power * WSTAR_MULT[wStar-1] * charStarMult(cStar) * C.dmgMult * (1 + 0.03 * stats.power) * (0.85 + Math.random()*0.3);
     var comboMult = Math.min(1 + combo * 0.01, 1.5 + 0.02 * stats.renda);       // コンボ倍率（上限はれんだで伸びる）
     var dmg = Math.max(1, Math.round(base * comboMult * (crit ? ((1.5 + 0.05 * stats.critD) * C.critDMult) : 1)));
@@ -1543,7 +1551,7 @@
     holdTimer = setInterval(function(){
       if (mode === "ta" && taState === "ended") { stopHold(); return; }
       onHit(holdX, holdY);
-    }, W.holdMs);
+    }, Math.max(40, Math.round(W.holdMs / WSTAR_MULT[starOf(weaponHits[weaponKey]) - 1])));  // 長押し連打の間隔にも熟練度バフ
   }
   window.addEventListener("pointerup", stopHold);
   window.addEventListener("pointercancel", stopHold);
