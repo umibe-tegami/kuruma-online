@@ -6,7 +6,7 @@
 <title>クルマを壊すオンライン（試作v0.9）</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  html,body { background:#0b0b18; }
+  html,body { background:#0b0b18; touch-action:none; overscroll-behavior:none; }
   body {
     font-family:"Courier New", monospace; color:#fff;
     display:flex; flex-direction:column; align-items:center;
@@ -349,7 +349,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v1.8（武器解放＋チケット交換）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v1.9（連打ズーム対策）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
 </div>
 
 <script>
@@ -1079,6 +1079,16 @@
     onHit(e.clientX, e.clientY);
   });
   stage.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+  // ダブルタップズーム対策：iOSは user-scalable=no や touch-action だけでは連打で拡大してしまうことがあるため、
+  // 短い間隔の2回目の touchend を止める（ヒット判定は pointerdown 側なので連打には影響しない）
+  var lastTouchEnd = 0;
+  stage.addEventListener("touchend", function(e){
+    var now = Date.now();
+    if (now - lastTouchEnd < 350) e.preventDefault();
+    lastTouchEnd = now;
+  }, { passive:false });
+  stage.addEventListener("dblclick", function(e){ e.preventDefault(); });
+  document.addEventListener("gesturestart", function(e){ e.preventDefault(); });
 
   // combo fade-out watcher（クルマが壊れている間は消さない：次のクルマが出るまでコンボを保持する）
   setInterval(function(){
