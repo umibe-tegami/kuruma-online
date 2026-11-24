@@ -275,6 +275,78 @@
   #hint b { color:#ffd94d; }
   #foot { text-align:center; margin-top:4px; font-size:11px; color:#5d5d8f; }
 
+  /* ===== GACHA PANEL ===== */
+  #gachaPanel {
+    position:absolute; inset:0; z-index:55; display:none;
+    background:rgba(5,5,20,.92); padding:10px; overflow-y:auto;
+  }
+  #gachaPanel.open { display:block; }
+  #gachaCard {
+    max-width:560px; margin:0 auto; background:#14142e; border:3px solid #b45cff; border-radius:10px; padding:14px; text-align:center;
+  }
+  #gachaCard h2 { font-size:18px; color:#ffd94d; letter-spacing:3px; text-shadow:2px 2px 0 #7a2d00; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+  #closeGacha { background:#26264e; color:#fff; border:2px solid #6e6ea8; border-radius:6px; font-family:inherit; font-size:13px; font-weight:bold; padding:4px 12px; cursor:pointer; }
+  .gachaScrapLine { font-size:15px; color:#bdbde8; margin-bottom:10px; }
+  .gachaScrapLine b { color:#9fe8ff; font-size:19px; }
+  .gachaBtns { display:flex; gap:10px; margin-bottom:8px; }
+  .gachaBtns button {
+    flex:1; padding:13px 0; font-family:inherit; font-size:16px; font-weight:bold; border-radius:8px; cursor:pointer; letter-spacing:1px;
+    background:linear-gradient(#5a2d9e,#3a2d6e); color:#ffd94d; border:2px solid #b45cff;
+  }
+  .gachaBtns button.off { opacity:.45; cursor:default; }
+  #gachaResult { margin-top:10px; }
+  .gachaGrid { display:grid; grid-template-columns:repeat(5, 1fr); gap:6px; margin-top:8px; }
+  .gachaCell { border:2px solid #2c2c52; border-radius:8px; background:#1b1b3a; padding:4px 2px; }
+  .gachaCell img { width:100%; height:74px; object-fit:cover; object-position:50% 0; border-radius:4px; }
+  .gachaCell .gname { font-size:11px; font-weight:bold; color:#fff; white-space:nowrap; overflow:hidden; }
+  .gachaCell .grar { font-size:10px; font-weight:bold; }
+  .gachaCell.top { border-color:#ffd94d; box-shadow:0 0 10px rgba(255,217,77,.7); }
+  .rar-rare { color:#3a9bff; } .rar-super { color:#b45cff; } .rar-ssr { color:#ffd94d; } .rar-ur { color:#ff5e8a; }
+
+  /* ===== GACHA FX（召喚演出：イメージ動画再現） ===== */
+  #gachaFx { position:absolute; inset:0; z-index:90; display:none; overflow:hidden; background:#000; cursor:pointer; }
+  #gachaFx.open { display:block; }
+  #gachaFxBg { position:absolute; inset:0; background-size:cover; background-position:50% 100%; opacity:0; filter:brightness(.4) saturate(.8); }
+  #gachaCanvas { position:absolute; inset:0; width:100%; height:100%; }
+  #gachaCircle {
+    position:absolute; left:50%; bottom:9%; width:340px; height:96px; margin-left:-170px;
+    border-radius:50%; opacity:0; pointer-events:none;
+    background:radial-gradient(ellipse at center, rgba(255,255,255,.85) 0%, var(--fxc, #ffd94d) 34%, transparent 68%);
+    box-shadow:0 0 44px 12px var(--fxc, #ffd94d);
+  }
+  #gachaCircle::before, #gachaCircle::after {
+    content:""; position:absolute; inset:6px; border-radius:50%;
+    border:3px dashed rgba(255,255,255,.75);
+    animation:circleSpin 5s linear infinite;
+  }
+  #gachaCircle::after { inset:20px; animation-direction:reverse; animation-duration:3.4s; }
+  @keyframes circleSpin { to { transform:rotate(360deg); } }
+  #gachaPillar {
+    position:absolute; left:50%; bottom:11%; width:120px; margin-left:-60px; height:0;
+    opacity:0; pointer-events:none; border-radius:60px 60px 0 0;
+    background:linear-gradient(90deg, transparent, var(--fxc, #ffd94d) 30%, #ffffff 50%, var(--fxc, #ffd94d) 70%, transparent);
+    filter:blur(1px); mix-blend-mode:screen;
+  }
+  #gachaFx.rainbow #gachaPillar {
+    background:linear-gradient(90deg, transparent, #ff5e5e 18%, #ffb02e 34%, #ffe95e 46%, #ffffff 50%, #7dff9a 56%, #3a9bff 70%, #b45cff 84%, transparent);
+    animation:rainbowShift 1.1s linear infinite;
+  }
+  #gachaFx.rainbow #gachaCircle { animation:rainbowShift 1.1s linear infinite; }
+  @keyframes rainbowShift { to { filter:hue-rotate(360deg); } }
+  #gachaChar {
+    position:absolute; left:50%; bottom:10%; transform:translateX(-50%);
+    max-height:72%; max-width:86%; opacity:0; pointer-events:none;
+    filter:brightness(0) drop-shadow(0 0 22px var(--fxc, #ffd94d));
+  }
+  #gachaFlashFx { position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; }
+  #gachaReveal {
+    position:absolute; left:0; right:0; bottom:3%; text-align:center; opacity:0; pointer-events:none; z-index:5;
+  }
+  #gachaReveal .grarBig { font-size:21px; font-weight:bold; letter-spacing:4px; text-shadow:2px 2px 0 #000; }
+  #gachaReveal .gnameBig { font-size:42px; font-weight:bold; color:#fff; letter-spacing:3px; text-shadow:3px 3px 0 #7a2d00, -1px -1px 0 #000; }
+  #gachaReveal .gnoteBig { font-size:14px; color:#ffd94d; text-shadow:1px 1px 0 #000; margin-top:2px; }
+  #gachaSkip { position:absolute; right:10px; bottom:8px; font-size:11px; color:rgba(255,255,255,.65); letter-spacing:2px; z-index:6; }
+
   /* ===== 強制横画面：縦持ち時は画面ごと90度回転して常に横画面表示にする ===== */
   @media (orientation:portrait) {
     body { display:block; padding:0; }
@@ -310,6 +382,10 @@
       <div class="hud-value" id="timeNum">99</div>
     </div>
     <div class="hud-block">
+      <div class="hud-label">SCRAP</div>
+      <div class="hud-value" id="scrapVal" style="color:#9fe8ff;">0</div>
+    </div>
+    <div class="hud-block">
       <button id="soundBtn">SOUND ON</button>
     </div>
   </div>
@@ -317,9 +393,9 @@
 
   <div id="stage">
     <div id="testBadge" style="display:none; position:absolute; top:6px; left:50%; transform:translateX(-50%); z-index:40; background:#c62828; color:#fff; font-size:12px; font-weight:bold; padding:2px 12px; border-radius:4px; letter-spacing:2px; pointer-events:none;">TEST環境</div>
-    <img id="bgImg" src="assets/bg0.webp?v=35" alt="">
-    <div id="carWrap"><img id="carImg" src="assets/car0.webp?v=35" alt="" draggable="false"></div>
-    <div id="fighterWrap"><img id="fighterImg" src="assets/fighter_idle.webp?v=35" alt="" draggable="false"></div>
+    <img id="bgImg" src="assets/bg0.webp?v=36" alt="">
+    <div id="carWrap"><img id="carImg" src="assets/car0.webp?v=36" alt="" draggable="false"></div>
+    <div id="fighterWrap"><img id="fighterImg" src="assets/fighter_idle.webp?v=36" alt="" draggable="false"></div>
     <div id="combo"><div id="comboNum">0</div><div id="comboTxt">HITS!</div></div>
     <div id="banner"><div id="bannerMain"></div><div id="bannerSub"></div></div>
     <div id="skillFlash"></div>
@@ -336,24 +412,29 @@
     <div id="menuCard">
       <h2>メニュー <button id="closeMenu">閉じる</button></h2>
       <div class="menuItem" data-act="solo">
-        <img class="micon" src="assets/icon_solo.webp?v=35" alt="">
+        <img class="micon" src="assets/icon_solo.webp?v=36" alt="">
         <div class="wname">ソロ<small>壊すたびに次のクルマが大きくなる階段制</small></div>
         <div class="weq" id="eqSolo">選択中</div>
       </div>
       <div class="menuItem" data-act="ta">
-        <img class="micon" src="assets/icon_ta.webp?v=35" alt="">
+        <img class="micon" src="assets/icon_ta.webp?v=36" alt="">
         <div class="wname">タイムアタック<small>60秒でスコアを競う／ベスト：<span id="taBestVal">0</span></small></div>
         <div class="weq" id="eqTa"></div>
       </div>
       <div class="menuItem locked" data-act="raid">
-        <img class="micon" src="assets/icon_raid.webp?v=35" alt="">
+        <img class="micon" src="assets/icon_raid.webp?v=36" alt="">
         <div class="wname">レイド<small>世界で1台のクルマを全員で壊す</small></div>
         <div class="weq">準備中</div>
       </div>
       <div class="menuItem" data-act="status">
-        <img class="micon" src="assets/icon_status.webp?v=35" alt="">
+        <img class="micon" src="assets/icon_status.webp?v=36" alt="">
         <div class="wname">ステータス<small>振り分け・キャラ・武器・熟練度</small></div>
         <div class="weq"></div>
+      </div>
+      <div class="menuItem" data-act="gacha">
+        <img class="micon" src="assets/icon_status.webp?v=36" alt="">
+        <div class="wname">キャラガチャ<small>スクラップ100で1回／10連1,000　所持スクラップ：<span id="menuScrapVal">0</span></small></div>
+        <div class="weq">NEW</div>
       </div>
       <div class="noteLine" id="menuNote">※ モードを切り替えるとスコアはリセットされます。レイドはサーバー接続が必要なため準備中です</div>
       <div class="noteLine">背景写真：Wikimedia Commons より（CC0／CC-BY／パブリックドメイン）。詳細は CREDITS.md</div>
@@ -371,7 +452,7 @@
 
       <div id="tabWeapon" class="tabPage">
         <div class="shopArea">
-          <img class="shopBg" src="assets/bg_shop.webp?v=35" alt="">
+          <img class="shopBg" src="assets/bg_shop.webp?v=36" alt="">
           <div class="shopInner">
             <div class="detailBox">
               <div class="dName" id="wpName">素手</div>
@@ -383,7 +464,7 @@
               <div class="dNote" id="wpSkill"></div>
               <button class="actionBtn" id="wpAction">装備する</button>
             </div>
-            <div class="charStand"><img id="wpStand" src="assets/fighter_idle.webp?v=35" alt=""></div>
+            <div class="charStand"><img id="wpStand" src="assets/fighter_idle.webp?v=36" alt=""></div>
           </div>
         </div>
         <div class="cardRow" id="wpCards"></div>
@@ -392,7 +473,7 @@
 
       <div id="tabChar" class="tabPage" style="display:none">
         <div class="shopArea">
-          <img class="shopBg" src="assets/bg_shop.webp?v=35" alt="">
+          <img class="shopBg" src="assets/bg_shop.webp?v=36" alt="">
           <div class="shopInner">
             <div class="detailBox">
               <div class="dName" id="chName">レン</div>
@@ -405,17 +486,17 @@
               <div class="dNote" id="chSkill"></div>
               <button class="actionBtn" id="chAction">このキャラにする</button>
             </div>
-            <div class="charStand"><img id="chStand" src="assets/fighter_idle.webp?v=35" alt=""></div>
+            <div class="charStand"><img id="chStand" src="assets/fighter_idle.webp?v=36" alt=""></div>
           </div>
         </div>
         <div class="cardRow" id="chCards"></div>
-        <div class="noteLine">※ 熟練度（星2=300／星3=1,000／星4=2,500／星5=5,000ヒット）でバフ：星2+10%／星3+20%／星4+30%／星5+50%（全ステータス）</div>
+        <div class="noteLine">※ キャラ熟練度の必要ヒット数はレア度で変わる（星5まで：ノーマル5,000／レア7,500／スーパーレア10,000／SSR15,000／UR25,000）。バフは星2+10%／星3+20%／星4+30%／星5+50%（全ステータス）。ガチャキャラは未所持だとシルエット表示</div>
       </div>
 
       <div id="tabStat" class="tabPage" style="display:none">
         <div class="lvLine">レベル <b id="stLevel">1</b> ／ 次のレベルまで</div>
         <div id="xpBarOuter"><div id="xpBar"></div></div>
-        <div id="ptsLine">ステータスポイント：<b id="stPts">0</b>　／　チケット：<b id="stTickets">0</b>枚</div>
+        <div id="ptsLine">ステータスポイント：<b id="stPts">0</b>　／　チケット：<b id="stTickets">0</b>枚　／　スクラップ：<b id="stScrap">0</b></div>
         <div id="testTools" style="display:none; margin-top:10px; border-top:1px dashed #c62828; padding-top:8px;">
           <div style="font-size:12px; color:#ff9d9d; font-weight:bold; margin-bottom:6px;">テスト用ツール（テスト環境でのみ表示・本番セーブには影響しない）</div>
           <div style="display:flex; gap:6px; flex-wrap:wrap;">
@@ -425,6 +506,8 @@
             <button class="sbtn" id="tUnlock" style="width:auto; padding:0 10px;">全武器解放＋熟練度MAX</button>
             <button class="sbtn" id="tCharMax" style="width:auto; padding:0 10px;">全キャラ熟練度MAX</button>
             <button class="sbtn" id="tStage" style="width:auto; padding:0 10px;">ステージ+100（背景切替）</button>
+            <button class="sbtn" id="tScrap" style="width:auto; padding:0 10px;">スクラップ+1000</button>
+            <button class="sbtn" id="tCharAll" style="width:auto; padding:0 10px;">全キャラ解放</button>
             <button class="sbtn" id="tWipe" style="width:auto; padding:0 10px;">テストセーブ消去</button>
           </div>
         </div>
@@ -438,6 +521,30 @@
         <div class="noteLine">※ 熟練度バフは武器・キャラ共通で星2+10%／星3+20%／星4+30%／星5+50%（全ステータスに効き、武器とキャラで乗算）</div>
       </div>
     </div>
+  </div>
+
+  <div id="gachaPanel">
+    <div id="gachaCard">
+      <h2>キャラガチャ <button id="closeGacha">閉じる</button></h2>
+      <div class="gachaScrapLine">スクラップ：<b id="gachaScrapVal">0</b>（クルマ完破で+10／10台ごとの強敵は+100）</div>
+      <div class="gachaBtns">
+        <button id="gachaOne">1回引く（100）</button>
+        <button id="gachaTen">10連（1,000）</button>
+      </div>
+      <div class="noteLine">排出率：レア 88.75%／スーパーレア 8%／SSR 3%／UR 0.25%。被ったキャラは、そのレア度に応じた熟練度ヒットに変換されます</div>
+      <div id="gachaResult"></div>
+    </div>
+  </div>
+
+  <div id="gachaFx">
+    <div id="gachaFxBg"></div>
+    <canvas id="gachaCanvas"></canvas>
+    <div id="gachaCircle"></div>
+    <div id="gachaPillar"></div>
+    <img id="gachaChar" src="" alt="">
+    <div id="gachaFlashFx"></div>
+    <div id="gachaReveal"><div class="grarBig" id="gachaRarBig"></div><div class="gnameBig" id="gachaNameBig"></div><div class="gnoteBig" id="gachaNoteBig"></div></div>
+    <div id="gachaSkip">TAP TO SKIP ▸</div>
   </div>
 
   <div id="resultPanel">
@@ -463,138 +570,193 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.34（大きなスコアが再読み込みで壊れる復元バグを修正）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー6）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.35（ガチャ実装：スクラップ通貨・新キャラ11体・召喚演出）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー6）</span></div>
 </div>
 
 <script>
 (function(){
   "use strict";
   var IMG = {
-    car:  ["assets/car0.webp?v=35","assets/car1.webp?v=35","assets/car2.webp?v=35","assets/car3.webp?v=35"],
-    car2: ["assets/car2_0.webp?v=35","assets/car2_1.webp?v=35","assets/car2_2.webp?v=35","assets/car2_3.webp?v=35"],
-    sedan: ["assets/sedan0.webp?v=35","assets/sedan1.webp?v=35","assets/sedan2.webp?v=35","assets/sedan3.webp?v=35"],
-    sport: ["assets/sport0.webp?v=35","assets/sport1.webp?v=35","assets/sport2.webp?v=35","assets/sport3.webp?v=35"],
-    suv:   ["assets/suv0.webp?v=35","assets/suv1.webp?v=35","assets/suv2.webp?v=35","assets/suv3.webp?v=35"],
-    truck: ["assets/truck0.webp?v=35","assets/truck1.webp?v=35","assets/truck2.webp?v=35","assets/truck3.webp?v=35"],
-    icons: { fist:"assets/icon_w_fist.webp?v=35", harisen:"assets/icon_w_harisen.webp?v=35", pan:"assets/icon_w_pan.webp?v=35", hammer:"assets/icon_w_hammer.webp?v=35", kakuzai:"assets/icon_w_kakuzai.webp?v=35", driver:"assets/icon_w_driver.webp?v=35", gunte:"assets/icon_w_gunte.webp?v=35", drill:"assets/icon_w_drill.webp?v=35", shinai:"assets/icon_w_shinai.webp?v=35", glove2:"assets/icon_w_glove2.webp?v=35", pliers:"assets/icon_w_pliers.webp?v=35", bokken:"assets/icon_w_bokken.webp?v=35", slipper:"assets/icon_w_slipper.webp?v=35", boxglove:"assets/icon_w_boxglove.webp?v=35", wrench:"assets/icon_w_wrench.webp?v=35", shinbunshi:"assets/icon_w_shinbunshi.webp?v=35", pikopiko:"assets/icon_w_pikopiko.webp?v=35", grinder:"assets/icon_w_grinder.webp?v=35", bat:"assets/icon_w_bat.webp?v=35", monkey:"assets/icon_w_monkey.webp?v=35", leather:"assets/icon_w_leather.webp?v=35" },
+    car:  ["assets/car0.webp?v=36","assets/car1.webp?v=36","assets/car2.webp?v=36","assets/car3.webp?v=36"],
+    car2: ["assets/car2_0.webp?v=36","assets/car2_1.webp?v=36","assets/car2_2.webp?v=36","assets/car2_3.webp?v=36"],
+    sedan: ["assets/sedan0.webp?v=36","assets/sedan1.webp?v=36","assets/sedan2.webp?v=36","assets/sedan3.webp?v=36"],
+    sport: ["assets/sport0.webp?v=36","assets/sport1.webp?v=36","assets/sport2.webp?v=36","assets/sport3.webp?v=36"],
+    suv:   ["assets/suv0.webp?v=36","assets/suv1.webp?v=36","assets/suv2.webp?v=36","assets/suv3.webp?v=36"],
+    truck: ["assets/truck0.webp?v=36","assets/truck1.webp?v=36","assets/truck2.webp?v=36","assets/truck3.webp?v=36"],
+    icons: { fist:"assets/icon_w_fist.webp?v=36", harisen:"assets/icon_w_harisen.webp?v=36", pan:"assets/icon_w_pan.webp?v=36", hammer:"assets/icon_w_hammer.webp?v=36", kakuzai:"assets/icon_w_kakuzai.webp?v=36", driver:"assets/icon_w_driver.webp?v=36", gunte:"assets/icon_w_gunte.webp?v=36", drill:"assets/icon_w_drill.webp?v=36", shinai:"assets/icon_w_shinai.webp?v=36", glove2:"assets/icon_w_glove2.webp?v=36", pliers:"assets/icon_w_pliers.webp?v=36", bokken:"assets/icon_w_bokken.webp?v=36", slipper:"assets/icon_w_slipper.webp?v=36", boxglove:"assets/icon_w_boxglove.webp?v=36", wrench:"assets/icon_w_wrench.webp?v=36", shinbunshi:"assets/icon_w_shinbunshi.webp?v=36", pikopiko:"assets/icon_w_pikopiko.webp?v=36", grinder:"assets/icon_w_grinder.webp?v=36", bat:"assets/icon_w_bat.webp?v=36", monkey:"assets/icon_w_monkey.webp?v=36", leather:"assets/icon_w_leather.webp?v=36" },
     chars: {
       ren: {
-        fist:    ["assets/fighter_idle.webp?v=35", "assets/fighter_punch.webp?v=35"],
-        harisen: ["assets/fighter_harisen_idle.webp?v=35", "assets/fighter_harisen_punch.webp?v=35"],
-        pan:     ["assets/fighter_pan_idle.webp?v=35", "assets/fighter_pan_punch.webp?v=35"],
-        hammer:  ["assets/fighter_hammer_idle.webp?v=35", "assets/fighter_hammer_punch.webp?v=35"],
-        kakuzai: ["assets/fighter_kakuzai_idle.webp?v=35", "assets/fighter_kakuzai_punch.webp?v=35"],
-        driver:  ["assets/fighter_driver_idle.webp?v=35", "assets/fighter_driver_punch.webp?v=35"],
-        gunte:   ["assets/fighter_gunte_idle.webp?v=35", "assets/fighter_gunte_punch.webp?v=35"],
-        drill:   ["assets/fighter_drill_idle.webp?v=35", "assets/fighter_drill_punch.webp?v=35"],
-        shinai:  ["assets/fighter_shinai_idle.webp?v=35", "assets/fighter_shinai_punch.webp?v=35"],
-        glove2:  ["assets/fighter_glove2_idle.webp?v=35", "assets/fighter_glove2_punch.webp?v=35"],
-        pliers:  ["assets/fighter_pliers_idle.webp?v=35", "assets/fighter_pliers_punch.webp?v=35"],
-        bokken:  ["assets/fighter_bokken_idle.webp?v=35", "assets/fighter_bokken_punch.webp?v=35"],
-        slipper: ["assets/fighter_slipper_idle.webp?v=35", "assets/fighter_slipper_punch.webp?v=35"],
-        boxglove:["assets/fighter_boxglove_idle.webp?v=35", "assets/fighter_boxglove_punch.webp?v=35"],
-        wrench:  ["assets/fighter_wrench_idle.webp?v=35", "assets/fighter_wrench_punch.webp?v=35"],
-        shinbunshi:["assets/fighter_shinbunshi_idle.webp?v=35", "assets/fighter_shinbunshi_punch.webp?v=35"],
-        pikopiko:["assets/fighter_pikopiko_idle.webp?v=35", "assets/fighter_pikopiko_punch.webp?v=35"],
-        grinder: ["assets/fighter_grinder_idle.webp?v=35", "assets/fighter_grinder_punch.webp?v=35"],
-        bat:     ["assets/fighter_bat_idle.webp?v=35", "assets/fighter_bat_punch.webp?v=35"],
-        monkey:  ["assets/fighter_monkey_idle.webp?v=35", "assets/fighter_monkey_punch.webp?v=35"],
-        leather: ["assets/fighter_leather_idle.webp?v=35", "assets/fighter_leather_punch.webp?v=35"]
+        fist:    ["assets/fighter_idle.webp?v=36", "assets/fighter_punch.webp?v=36"],
+        harisen: ["assets/fighter_harisen_idle.webp?v=36", "assets/fighter_harisen_punch.webp?v=36"],
+        pan:     ["assets/fighter_pan_idle.webp?v=36", "assets/fighter_pan_punch.webp?v=36"],
+        hammer:  ["assets/fighter_hammer_idle.webp?v=36", "assets/fighter_hammer_punch.webp?v=36"],
+        kakuzai: ["assets/fighter_kakuzai_idle.webp?v=36", "assets/fighter_kakuzai_punch.webp?v=36"],
+        driver:  ["assets/fighter_driver_idle.webp?v=36", "assets/fighter_driver_punch.webp?v=36"],
+        gunte:   ["assets/fighter_gunte_idle.webp?v=36", "assets/fighter_gunte_punch.webp?v=36"],
+        drill:   ["assets/fighter_drill_idle.webp?v=36", "assets/fighter_drill_punch.webp?v=36"],
+        shinai:  ["assets/fighter_shinai_idle.webp?v=36", "assets/fighter_shinai_punch.webp?v=36"],
+        glove2:  ["assets/fighter_glove2_idle.webp?v=36", "assets/fighter_glove2_punch.webp?v=36"],
+        pliers:  ["assets/fighter_pliers_idle.webp?v=36", "assets/fighter_pliers_punch.webp?v=36"],
+        bokken:  ["assets/fighter_bokken_idle.webp?v=36", "assets/fighter_bokken_punch.webp?v=36"],
+        slipper: ["assets/fighter_slipper_idle.webp?v=36", "assets/fighter_slipper_punch.webp?v=36"],
+        boxglove:["assets/fighter_boxglove_idle.webp?v=36", "assets/fighter_boxglove_punch.webp?v=36"],
+        wrench:  ["assets/fighter_wrench_idle.webp?v=36", "assets/fighter_wrench_punch.webp?v=36"],
+        shinbunshi:["assets/fighter_shinbunshi_idle.webp?v=36", "assets/fighter_shinbunshi_punch.webp?v=36"],
+        pikopiko:["assets/fighter_pikopiko_idle.webp?v=36", "assets/fighter_pikopiko_punch.webp?v=36"],
+        grinder: ["assets/fighter_grinder_idle.webp?v=36", "assets/fighter_grinder_punch.webp?v=36"],
+        bat:     ["assets/fighter_bat_idle.webp?v=36", "assets/fighter_bat_punch.webp?v=36"],
+        monkey:  ["assets/fighter_monkey_idle.webp?v=36", "assets/fighter_monkey_punch.webp?v=36"],
+        leather: ["assets/fighter_leather_idle.webp?v=36", "assets/fighter_leather_punch.webp?v=36"]
       },
       gou: {
-        fist:    ["assets/fighter_gou_fist_idle.webp?v=35", "assets/fighter_gou_fist_punch.webp?v=35"],
-        harisen: ["assets/fighter_gou_harisen_idle.webp?v=35", "assets/fighter_gou_harisen_punch.webp?v=35"],
-        pan:     ["assets/fighter_gou_pan_idle.webp?v=35", "assets/fighter_gou_pan_punch.webp?v=35"],
-        hammer:  ["assets/fighter_gou_hammer_idle.webp?v=35", "assets/fighter_gou_hammer_punch.webp?v=35"],
-        kakuzai: ["assets/fighter_gou_kakuzai_idle.webp?v=35", "assets/fighter_gou_kakuzai_punch.webp?v=35"],
-        driver:  ["assets/fighter_gou_driver_idle.webp?v=35", "assets/fighter_gou_driver_punch.webp?v=35"],
-        gunte:   ["assets/fighter_gou_gunte_idle.webp?v=35", "assets/fighter_gou_gunte_punch.webp?v=35"],
-        drill:   ["assets/fighter_gou_drill_idle.webp?v=35", "assets/fighter_gou_drill_punch.webp?v=35"],
-        shinai:  ["assets/fighter_gou_shinai_idle.webp?v=35", "assets/fighter_gou_shinai_punch.webp?v=35"],
-        glove2:  ["assets/fighter_gou_glove2_idle.webp?v=35", "assets/fighter_gou_glove2_punch.webp?v=35"],
-        pliers:  ["assets/fighter_gou_pliers_idle.webp?v=35", "assets/fighter_gou_pliers_punch.webp?v=35"],
-        bokken:  ["assets/fighter_gou_bokken_idle.webp?v=35", "assets/fighter_gou_bokken_punch.webp?v=35"],
-        slipper: ["assets/fighter_gou_slipper_idle.webp?v=35", "assets/fighter_gou_slipper_punch.webp?v=35"],
-        boxglove:["assets/fighter_gou_boxglove_idle.webp?v=35", "assets/fighter_gou_boxglove_punch.webp?v=35"],
-        wrench:  ["assets/fighter_gou_wrench_idle.webp?v=35", "assets/fighter_gou_wrench_punch.webp?v=35"],
-        shinbunshi:["assets/fighter_gou_shinbunshi_idle.webp?v=35", "assets/fighter_gou_shinbunshi_punch.webp?v=35"],
-        pikopiko:["assets/fighter_gou_pikopiko_idle.webp?v=35", "assets/fighter_gou_pikopiko_punch.webp?v=35"],
-        grinder: ["assets/fighter_gou_grinder_idle.webp?v=35", "assets/fighter_gou_grinder_punch.webp?v=35"],
-        bat:     ["assets/fighter_gou_bat_idle.webp?v=35", "assets/fighter_gou_bat_punch.webp?v=35"],
-        monkey:  ["assets/fighter_gou_monkey_idle.webp?v=35", "assets/fighter_gou_monkey_punch.webp?v=35"],
-        leather: ["assets/fighter_gou_leather_idle.webp?v=35", "assets/fighter_gou_leather_punch.webp?v=35"]
+        fist:    ["assets/fighter_gou_fist_idle.webp?v=36", "assets/fighter_gou_fist_punch.webp?v=36"],
+        harisen: ["assets/fighter_gou_harisen_idle.webp?v=36", "assets/fighter_gou_harisen_punch.webp?v=36"],
+        pan:     ["assets/fighter_gou_pan_idle.webp?v=36", "assets/fighter_gou_pan_punch.webp?v=36"],
+        hammer:  ["assets/fighter_gou_hammer_idle.webp?v=36", "assets/fighter_gou_hammer_punch.webp?v=36"],
+        kakuzai: ["assets/fighter_gou_kakuzai_idle.webp?v=36", "assets/fighter_gou_kakuzai_punch.webp?v=36"],
+        driver:  ["assets/fighter_gou_driver_idle.webp?v=36", "assets/fighter_gou_driver_punch.webp?v=36"],
+        gunte:   ["assets/fighter_gou_gunte_idle.webp?v=36", "assets/fighter_gou_gunte_punch.webp?v=36"],
+        drill:   ["assets/fighter_gou_drill_idle.webp?v=36", "assets/fighter_gou_drill_punch.webp?v=36"],
+        shinai:  ["assets/fighter_gou_shinai_idle.webp?v=36", "assets/fighter_gou_shinai_punch.webp?v=36"],
+        glove2:  ["assets/fighter_gou_glove2_idle.webp?v=36", "assets/fighter_gou_glove2_punch.webp?v=36"],
+        pliers:  ["assets/fighter_gou_pliers_idle.webp?v=36", "assets/fighter_gou_pliers_punch.webp?v=36"],
+        bokken:  ["assets/fighter_gou_bokken_idle.webp?v=36", "assets/fighter_gou_bokken_punch.webp?v=36"],
+        slipper: ["assets/fighter_gou_slipper_idle.webp?v=36", "assets/fighter_gou_slipper_punch.webp?v=36"],
+        boxglove:["assets/fighter_gou_boxglove_idle.webp?v=36", "assets/fighter_gou_boxglove_punch.webp?v=36"],
+        wrench:  ["assets/fighter_gou_wrench_idle.webp?v=36", "assets/fighter_gou_wrench_punch.webp?v=36"],
+        shinbunshi:["assets/fighter_gou_shinbunshi_idle.webp?v=36", "assets/fighter_gou_shinbunshi_punch.webp?v=36"],
+        pikopiko:["assets/fighter_gou_pikopiko_idle.webp?v=36", "assets/fighter_gou_pikopiko_punch.webp?v=36"],
+        grinder: ["assets/fighter_gou_grinder_idle.webp?v=36", "assets/fighter_gou_grinder_punch.webp?v=36"],
+        bat:     ["assets/fighter_gou_bat_idle.webp?v=36", "assets/fighter_gou_bat_punch.webp?v=36"],
+        monkey:  ["assets/fighter_gou_monkey_idle.webp?v=36", "assets/fighter_gou_monkey_punch.webp?v=36"],
+        leather: ["assets/fighter_gou_leather_idle.webp?v=36", "assets/fighter_gou_leather_punch.webp?v=36"]
       },
       hayate: {
-        fist:    ["assets/fighter_hayate_fist_idle.webp?v=35", "assets/fighter_hayate_fist_punch.webp?v=35"],
-        harisen: ["assets/fighter_hayate_harisen_idle.webp?v=35", "assets/fighter_hayate_harisen_punch.webp?v=35"],
-        pan:     ["assets/fighter_hayate_pan_idle.webp?v=35", "assets/fighter_hayate_pan_punch.webp?v=35"],
-        hammer:  ["assets/fighter_hayate_hammer_idle.webp?v=35", "assets/fighter_hayate_hammer_punch.webp?v=35"],
-        kakuzai: ["assets/fighter_hayate_kakuzai_idle.webp?v=35", "assets/fighter_hayate_kakuzai_punch.webp?v=35"],
-        driver:  ["assets/fighter_hayate_driver_idle.webp?v=35", "assets/fighter_hayate_driver_punch.webp?v=35"],
-        gunte:   ["assets/fighter_hayate_gunte_idle.webp?v=35", "assets/fighter_hayate_gunte_punch.webp?v=35"],
-        drill:   ["assets/fighter_hayate_drill_idle.webp?v=35", "assets/fighter_hayate_drill_punch.webp?v=35"],
-        shinai:  ["assets/fighter_hayate_shinai_idle.webp?v=35", "assets/fighter_hayate_shinai_punch.webp?v=35"],
-        glove2:  ["assets/fighter_hayate_glove2_idle.webp?v=35", "assets/fighter_hayate_glove2_punch.webp?v=35"],
-        pliers:  ["assets/fighter_hayate_pliers_idle.webp?v=35", "assets/fighter_hayate_pliers_punch.webp?v=35"],
-        bokken:  ["assets/fighter_hayate_bokken_idle.webp?v=35", "assets/fighter_hayate_bokken_punch.webp?v=35"],
-        slipper: ["assets/fighter_hayate_slipper_idle.webp?v=35", "assets/fighter_hayate_slipper_punch.webp?v=35"],
-        boxglove:["assets/fighter_hayate_boxglove_idle.webp?v=35", "assets/fighter_hayate_boxglove_punch.webp?v=35"],
-        wrench:  ["assets/fighter_hayate_wrench_idle.webp?v=35", "assets/fighter_hayate_wrench_punch.webp?v=35"],
-        shinbunshi:["assets/fighter_hayate_shinbunshi_idle.webp?v=35", "assets/fighter_hayate_shinbunshi_punch.webp?v=35"],
-        pikopiko:["assets/fighter_hayate_pikopiko_idle.webp?v=35", "assets/fighter_hayate_pikopiko_punch.webp?v=35"],
-        grinder: ["assets/fighter_hayate_grinder_idle.webp?v=35", "assets/fighter_hayate_grinder_punch.webp?v=35"],
-        bat:     ["assets/fighter_hayate_bat_idle.webp?v=35", "assets/fighter_hayate_bat_punch.webp?v=35"],
-        monkey:  ["assets/fighter_hayate_monkey_idle.webp?v=35", "assets/fighter_hayate_monkey_punch.webp?v=35"],
-        leather: ["assets/fighter_hayate_leather_idle.webp?v=35", "assets/fighter_hayate_leather_punch.webp?v=35"]
+        fist:    ["assets/fighter_hayate_fist_idle.webp?v=36", "assets/fighter_hayate_fist_punch.webp?v=36"],
+        harisen: ["assets/fighter_hayate_harisen_idle.webp?v=36", "assets/fighter_hayate_harisen_punch.webp?v=36"],
+        pan:     ["assets/fighter_hayate_pan_idle.webp?v=36", "assets/fighter_hayate_pan_punch.webp?v=36"],
+        hammer:  ["assets/fighter_hayate_hammer_idle.webp?v=36", "assets/fighter_hayate_hammer_punch.webp?v=36"],
+        kakuzai: ["assets/fighter_hayate_kakuzai_idle.webp?v=36", "assets/fighter_hayate_kakuzai_punch.webp?v=36"],
+        driver:  ["assets/fighter_hayate_driver_idle.webp?v=36", "assets/fighter_hayate_driver_punch.webp?v=36"],
+        gunte:   ["assets/fighter_hayate_gunte_idle.webp?v=36", "assets/fighter_hayate_gunte_punch.webp?v=36"],
+        drill:   ["assets/fighter_hayate_drill_idle.webp?v=36", "assets/fighter_hayate_drill_punch.webp?v=36"],
+        shinai:  ["assets/fighter_hayate_shinai_idle.webp?v=36", "assets/fighter_hayate_shinai_punch.webp?v=36"],
+        glove2:  ["assets/fighter_hayate_glove2_idle.webp?v=36", "assets/fighter_hayate_glove2_punch.webp?v=36"],
+        pliers:  ["assets/fighter_hayate_pliers_idle.webp?v=36", "assets/fighter_hayate_pliers_punch.webp?v=36"],
+        bokken:  ["assets/fighter_hayate_bokken_idle.webp?v=36", "assets/fighter_hayate_bokken_punch.webp?v=36"],
+        slipper: ["assets/fighter_hayate_slipper_idle.webp?v=36", "assets/fighter_hayate_slipper_punch.webp?v=36"],
+        boxglove:["assets/fighter_hayate_boxglove_idle.webp?v=36", "assets/fighter_hayate_boxglove_punch.webp?v=36"],
+        wrench:  ["assets/fighter_hayate_wrench_idle.webp?v=36", "assets/fighter_hayate_wrench_punch.webp?v=36"],
+        shinbunshi:["assets/fighter_hayate_shinbunshi_idle.webp?v=36", "assets/fighter_hayate_shinbunshi_punch.webp?v=36"],
+        pikopiko:["assets/fighter_hayate_pikopiko_idle.webp?v=36", "assets/fighter_hayate_pikopiko_punch.webp?v=36"],
+        grinder: ["assets/fighter_hayate_grinder_idle.webp?v=36", "assets/fighter_hayate_grinder_punch.webp?v=36"],
+        bat:     ["assets/fighter_hayate_bat_idle.webp?v=36", "assets/fighter_hayate_bat_punch.webp?v=36"],
+        monkey:  ["assets/fighter_hayate_monkey_idle.webp?v=36", "assets/fighter_hayate_monkey_punch.webp?v=36"],
+        leather: ["assets/fighter_hayate_leather_idle.webp?v=36", "assets/fighter_hayate_leather_punch.webp?v=36"]
       },
       kirara: {
-        fist:    ["assets/fighter_kirara_fist_idle.webp?v=35", "assets/fighter_kirara_fist_punch.webp?v=35"],
-        harisen: ["assets/fighter_kirara_harisen_idle.webp?v=35", "assets/fighter_kirara_harisen_punch.webp?v=35"],
-        pan:     ["assets/fighter_kirara_pan_idle.webp?v=35", "assets/fighter_kirara_pan_punch.webp?v=35"],
-        hammer:  ["assets/fighter_kirara_hammer_idle.webp?v=35", "assets/fighter_kirara_hammer_punch.webp?v=35"],
-        kakuzai: ["assets/fighter_kirara_kakuzai_idle.webp?v=35", "assets/fighter_kirara_kakuzai_punch.webp?v=35"],
-        driver:  ["assets/fighter_kirara_driver_idle.webp?v=35", "assets/fighter_kirara_driver_punch.webp?v=35"],
-        gunte:   ["assets/fighter_kirara_gunte_idle.webp?v=35", "assets/fighter_kirara_gunte_punch.webp?v=35"],
-        drill:   ["assets/fighter_kirara_drill_idle.webp?v=35", "assets/fighter_kirara_drill_punch.webp?v=35"],
-        shinai:  ["assets/fighter_kirara_shinai_idle.webp?v=35", "assets/fighter_kirara_shinai_punch.webp?v=35"],
-        glove2:  ["assets/fighter_kirara_glove2_idle.webp?v=35", "assets/fighter_kirara_glove2_punch.webp?v=35"],
-        pliers:  ["assets/fighter_kirara_pliers_idle.webp?v=35", "assets/fighter_kirara_pliers_punch.webp?v=35"],
-        bokken:  ["assets/fighter_kirara_bokken_idle.webp?v=35", "assets/fighter_kirara_bokken_punch.webp?v=35"],
-        slipper: ["assets/fighter_kirara_slipper_idle.webp?v=35", "assets/fighter_kirara_slipper_punch.webp?v=35"],
-        boxglove:["assets/fighter_kirara_boxglove_idle.webp?v=35", "assets/fighter_kirara_boxglove_punch.webp?v=35"],
-        wrench:  ["assets/fighter_kirara_wrench_idle.webp?v=35", "assets/fighter_kirara_wrench_punch.webp?v=35"],
-        shinbunshi:["assets/fighter_kirara_shinbunshi_idle.webp?v=35", "assets/fighter_kirara_shinbunshi_punch.webp?v=35"],
-        pikopiko:["assets/fighter_kirara_pikopiko_idle.webp?v=35", "assets/fighter_kirara_pikopiko_punch.webp?v=35"],
-        grinder: ["assets/fighter_kirara_grinder_idle.webp?v=35", "assets/fighter_kirara_grinder_punch.webp?v=35"],
-        bat:     ["assets/fighter_kirara_bat_idle.webp?v=35", "assets/fighter_kirara_bat_punch.webp?v=35"],
-        monkey:  ["assets/fighter_kirara_monkey_idle.webp?v=35", "assets/fighter_kirara_monkey_punch.webp?v=35"],
-        leather: ["assets/fighter_kirara_leather_idle.webp?v=35", "assets/fighter_kirara_leather_punch.webp?v=35"]
+        fist:    ["assets/fighter_kirara_fist_idle.webp?v=36", "assets/fighter_kirara_fist_punch.webp?v=36"],
+        harisen: ["assets/fighter_kirara_harisen_idle.webp?v=36", "assets/fighter_kirara_harisen_punch.webp?v=36"],
+        pan:     ["assets/fighter_kirara_pan_idle.webp?v=36", "assets/fighter_kirara_pan_punch.webp?v=36"],
+        hammer:  ["assets/fighter_kirara_hammer_idle.webp?v=36", "assets/fighter_kirara_hammer_punch.webp?v=36"],
+        kakuzai: ["assets/fighter_kirara_kakuzai_idle.webp?v=36", "assets/fighter_kirara_kakuzai_punch.webp?v=36"],
+        driver:  ["assets/fighter_kirara_driver_idle.webp?v=36", "assets/fighter_kirara_driver_punch.webp?v=36"],
+        gunte:   ["assets/fighter_kirara_gunte_idle.webp?v=36", "assets/fighter_kirara_gunte_punch.webp?v=36"],
+        drill:   ["assets/fighter_kirara_drill_idle.webp?v=36", "assets/fighter_kirara_drill_punch.webp?v=36"],
+        shinai:  ["assets/fighter_kirara_shinai_idle.webp?v=36", "assets/fighter_kirara_shinai_punch.webp?v=36"],
+        glove2:  ["assets/fighter_kirara_glove2_idle.webp?v=36", "assets/fighter_kirara_glove2_punch.webp?v=36"],
+        pliers:  ["assets/fighter_kirara_pliers_idle.webp?v=36", "assets/fighter_kirara_pliers_punch.webp?v=36"],
+        bokken:  ["assets/fighter_kirara_bokken_idle.webp?v=36", "assets/fighter_kirara_bokken_punch.webp?v=36"],
+        slipper: ["assets/fighter_kirara_slipper_idle.webp?v=36", "assets/fighter_kirara_slipper_punch.webp?v=36"],
+        boxglove:["assets/fighter_kirara_boxglove_idle.webp?v=36", "assets/fighter_kirara_boxglove_punch.webp?v=36"],
+        wrench:  ["assets/fighter_kirara_wrench_idle.webp?v=36", "assets/fighter_kirara_wrench_punch.webp?v=36"],
+        shinbunshi:["assets/fighter_kirara_shinbunshi_idle.webp?v=36", "assets/fighter_kirara_shinbunshi_punch.webp?v=36"],
+        pikopiko:["assets/fighter_kirara_pikopiko_idle.webp?v=36", "assets/fighter_kirara_pikopiko_punch.webp?v=36"],
+        grinder: ["assets/fighter_kirara_grinder_idle.webp?v=36", "assets/fighter_kirara_grinder_punch.webp?v=36"],
+        bat:     ["assets/fighter_kirara_bat_idle.webp?v=36", "assets/fighter_kirara_bat_punch.webp?v=36"],
+        monkey:  ["assets/fighter_kirara_monkey_idle.webp?v=36", "assets/fighter_kirara_monkey_punch.webp?v=36"],
+        leather: ["assets/fighter_kirara_leather_idle.webp?v=36", "assets/fighter_kirara_leather_punch.webp?v=36"]
       },
       satoru: {
-        fist:    ["assets/fighter_satoru_fist_idle.webp?v=35", "assets/fighter_satoru_fist_punch.webp?v=35"],
-        harisen: ["assets/fighter_satoru_harisen_idle.webp?v=35", "assets/fighter_satoru_harisen_punch.webp?v=35"],
-        pan:     ["assets/fighter_satoru_pan_idle.webp?v=35", "assets/fighter_satoru_pan_punch.webp?v=35"],
-        hammer:  ["assets/fighter_satoru_hammer_idle.webp?v=35", "assets/fighter_satoru_hammer_punch.webp?v=35"],
-        kakuzai: ["assets/fighter_satoru_kakuzai_idle.webp?v=35", "assets/fighter_satoru_kakuzai_punch.webp?v=35"],
-        driver:  ["assets/fighter_satoru_driver_idle.webp?v=35", "assets/fighter_satoru_driver_punch.webp?v=35"],
-        gunte:   ["assets/fighter_satoru_gunte_idle.webp?v=35", "assets/fighter_satoru_gunte_punch.webp?v=35"],
-        drill:   ["assets/fighter_satoru_drill_idle.webp?v=35", "assets/fighter_satoru_drill_punch.webp?v=35"],
-        shinai:  ["assets/fighter_satoru_shinai_idle.webp?v=35", "assets/fighter_satoru_shinai_punch.webp?v=35"],
-        glove2:  ["assets/fighter_satoru_glove2_idle.webp?v=35", "assets/fighter_satoru_glove2_punch.webp?v=35"],
-        pliers:  ["assets/fighter_satoru_pliers_idle.webp?v=35", "assets/fighter_satoru_pliers_punch.webp?v=35"],
-        bokken:  ["assets/fighter_satoru_bokken_idle.webp?v=35", "assets/fighter_satoru_bokken_punch.webp?v=35"],
-        slipper: ["assets/fighter_satoru_slipper_idle.webp?v=35", "assets/fighter_satoru_slipper_punch.webp?v=35"],
-        boxglove:["assets/fighter_satoru_boxglove_idle.webp?v=35", "assets/fighter_satoru_boxglove_punch.webp?v=35"],
-        wrench:  ["assets/fighter_satoru_wrench_idle.webp?v=35", "assets/fighter_satoru_wrench_punch.webp?v=35"],
-        shinbunshi:["assets/fighter_satoru_shinbunshi_idle.webp?v=35", "assets/fighter_satoru_shinbunshi_punch.webp?v=35"],
-        pikopiko:["assets/fighter_satoru_pikopiko_idle.webp?v=35", "assets/fighter_satoru_pikopiko_punch.webp?v=35"],
-        grinder: ["assets/fighter_satoru_grinder_idle.webp?v=35", "assets/fighter_satoru_grinder_punch.webp?v=35"],
-        bat:     ["assets/fighter_satoru_bat_idle.webp?v=35", "assets/fighter_satoru_bat_punch.webp?v=35"],
-        monkey:  ["assets/fighter_satoru_monkey_idle.webp?v=35", "assets/fighter_satoru_monkey_punch.webp?v=35"],
-        leather: ["assets/fighter_satoru_leather_idle.webp?v=35", "assets/fighter_satoru_leather_punch.webp?v=35"]
+        fist:    ["assets/fighter_satoru_fist_idle.webp?v=36", "assets/fighter_satoru_fist_punch.webp?v=36"],
+        harisen: ["assets/fighter_satoru_harisen_idle.webp?v=36", "assets/fighter_satoru_harisen_punch.webp?v=36"],
+        pan:     ["assets/fighter_satoru_pan_idle.webp?v=36", "assets/fighter_satoru_pan_punch.webp?v=36"],
+        hammer:  ["assets/fighter_satoru_hammer_idle.webp?v=36", "assets/fighter_satoru_hammer_punch.webp?v=36"],
+        kakuzai: ["assets/fighter_satoru_kakuzai_idle.webp?v=36", "assets/fighter_satoru_kakuzai_punch.webp?v=36"],
+        driver:  ["assets/fighter_satoru_driver_idle.webp?v=36", "assets/fighter_satoru_driver_punch.webp?v=36"],
+        gunte:   ["assets/fighter_satoru_gunte_idle.webp?v=36", "assets/fighter_satoru_gunte_punch.webp?v=36"],
+        drill:   ["assets/fighter_satoru_drill_idle.webp?v=36", "assets/fighter_satoru_drill_punch.webp?v=36"],
+        shinai:  ["assets/fighter_satoru_shinai_idle.webp?v=36", "assets/fighter_satoru_shinai_punch.webp?v=36"],
+        glove2:  ["assets/fighter_satoru_glove2_idle.webp?v=36", "assets/fighter_satoru_glove2_punch.webp?v=36"],
+        pliers:  ["assets/fighter_satoru_pliers_idle.webp?v=36", "assets/fighter_satoru_pliers_punch.webp?v=36"],
+        bokken:  ["assets/fighter_satoru_bokken_idle.webp?v=36", "assets/fighter_satoru_bokken_punch.webp?v=36"],
+        slipper: ["assets/fighter_satoru_slipper_idle.webp?v=36", "assets/fighter_satoru_slipper_punch.webp?v=36"],
+        boxglove:["assets/fighter_satoru_boxglove_idle.webp?v=36", "assets/fighter_satoru_boxglove_punch.webp?v=36"],
+        wrench:  ["assets/fighter_satoru_wrench_idle.webp?v=36", "assets/fighter_satoru_wrench_punch.webp?v=36"],
+        shinbunshi:["assets/fighter_satoru_shinbunshi_idle.webp?v=36", "assets/fighter_satoru_shinbunshi_punch.webp?v=36"],
+        pikopiko:["assets/fighter_satoru_pikopiko_idle.webp?v=36", "assets/fighter_satoru_pikopiko_punch.webp?v=36"],
+        grinder: ["assets/fighter_satoru_grinder_idle.webp?v=36", "assets/fighter_satoru_grinder_punch.webp?v=36"],
+        bat:     ["assets/fighter_satoru_bat_idle.webp?v=36", "assets/fighter_satoru_bat_punch.webp?v=36"],
+        monkey:  ["assets/fighter_satoru_monkey_idle.webp?v=36", "assets/fighter_satoru_monkey_punch.webp?v=36"],
+        leather: ["assets/fighter_satoru_leather_idle.webp?v=36", "assets/fighter_satoru_leather_punch.webp?v=36"]
+      },
+      akari: {
+        fist:    ["assets/fighter_akari_fist_idle.webp?v=36", "assets/fighter_akari_fist_punch.webp?v=36"],
+        wrench:  ["assets/fighter_akari_wrench_idle.webp?v=36", "assets/fighter_akari_wrench_punch.webp?v=36"]
+      },
+      jinya: {
+        fist:    ["assets/fighter_jinya_fist_idle.webp?v=36", "assets/fighter_jinya_fist_punch.webp?v=36"],
+        bat:     ["assets/fighter_jinya_bat_idle.webp?v=36", "assets/fighter_jinya_bat_punch.webp?v=36"]
+      },
+      mio: {
+        fist:    ["assets/fighter_mio_fist_idle.webp?v=36", "assets/fighter_mio_fist_punch.webp?v=36"],
+        shinai:  ["assets/fighter_mio_shinai_idle.webp?v=36", "assets/fighter_mio_shinai_punch.webp?v=36"]
+      },
+      gorou: {
+        fist:    ["assets/fighter_gorou_fist_idle.webp?v=36", "assets/fighter_gorou_fist_punch.webp?v=36"],
+        hammer:  ["assets/fighter_gorou_hammer_idle.webp?v=36", "assets/fighter_gorou_hammer_punch.webp?v=36"]
+      },
+      yuki: {
+        fist:    ["assets/fighter_yuki_fist_idle.webp?v=36", "assets/fighter_yuki_fist_punch.webp?v=36"],
+        monkey:  ["assets/fighter_yuki_monkey_idle.webp?v=36", "assets/fighter_yuki_monkey_punch.webp?v=36"]
+      },
+      mike: {
+        fist:    ["assets/fighter_mike_fist_idle.webp?v=36", "assets/fighter_mike_fist_punch.webp?v=36"],
+        boxglove:["assets/fighter_mike_boxglove_idle.webp?v=36", "assets/fighter_mike_boxglove_punch.webp?v=36"]
+      },
+      hisui: {
+        fist:    ["assets/fighter_hisui_fist_idle.webp?v=36", "assets/fighter_hisui_fist_punch.webp?v=36"],
+        driver:  ["assets/fighter_hisui_driver_idle.webp?v=36", "assets/fighter_hisui_driver_punch.webp?v=36"]
+      },
+      hakase: {
+        fist:    ["assets/fighter_hakase_fist_idle.webp?v=36", "assets/fighter_hakase_fist_punch.webp?v=36"],
+        drill:   ["assets/fighter_hakase_drill_idle.webp?v=36", "assets/fighter_hakase_drill_punch.webp?v=36"]
+      },
+      reika: {
+        fist:    ["assets/fighter_reika_fist_idle.webp?v=36", "assets/fighter_reika_fist_punch.webp?v=36"],
+        wrench:  ["assets/fighter_reika_wrench_idle.webp?v=36", "assets/fighter_reika_wrench_punch.webp?v=36"]
+      },
+      shou: {
+        fist:    ["assets/fighter_shou_fist_idle.webp?v=36", "assets/fighter_shou_fist_punch.webp?v=36"],
+        bat:     ["assets/fighter_shou_bat_idle.webp?v=36", "assets/fighter_shou_bat_punch.webp?v=36"]
+      },
+      rinne: {
+        fist:    ["assets/fighter_rinne_fist_idle.webp?v=36", "assets/fighter_rinne_fist_punch.webp?v=36"],
+        hammer:  ["assets/fighter_rinne_hammer_idle.webp?v=36", "assets/fighter_rinne_hammer_punch.webp?v=36"]
       }
+    },
+    gacha: {
+      akari:"assets/gacha_akari.webp?v=36", jinya:"assets/gacha_jinya.webp?v=36", mio:"assets/gacha_mio.webp?v=36", gorou:"assets/gacha_gorou.webp?v=36", yuki:"assets/gacha_yuki.webp?v=36",
+      mike:"assets/gacha_mike.webp?v=36", hisui:"assets/gacha_hisui.webp?v=36", hakase:"assets/gacha_hakase.webp?v=36",
+      reika:"assets/gacha_reika.webp?v=36", shou:"assets/gacha_shou.webp?v=36", rinne:"assets/gacha_rinne.webp?v=36"
     }
   };
+  // スプライト解決：そのキャラ×武器の絵が無い組み合わせは素手スプライトで代替する（性能は装備武器どおり）
+  function CS(c, w){
+    var t = IMG.chars[c];
+    if (!t) return IMG.chars.ren.fist;
+    return t[w] || t.fist;
+  }
   // preload（入れ子を全部たどる）
   (function preload(v){
     if (typeof v === "string") { var i=new Image(); i.src=v; }
@@ -636,10 +798,23 @@
     gou:    { name:"ゴウ",   dmgMult:0.5,  cdMult:2.7,  critAdd:0,    critDMult:1.0, bonusMult:1.0, desc:"パワー型／一撃が重い・振りが少し重い" },
     hayate: { name:"ハヤテ", dmgMult:0.35, cdMult:1.6,  critAdd:0,    critDMult:1.0, bonusMult:1.0, desc:"スピード型／振りが速い・一撃は軽い" },
     kirara: { name:"キララ", dmgMult:0.38, cdMult:2.0,  critAdd:0.03, critDMult:1.25, bonusMult:1.0, desc:"クリティカル型／クリ率+3%・クリ倍率+25%・一撃は軽い" },
-    satoru: { name:"サトル", dmgMult:0.38, cdMult:2.0,  critAdd:0,    critDMult:1.0, bonusMult:1.1, desc:"テクニック型／完破ボーナス+10%・一撃は軽い" }
+    satoru: { name:"サトル", dmgMult:0.38, cdMult:2.0,  critAdd:0,    critDMult:1.0, bonusMult:1.1, desc:"テクニック型／完破ボーナス+10%・一撃は軽い" },
+    akari:  { name:"アカリ", dmgMult:0.46, cdMult:2.0,  critAdd:0,    critDMult:1.0, bonusMult:1.0, rarity:"rare", desc:"レア／バランス型・部位破壊が得意な整備士" },
+    jinya:  { name:"ジンヤ", dmgMult:0.55, cdMult:2.5,  critAdd:0,    critDMult:1.0, bonusMult:1.0, rarity:"rare", desc:"レア／パワー寄り・元ヤンの一撃" },
+    mio:    { name:"ミオ",   dmgMult:0.4,  cdMult:1.65, critAdd:0,    critDMult:1.0, bonusMult:1.0, rarity:"rare", desc:"レア／スピード寄り・ライダーの速さ" },
+    gorou:  { name:"ゴロウ", dmgMult:0.68, cdMult:3.1,  critAdd:0,    critDMult:1.0, bonusMult:1.0, rarity:"rare", desc:"レア／超パワー・低速の解体屋親方" },
+    yuki:   { name:"ユキ",   dmgMult:0.42, cdMult:2.0,  critAdd:0.05, critDMult:1.3, bonusMult:1.0, rarity:"rare", desc:"レア／クリティカル寄り・寡黙な職人" },
+    mike:   { name:"マイク", dmgMult:0.56, cdMult:2.3,  critAdd:0.03, critDMult:1.25, bonusMult:1.0, rarity:"super", desc:"スーパーレア／パワー＋クリティカル少しの元軍人メカニック" },
+    hisui:  { name:"ヒスイ", dmgMult:0.5,  cdMult:2.0,  critAdd:0,    critDMult:1.0, bonusMult:1.1, rarity:"super", desc:"スーパーレア／部位破壊寄り・クレーンオペレーター" },
+    hakase: { name:"ハカセ", dmgMult:0.48, cdMult:1.95, critAdd:0,    critDMult:1.0, bonusMult:1.0, rarity:"super", chargeMult:0.7, desc:"スーパーレア／必殺技のチャージが速い発明家" },
+    reika:  { name:"レイカ", dmgMult:0.58, cdMult:1.85, critAdd:0.03, critDMult:1.25, bonusMult:1.1, rarity:"ssr", desc:"SSR／万能型・解体会社の女社長" },
+    shou:   { name:"ショウ", dmgMult:0.44, cdMult:1.4,  critAdd:0.06, critDMult:1.4, bonusMult:1.0, rarity:"ssr", desc:"SSR／スピード×クリティカルの若きエース" },
+    rinne:  { name:"リンネ", dmgMult:0.8,  cdMult:2.2,  critAdd:0.05, critDMult:1.5, bonusMult:1.2, rarity:"ur", desc:"UR／解体姫・全キャラ最高のパワー" }
   };
   var charKey = "ren";
-  var CHAR_KEYS = ["ren","gou","hayate","kirara","satoru"];
+  var CHAR_KEYS = ["ren","gou","hayate","kirara","satoru","akari","jinya","mio","gorou","yuki","mike","hisui","hakase","reika","shou","rinne"];
+  var ownedChars = { ren:true, gou:true, hayate:true, kirara:true, satoru:true };  // ガチャキャラは入手で解放される
+  var scrap = 0;  // ガチャ通貨スクラップ（完破+10／10台ごとの強敵+100）
 
   /* 熟練度：ヒット数で星が上がる（武器・キャラ共通の階段） */
   var STAR_HITS = [0, 300, 1000, 2500, 5000];
@@ -647,7 +822,27 @@
   function starOf(hits){ var s=1; for (var i=1;i<STAR_HITS.length;i++) if (hits >= STAR_HITS[i]) s = i+1; return s; }
   function charStarMult(star){ return WSTAR_MULT[star - 1]; }  // キャラ熟練度も武器と同じ倍率表で全ステータスに効く（2026年11月24日にユーザーが決定）
   var weaponHits = { fist:0, harisen:0, pan:0, hammer:0, kakuzai:0, driver:0, gunte:0, drill:0, shinai:0, glove2:0, pliers:0, bokken:0, slipper:0, boxglove:0, wrench:0, shinbunshi:0, pikopiko:0, grinder:0, bat:0, monkey:0, leather:0 };
-  var charHits = { ren:0, gou:0, hayate:0, kirara:0, satoru:0 };
+  var charHits = { ren:0, gou:0, hayate:0, kirara:0, satoru:0, akari:0, jinya:0, mio:0, gorou:0, yuki:0, mike:0, hisui:0, hakase:0, reika:0, shou:0, rinne:0 };
+
+  /* キャラ熟練度はレア度で必要ヒット数が変わる（武器は従来どおり一律） */
+  var CHAR_STAR_HITS = {
+    normal:[0, 300, 1000, 2500, 5000],
+    rare:  [0, 450, 1500, 3750, 7500],
+    super: [0, 600, 2000, 5000, 10000],
+    ssr:   [0, 900, 3000, 7500, 15000],
+    ur:    [0, 1500, 5000, 12500, 25000]
+  };
+  function charRarity(key){ return (CHARS[key] && CHARS[key].rarity) || "normal"; }
+  function charStarOf(key){
+    var th = CHAR_STAR_HITS[charRarity(key)], hits = charHits[key] || 0, s = 1;
+    for (var i=1;i<th.length;i++) if (hits >= th[i]) s = i+1;
+    return s;
+  }
+  function charMasteryNote(key){
+    var th = CHAR_STAR_HITS[charRarity(key)], hits = charHits[key] || 0, st = charStarOf(key);
+    if (st >= 5) return "熟練度MAX（" + hits + "ヒット）";
+    return "あと" + (th[st] - hits) + "ヒットで星" + (st + 1) + "（現在" + hits + "ヒット）";
+  }
 
   var LADDER = [
     {name:"軽自動車",     hp:300,  pts:100, set:"car",  scale:1.00},
@@ -685,6 +880,7 @@
   var bannerSub = document.getElementById("bannerSub");
 
   var score = 0, carsDestroyed = 0;
+  var curBoss = false;  // 通算10台ごとの節目の車（強敵：HP1.5倍・スクラップ+100）
   var carIdx = 0, cur = null, hp = 0, maxHp = 0;
   var soloIdx = 0;  // ソロの到達ステージ（保存して次回ここから再開する）
   var savedCarHp = null;     // 途中で閉じた時の車の残りHP（ソロのみ・復元用）
@@ -893,7 +1089,7 @@
     document.getElementById("wpBarCritBuff").style.width = wcW[1] + "%";
     document.getElementById("wpNote").textContent = masteryNote(weaponHits[selWeapon]);
     document.getElementById("wpSkill").innerHTML = skillDetailHTML("w", selWeapon, weaponHits[selWeapon]);
-    document.getElementById("wpStand").src = IMG.chars[charKey][selWeapon][0];
+    document.getElementById("wpStand").src = CS(charKey, selWeapon)[0];
     var act = document.getElementById("wpAction");
     act.classList.remove("off"); act.disabled = false;
     if (selWeapon === weaponKey) { act.textContent = "装備中"; act.disabled = true; act.classList.add("off"); }
@@ -915,11 +1111,12 @@
       wc.appendChild(makeCard(IMG.icons[k], w.name, badge, gold, k === selWeapon, !ownedWeapons[k], function(){ selWeapon = k; renderShop(); }));
     });
     var C = CHARS[selChar];
-    document.getElementById("chName").textContent = C.name;
-    document.getElementById("chDesc").textContent = C.desc;
-    var cStarNow = starOf(charHits[selChar]);
+    var chOwned = !!ownedChars[selChar];
+    document.getElementById("chName").textContent = chOwned ? C.name : "？？？";
+    document.getElementById("chDesc").textContent = chOwned ? C.desc : "ガチャで入手できるキャラクター";
+    var cStarNow = charStarOf(selChar);
     var cMultNow = charStarMult(cStarNow);
-    document.getElementById("chStars").textContent = starText(cStarNow) + (cMultNow > 1 ? "（全ステータス+" + Math.round((cMultNow - 1) * 100) + "%）" : "");
+    document.getElementById("chStars").textContent = chOwned ? (starText(cStarNow) + (cMultNow > 1 ? "（全ステータス+" + Math.round((cMultNow - 1) * 100) + "%）" : "")) : "？？？？？";
     var cpW = barWidths(C.dmgMult, C.dmgMult * (cMultNow - 1), 1.7);
     document.getElementById("chBarPower").style.width = cpW[0] + "%";
     document.getElementById("chBarPowerBuff").style.width = cpW[1] + "%";
@@ -930,25 +1127,31 @@
     document.getElementById("chBarCrit").style.width = ccW[0] + "%";
     document.getElementById("chBarCritBuff").style.width = ccW[1] + "%";
     document.getElementById("chBarBonus").style.width = barPct((C.bonusMult - 0.9) / 0.5 * 100);
-    document.getElementById("chNote").textContent = masteryNote(charHits[selChar]);
-    document.getElementById("chSkill").innerHTML = skillDetailHTML("c", selChar, charHits[selChar]);
+    document.getElementById("chNote").textContent = chOwned ? charMasteryNote(selChar) : "未所持：ガチャで入手すると使えるようになります";
+    document.getElementById("chSkill").innerHTML = chOwned ? skillDetailHTML("c", selChar, charHits[selChar]) : "";
     renderSkillChips();
-    document.getElementById("chStand").src = IMG.chars[selChar][weaponKey][0];
+    var chStandEl = document.getElementById("chStand");
+    chStandEl.src = CS(selChar, weaponKey)[0];
+    chStandEl.style.filter = chOwned ? "" : "brightness(0) drop-shadow(0 6px 6px rgba(0,0,0,.6))";
     var ca = document.getElementById("chAction");
     ca.classList.remove("off"); ca.disabled = false;
-    if (selChar === charKey) { ca.textContent = "使用中"; ca.disabled = true; ca.classList.add("off"); }
+    if (!chOwned) { ca.textContent = "ガチャで入手"; ca.disabled = true; ca.classList.add("off"); }
+    else if (selChar === charKey) { ca.textContent = "使用中"; ca.disabled = true; ca.classList.add("off"); }
     else ca.textContent = "このキャラにする";
     var cc = document.getElementById("chCards");
     cc.innerHTML = "";
     CHAR_KEYS.forEach(function(k){
-      var badge = (k === charKey) ? "使用中" : starText(starOf(charHits[k]));
-      cc.appendChild(makeCard(IMG.chars[k].fist[0], CHARS[k].name, badge, k === charKey, k === selChar, false, function(){ selChar = k; renderShop(); }));
+      var own = !!ownedChars[k];
+      var badge = !own ? "未所持" : (k === charKey) ? "使用中" : starText(charStarOf(k));
+      var card = makeCard(IMG.chars[k].fist[0], own ? CHARS[k].name : "？？？", badge, k === charKey, k === selChar, !own, function(){ selChar = k; renderShop(); });
+      if (!own) card.querySelector("img").style.filter = "brightness(0)";
+      cc.appendChild(card);
     });
   }
   function setWeapon(key){
     if (!WEAPONS[key] || !ownedWeapons[key]) return;
     weaponKey = key;
-    fighterImg.src = IMG.chars[charKey][key][0];
+    fighterImg.src = CS(charKey, key)[0];
     fighterWrap.classList.remove("lunge");
     weaponInfo.textContent = WEAPONS[key].name + "（パワー" + WEAPONS[key].power + "）";
     renderShop();
@@ -972,9 +1175,9 @@
   /* ---------- CHARACTER SWITCH ---------- */
   var charInfo = document.getElementById("charInfo");
   function setChar(key){
-    if (!CHARS[key]) return;
+    if (!CHARS[key] || !ownedChars[key]) return;
     charKey = key;
-    fighterImg.src = IMG.chars[key][weaponKey][0];
+    fighterImg.src = CS(key, weaponKey)[0];
     fighterWrap.classList.remove("lunge");
     charInfo.textContent = CHARS[key].name;
     renderShop();
@@ -1013,7 +1216,7 @@
   function xpNext(lv){ return Math.round(50 * Math.pow(lv, 1.5)); }
   function saveGame(){
     try {
-      localStorage.setItem(SAVE_KEY, JSON.stringify({ level:level, xp:xp, statPts:statPts, stats:stats, weaponKey:weaponKey, charKey:charKey, weaponHits:weaponHits, charHits:charHits, mode:mode, taBest:taBest, taScores:taScores, tickets:tickets, ownedWeapons:ownedWeapons, soloIdx:soloIdx, carHp:savedCarHp, carParts:savedCarParts, carIdxFor:savedCarIdx, score:score, skillCharge:skillCharge, cars:carsDestroyed }));
+      localStorage.setItem(SAVE_KEY, JSON.stringify({ level:level, xp:xp, statPts:statPts, stats:stats, weaponKey:weaponKey, charKey:charKey, weaponHits:weaponHits, charHits:charHits, mode:mode, taBest:taBest, taScores:taScores, tickets:tickets, ownedWeapons:ownedWeapons, soloIdx:soloIdx, carHp:savedCarHp, carParts:savedCarParts, carIdxFor:savedCarIdx, score:score, skillCharge:skillCharge, cars:carsDestroyed, scrap:scrap, ownedChars:ownedChars }));
     } catch(e){}
   }
   function loadGame(){
@@ -1034,7 +1237,9 @@
         tickets = Math.max(1, level);
       }
       if (s.weaponKey && WEAPONS[s.weaponKey] && ownedWeapons[s.weaponKey]) weaponKey = s.weaponKey;
-      if (s.charKey && CHARS[s.charKey]) charKey = s.charKey;
+      if (s.ownedChars) CHAR_KEYS.forEach(function(k){ if (s.ownedChars[k]) ownedChars[k] = true; });  // 旧セーブ（項目なし）は初期5体のみ所持のまま
+      scrap = Math.max(0, Math.floor(Number(s.scrap) || 0));
+      if (s.charKey && CHARS[s.charKey] && ownedChars[s.charKey]) charKey = s.charKey;
       if (s.weaponHits) Object.keys(weaponHits).forEach(function(k){ weaponHits[k] = Math.max(0, s.weaponHits[k]|0 || 0); });
       if (s.charHits) Object.keys(charHits).forEach(function(k){ charHits[k] = Math.max(0, s.charHits[k]|0 || 0); });
       if (s.mode && MODES[s.mode]) mode = s.mode;
@@ -1063,6 +1268,10 @@
     document.getElementById("xpBar").style.width = pct + "%";
     document.getElementById("stPts").textContent = statPts;
     document.getElementById("stTickets").textContent = tickets;
+    document.getElementById("scrapVal").textContent = scrap;
+    document.getElementById("stScrap").textContent = scrap;
+    document.getElementById("menuScrapVal").textContent = scrap;
+    document.getElementById("gachaScrapVal").textContent = scrap;
     STAT_KEYS.forEach(function(k){ document.getElementById("sv-" + k).textContent = stats[k]; });
     renderShop();
   }
@@ -1143,6 +1352,11 @@
       if (act === "solo" || act === "ta") {
         setMode(act);
         menuPanel.classList.remove("open");
+      } else if (act === "gacha") {
+        menuPanel.classList.remove("open");
+        document.getElementById("gachaResult").innerHTML = "";
+        renderGacha();
+        gachaPanel.classList.add("open");
       } else if (act === "status") {
         menuPanel.classList.remove("open");
         selWeapon = weaponKey;
@@ -1385,7 +1599,7 @@
     renderParts();
   }
   // ===== 背景：100ステージごとに世界各地の実写へ =====
-  var BG_SRCS = ["assets/bg0.webp?v=35", "assets/bg1.webp?v=35", "assets/bg2.webp?v=35", "assets/bg3.webp?v=35", "assets/bg4.webp?v=35", "assets/bg5.webp?v=35", "assets/bg6.webp?v=35", "assets/bg7.webp?v=35", "assets/bg8.webp?v=35", "assets/bg9.webp?v=35"];
+  var BG_SRCS = ["assets/bg0.webp?v=36", "assets/bg1.webp?v=36", "assets/bg2.webp?v=36", "assets/bg3.webp?v=36", "assets/bg4.webp?v=36", "assets/bg5.webp?v=36", "assets/bg6.webp?v=36", "assets/bg7.webp?v=36", "assets/bg8.webp?v=36", "assets/bg9.webp?v=36"];
   var BG_PLACES = ["横浜みなとみらい", "ニューヨーク", "サンフランシスコ", "パリ", "ロンドン", "シドニー", "ドバイ", "リオデジャネイロ", "ローマ", "富士山"];
   var bgImgEl = document.getElementById("bgImg");
   var curBgTheme = -1;
@@ -1401,14 +1615,36 @@
     gou:    { name:"気合撃", cd:200, kind:"next", mult:5, crit:true },
     hayate: { name:"連打の極意", cd:350, kind:"combo", add:30, protect:10 },
     kirara: { name:"職人の勘", cd:400, kind:"buff", buff:{ dur:15, critAdd:0.25 } },
-    satoru: { name:"破壊衝動", cd:450, kind:"part", part:"random" }
+    satoru: { name:"破壊衝動", cd:450, kind:"part", part:"random" },
+    akari:  { name:"整備の勘", cd:300, kind:"partDmg" },
+    jinya:  { name:"仁義なき一撃", cd:200, kind:"next", mult:5, crit:true },
+    mio:    { name:"風のステップ", cd:350, kind:"buff", buff:{ dur:6, spd:1.6 } },
+    gorou:  { name:"親方の檄", cd:300, kind:"buff", buff:{ dur:10, dmg:1.3, spd:1.5 } },
+    yuki:   { name:"冷静な目", cd:400, kind:"buff", buff:{ dur:10, critAdd:0.2 } },
+    mike:   { name:"軍用格闘術", cd:250, kind:"next", mult:4 },
+    hisui:  { name:"吊り上げ落とし", cd:450, kind:"part", part:"max" },
+    hakase: { name:"発明ブースト", cd:600, kind:"xp", frac:0.15 },
+    reika:  { name:"女王の号令", cd:400, kind:"buff", buff:{ dur:12, dmg:1.3 }, protect:12 },
+    shou:   { name:"疾風の型", cd:450, kind:"buff", buff:{ dur:8, noCd:true } },
+    rinne:  { name:"重撃連鎖", cd:300, kind:"buff", buff:{ dur:10, dmg:1.5 } }
   };
   var CHAR_ORIG = {
     ren:    { name:"破天連撃", cd:800, kind:"multi", n:30, pct:0.8, interval:100 },
     gou:    { name:"剛腕・山砕き", cd:900, kind:"pct", pct:0.08 },
     hayate: { name:"疾風千手", cd:700, kind:"buff", buff:{ dur:5, noCd:true, comboPerHit:2 } },
     kirara: { name:"星屑の乱舞", cd:850, kind:"multi", n:12, pct:1.0, interval:110, critAll:true },
-    satoru: { name:"解体の美学", cd:1000, kind:"part", part:"all" }
+    satoru: { name:"解体の美学", cd:1000, kind:"part", part:"all" },
+    akari:  { name:"完全整備・解体新書", cd:750, kind:"part", part:"random", pbm:2 },
+    jinya:  { name:"特攻・一番槍", cd:800, kind:"pct", pct:0.06 },
+    mio:    { name:"ライダーキック・解体", cd:600, kind:"multi", n:10, pct:0.3, interval:60 },
+    gorou:  { name:"山崩し・親方の一撃", cd:900, kind:"pct", pct:0.08 },
+    yuki:   { name:"氷の心眼", cd:750, kind:"pct", pct:0.05, crit:true },
+    mike:   { name:"ミリタリー・ラッシュ", cd:850, kind:"multi", n:12, pct:1.0, interval:110, critAll:true },
+    hisui:  { name:"精密吊り解体", cd:1000, kind:"part", part:"all" },
+    hakase: { name:"最終兵器・解体くん1号", cd:800, kind:"multiPct", n:20, pct:0.003, interval:100 },
+    reika:  { name:"解体宣言", cd:1000, kind:"pct", pct:0.10, allPartDmg:0.25 },
+    shou:   { name:"瞬滅・バール乱舞", cd:850, kind:"multi", n:20, pct:0.35, interval:50, critAll:true },
+    rinne:  { name:"天破・解体鉄球", cd:1000, kind:"pct", pct:0.15, partBreakAll:true }
   };
   var WP_BASIC_DEFS = {
     next4:  { name:"一点集中", cd:250, kind:"next", mult:4 },
@@ -1472,10 +1708,24 @@
     "チャンピオンの右":"最大HPの7%の確定クリティカル", "ピコピコ・ラッシュ":"通常の15%×30連打",
     "締め上げ・トルクマックス":"最大HPの4%＋エンジンに大ダメージ", "火花・切断":"2秒間、最大HPの0.3%×20回",
     "場外・ホームラン":"最大HPの6%の一撃", "万能の顎":"一番残っている部位を即破壊",
-    "紳士の鉄拳":"最大HPの5%の確定クリティカル"
+    "紳士の鉄拳":"最大HPの5%の確定クリティカル",
+    "整備の勘":"ランダムな部位に特大ダメージ", "仁義なき一撃":"次の1撃が確定クリティカル＆ダメージ5倍",
+    "風のステップ":"6秒間、速度+60%", "親方の檄":"10秒間、ダメージ+30%・速度+50%",
+    "冷静な目":"10秒間、クリティカル率+20%", "軍用格闘術":"次の1撃のダメージ4倍",
+    "吊り上げ落とし":"一番残っている部位を即破壊", "発明ブースト":"次のレベルまでの15%分のXPを即獲得",
+    "女王の号令":"12秒間、ダメージ+30%＆コンボが切れない", "疾風の型":"8秒間、クールダウンなしで連打できる",
+    "重撃連鎖":"10秒間、ダメージ+50%",
+    "完全整備・解体新書":"ランダムな部位を即破壊（部位ボーナス2倍）", "特攻・一番槍":"車の最大HPの6%の一撃",
+    "ライダーキック・解体":"通常の30%×10連打", "山崩し・親方の一撃":"車の最大HPの8%の一撃",
+    "氷の心眼":"最大HPの5%の確定クリティカル", "ミリタリー・ラッシュ":"12ヒット全て確定クリティカルの連撃",
+    "精密吊り解体":"未破壊の全部位を即破壊", "最終兵器・解体くん1号":"2秒間、最大HPの0.3%×20回",
+    "解体宣言":"最大HPの10%の一撃＋全部位に大ダメージ", "瞬滅・バール乱舞":"20ヒット全て確定クリティカルの超高速連打",
+    "天破・解体鉄球":"最大HPの15%の一撃＋全部位を即破壊"
   };
   var skillCharge = { cb:{}, co:{}, wb:{}, wo:{} };
   function effCd(base){ return Math.max(1, Math.ceil(base * (1 - 0.01 * (stats.skillCd || 0)))); }  // 技クールタイム減少：必要ヒット数 -1%/pt
+  function effCdC(key, base){ return effCd(base * ((CHARS[key] && CHARS[key].chargeMult) || 1)); }  // キャラ技用：ハカセは必要ヒット数30%引き
+  function effCdW(base){ return effCd(base * ((CHARS[charKey] && CHARS[charKey].chargeMult) || 1)); }  // 武器技用：使用中キャラのチャージ特性が乗る
   var activeBuffs = [];
   var armedNext = null;
   var comboProtectUntil = 0;
@@ -1501,7 +1751,7 @@
   function flashStage(){ if (!skillFlashEl) return; skillFlashEl.style.transition = "none"; skillFlashEl.style.opacity = 0.55; setTimeout(function(){ skillFlashEl.style.transition = "opacity .45s"; skillFlashEl.style.opacity = 0; }, 30); }
   function skillHitBase(){
     var W = WEAPONS[weaponKey], C = CHARS[charKey];
-    return W.power * WSTAR_MULT[starOf(weaponHits[weaponKey]) - 1] * charStarMult(starOf(charHits[charKey])) * C.dmgMult * (1 + 0.03 * stats.power) * buffAgg().dmg;
+    return W.power * WSTAR_MULT[starOf(weaponHits[weaponKey]) - 1] * charStarMult(charStarOf(charKey)) * C.dmgMult * (1 + 0.03 * stats.power) * buffAgg().dmg;
   }
   function dealSkillDamage(dmg, x, y, color){
     if (destroyed || dmg <= 0) return;
@@ -1554,6 +1804,8 @@
       dealSkillDamage(Math.max(1, Math.round(maxHp * def.pct)), cx, cy, def.crit ? "#ff5e5e" : "#ffd94d");
       if (def.partKey) applyPartDamage(def.partKey, Math.round(maxHp * 0.2), cx, cy);
       if (def.partBreak) skillPart({ part: def.partBreak });
+      if (def.allPartDmg) PART_KEYS.forEach(function(k){ applyPartDamage(k, Math.round(maxHp * def.allPartDmg), cx, cy); });
+      if (def.partBreakAll) skillPart({ part: "all" });
       if (def.buff) addBuff(def.buff);
       shake("shakeL");
     }
@@ -1564,7 +1816,7 @@
       if (alive2.length) applyPartDamage(alive2[Math.floor(Math.random() * alive2.length)], Math.round(maxHp * 0.15), cx, cy);
       else dealSkillDamage(Math.round(maxHp * 0.02), cx, cy);
     }
-    else if (def.kind === "buff") { addBuff(def.buff); spawnParticles(cx, cy, 18, 1.2, { colors:["#7dff9a", "#ffffff"] }); }
+    else if (def.kind === "buff") { addBuff(def.buff); if (def.protect) comboProtectUntil = performance.now() + def.protect * 1000; spawnParticles(cx, cy, 18, 1.2, { colors:["#7dff9a", "#ffffff"] }); }
     else if (def.kind === "next") { armedNext = { mult: def.mult, crit: !!def.crit }; spawnDmg(cx, cy - 30, "次の1撃に力を溜めた！", false, "#7dff9a"); }
     else if (def.kind === "xp") { gainXP(Math.round(xpNext(level) * def.frac)); }
     else if (def.kind === "combo") { combo += def.add; comboNum.textContent = combo; comboEl.style.opacity = 1; if (def.protect) comboProtectUntil = performance.now() + def.protect * 1000; }
@@ -1574,11 +1826,11 @@
   }
   function readySkills(){
     var list = [];
-    var cs = starOf(charHits[charKey]), ws = starOf(weaponHits[weaponKey]);
-    if (cs >= 3 && (skillCharge.cb[charKey] || 0) >= effCd(CHAR_BASIC[charKey].cd)) list.push({ def: CHAR_BASIC[charKey], cd: CHAR_BASIC[charKey].cd, map: "cb", key: charKey });
-    if (cs >= 5 && (skillCharge.co[charKey] || 0) >= effCd(CHAR_ORIG[charKey].cd)) list.push({ def: CHAR_ORIG[charKey], cd: CHAR_ORIG[charKey].cd, map: "co", key: charKey });
-    if (ws >= 3 && (skillCharge.wb[weaponKey] || 0) >= effCd(WP_BASIC_DEFS[WP_BASIC[weaponKey]].cd)) list.push({ def: WP_BASIC_DEFS[WP_BASIC[weaponKey]], cd: WP_BASIC_DEFS[WP_BASIC[weaponKey]].cd, map: "wb", key: weaponKey });
-    if (ws >= 5 && (skillCharge.wo[weaponKey] || 0) >= effCd(WP_ORIG[weaponKey].cd)) list.push({ def: WP_ORIG[weaponKey], cd: WP_ORIG[weaponKey].cd, map: "wo", key: weaponKey });
+    var cs = charStarOf(charKey), ws = starOf(weaponHits[weaponKey]);
+    if (cs >= 3 && (skillCharge.cb[charKey] || 0) >= effCdC(charKey, CHAR_BASIC[charKey].cd)) list.push({ def: CHAR_BASIC[charKey], cd: CHAR_BASIC[charKey].cd, map: "cb", key: charKey });
+    if (cs >= 5 && (skillCharge.co[charKey] || 0) >= effCdC(charKey, CHAR_ORIG[charKey].cd)) list.push({ def: CHAR_ORIG[charKey], cd: CHAR_ORIG[charKey].cd, map: "co", key: charKey });
+    if (ws >= 3 && (skillCharge.wb[weaponKey] || 0) >= effCdW(WP_BASIC_DEFS[WP_BASIC[weaponKey]].cd)) list.push({ def: WP_BASIC_DEFS[WP_BASIC[weaponKey]], cd: WP_BASIC_DEFS[WP_BASIC[weaponKey]].cd, map: "wb", key: weaponKey });
+    if (ws >= 5 && (skillCharge.wo[weaponKey] || 0) >= effCdW(WP_ORIG[weaponKey].cd)) list.push({ def: WP_ORIG[weaponKey], cd: WP_ORIG[weaponKey].cd, map: "wo", key: weaponKey });
     list.sort(function(a, b){ return b.cd - a.cd; });
     return list;
   }
@@ -1594,11 +1846,11 @@
     if (list.length > 1) skillChainTimer = setTimeout(function(){ skillChainTimer = null; maybeFireSkills(); }, 900);
   }
   function addSkillCharge(){
-    var cs = starOf(charHits[charKey]), ws = starOf(weaponHits[weaponKey]);
-    if (cs >= 3) skillCharge.cb[charKey] = Math.min(effCd(CHAR_BASIC[charKey].cd), (skillCharge.cb[charKey] || 0) + 1);
-    if (cs >= 5) skillCharge.co[charKey] = Math.min(effCd(CHAR_ORIG[charKey].cd), (skillCharge.co[charKey] || 0) + 1);
-    if (ws >= 3) skillCharge.wb[weaponKey] = Math.min(effCd(WP_BASIC_DEFS[WP_BASIC[weaponKey]].cd), (skillCharge.wb[weaponKey] || 0) + 1);
-    if (ws >= 5) skillCharge.wo[weaponKey] = Math.min(effCd(WP_ORIG[weaponKey].cd), (skillCharge.wo[weaponKey] || 0) + 1);
+    var cs = charStarOf(charKey), ws = starOf(weaponHits[weaponKey]);
+    if (cs >= 3) skillCharge.cb[charKey] = Math.min(effCdC(charKey, CHAR_BASIC[charKey].cd), (skillCharge.cb[charKey] || 0) + 1);
+    if (cs >= 5) skillCharge.co[charKey] = Math.min(effCdC(charKey, CHAR_ORIG[charKey].cd), (skillCharge.co[charKey] || 0) + 1);
+    if (ws >= 3) skillCharge.wb[weaponKey] = Math.min(effCdW(WP_BASIC_DEFS[WP_BASIC[weaponKey]].cd), (skillCharge.wb[weaponKey] || 0) + 1);
+    if (ws >= 5) skillCharge.wo[weaponKey] = Math.min(effCdW(WP_ORIG[weaponKey].cd), (skillCharge.wo[weaponKey] || 0) + 1);
     maybeFireSkills();
   }
   function skillRow(label, name, charge, cd, unlocked){
@@ -1608,35 +1860,35 @@
   }
   function renderSkillChips(){
     if (!skillChipC || !skillChipW) return;
-    var cs = starOf(charHits[charKey]), ws = starOf(weaponHits[weaponKey]);
-    skillChipC.innerHTML = skillRow("基本", CHAR_BASIC[charKey].name, skillCharge.cb[charKey] || 0, effCd(CHAR_BASIC[charKey].cd), cs >= 3)
-      + skillRow("奥義", CHAR_ORIG[charKey].name, skillCharge.co[charKey] || 0, effCd(CHAR_ORIG[charKey].cd), cs >= 5);
-    skillChipW.innerHTML = skillRow("基本", WP_BASIC_DEFS[WP_BASIC[weaponKey]].name, skillCharge.wb[weaponKey] || 0, effCd(WP_BASIC_DEFS[WP_BASIC[weaponKey]].cd), ws >= 3)
-      + skillRow("奥義", WP_ORIG[weaponKey].name, skillCharge.wo[weaponKey] || 0, effCd(WP_ORIG[weaponKey].cd), ws >= 5);
+    var cs = charStarOf(charKey), ws = starOf(weaponHits[weaponKey]);
+    skillChipC.innerHTML = skillRow("基本", CHAR_BASIC[charKey].name, skillCharge.cb[charKey] || 0, effCdC(charKey, CHAR_BASIC[charKey].cd), cs >= 3)
+      + skillRow("奥義", CHAR_ORIG[charKey].name, skillCharge.co[charKey] || 0, effCdC(charKey, CHAR_ORIG[charKey].cd), cs >= 5);
+    skillChipW.innerHTML = skillRow("基本", WP_BASIC_DEFS[WP_BASIC[weaponKey]].name, skillCharge.wb[weaponKey] || 0, effCdW(WP_BASIC_DEFS[WP_BASIC[weaponKey]].cd), ws >= 3)
+      + skillRow("奥義", WP_ORIG[weaponKey].name, skillCharge.wo[weaponKey] || 0, effCdW(WP_ORIG[weaponKey].cd), ws >= 5);
     var rs = readySkills();
     skillChipC.classList.toggle("ready", rs.some(function(s){ return s.map === "cb" || s.map === "co"; }));
     skillChipW.classList.toggle("ready", rs.some(function(s){ return s.map === "wb" || s.map === "wo"; }));
   }
   function skillInfo(owner, key, hits){
-    var st = starOf(hits);
+    var st = owner === "c" ? charStarOf(key) : starOf(hits);
     var basic = owner === "c" ? CHAR_BASIC[key] : WP_BASIC_DEFS[WP_BASIC[key]];
     var orig = owner === "c" ? CHAR_ORIG[key] : WP_ORIG[key];
     var cb = owner === "c" ? skillCharge.cb : skillCharge.wb;
     var co = owner === "c" ? skillCharge.co : skillCharge.wo;
     var t = "必殺技：";
-    t += st >= 3 ? "基本「" + basic.name + "」あと" + Math.max(0, effCd(basic.cd) - (cb[key] || 0)) + "ヒット" : "基本技は星3で解放";
-    t += st >= 5 ? "／奥義「" + orig.name + "」あと" + Math.max(0, effCd(orig.cd) - (co[key] || 0)) + "ヒット" : "／奥義は星5で解放";
+    t += st >= 3 ? "基本「" + basic.name + "」あと" + Math.max(0, (owner === "c" ? effCdC(key, basic.cd) : effCdW(basic.cd)) - (cb[key] || 0)) + "ヒット" : "基本技は星3で解放";
+    t += st >= 5 ? "／奥義「" + orig.name + "」あと" + Math.max(0, (owner === "c" ? effCdC(key, orig.cd) : effCdW(orig.cd)) - (co[key] || 0)) + "ヒット" : "／奥義は星5で解放";
     return t;
   }
   function skillDetailHTML(owner, key, hits){
-    var st = starOf(hits);
+    var st = owner === "c" ? charStarOf(key) : starOf(hits);
     var basic = owner === "c" ? CHAR_BASIC[key] : WP_BASIC_DEFS[WP_BASIC[key]];
     var orig = owner === "c" ? CHAR_ORIG[key] : WP_ORIG[key];
     var cb = owner === "c" ? skillCharge.cb : skillCharge.wb;
     var co = owner === "c" ? skillCharge.co : skillCharge.wo;
     function line(label, def, charge, needStar){
       var unlocked = st >= needStar;
-      var state = unlocked ? "あと" + Math.max(0, effCd(def.cd) - (charge[key] || 0)) + "（必要" + effCd(def.cd) + "）" : "星" + needStar + "で解放";
+      var state = unlocked ? "あと" + Math.max(0, (owner === "c" ? effCdC(key, def.cd) : effCdW(def.cd)) - (charge[key] || 0)) + "（必要" + (owner === "c" ? effCdC(key, def.cd) : effCdW(def.cd)) + "）" : "星" + needStar + "で解放";
       return "<b>" + label + "「" + def.name + "」</b>：" + (SKILL_DESC[def.name] || "") + " ─ " + state;
     }
     return "必殺技<div style=\"display:flex; gap:10px;\"><div style=\"flex:1; min-width:0;\">" + line("基本", basic, cb, 3) + "</div><div style=\"flex:1; min-width:0;\">" + line("奥義", orig, co, 5) + "</div></div>";
@@ -1677,7 +1929,9 @@
     carIdx = idx;
     if (mode === "solo" && idx !== soloIdx) { soloIdx = idx; saveGame(); }
     cur = carSpec(idx);
-    maxHp = cur.hp; hp = cur.hp;
+    curBoss = ((carsDestroyed + 1) % 10 === 0);  // 通算10台ごとの節目の車は強敵（ミニボス）
+    maxHp = curBoss ? Math.round(cur.hp * 1.5) : cur.hp;
+    hp = maxHp;
     initParts();
     if (mode === "solo" && idx === soloIdx && savedCarIdx === idx && savedCarHp !== null && savedCarHp > 0 && savedCarHp < maxHp) {
       hp = savedCarHp;  // 前回途中で閉じた車の続きから
@@ -1694,7 +1948,8 @@
     destroyed = false;
 
     lastHitAt = performance.now();  // コンボは車が替わっても継続：新しいクルマが出た瞬間から猶予1秒を数え直す
-    carNameEl.textContent = cur.name + "（" + (idx+1) + "台目）";
+    carNameEl.textContent = cur.name + "（" + (idx+1) + "台目）" + (curBoss ? " ⚠強敵" : "");
+    carImg.style.filter = curBoss ? "drop-shadow(8px 8px 0 rgba(0,0,0,.35)) hue-rotate(-38deg) saturate(1.8)" : "";
     carWrap.style.height = (50 * cur.scale) + "%";
     renderCar();
     if (animateIn) {
@@ -1712,6 +1967,9 @@
     hp = 0; renderCar();
     carsDestroyed++;
     carsVal.textContent = carsDestroyed;
+    var scrapGain = (carsDestroyed % 10 === 0) ? 100 : 10;  // スクラップ：通常+10固定／10台ごとの強敵は+100
+    scrap += scrapGain;
+    renderGrowth();
     var bonusPts = (mode === "ta")
       ? 500
       : Math.round(cur.pts * (1 + 0.06 * stats.tech) * CHARS[charKey].bonusMult);
@@ -1723,7 +1981,7 @@
     spawnSmoke(cx, cy - 20, 7);
     shake("shakeL"); vibrate([50,40,80]);
     sndBoom();
-    showBanner("DESTROYED!", "+" + bonusPts + " PTS", 1250);
+    showBanner("DESTROYED!", "+" + bonusPts + " PTS　スクラップ+" + scrapGain, 1250);
     if (mode === "solo" && (carIdx + 1) % 100 === 0) {  // 100ステージごとの節目ボーナス
       tickets += 5;
       saveGame();
@@ -1742,11 +2000,11 @@
     }, 1350);
   }
   function punchFX(){
-    fighterImg.src = IMG.chars[charKey][weaponKey][1];
+    fighterImg.src = CS(charKey, weaponKey)[1];
     fighterWrap.classList.add("lunge");
     if (punchTimer) clearTimeout(punchTimer);
     punchTimer = setTimeout(function(){
-      fighterImg.src = IMG.chars[charKey][weaponKey][0];
+      fighterImg.src = CS(charKey, weaponKey)[0];
       fighterWrap.classList.remove("lunge");
     }, Math.round(WEAPONS[weaponKey].swingMs * CHARS[charKey].cdMult));
   }
@@ -1759,7 +2017,7 @@
     var W = WEAPONS[weaponKey];
     var C = CHARS[charKey];
     var agg = buffAgg();
-    var wMultGate = WSTAR_MULT[starOf(weaponHits[weaponKey]) - 1] * charStarMult(starOf(charHits[charKey]));
+    var wMultGate = WSTAR_MULT[starOf(weaponHits[weaponKey]) - 1] * charStarMult(charStarOf(charKey));
     if (!agg.noCd && now - lastSwingAt < W.cooldown * C.cdMult / (wMultGate * agg.spd)) return;  // 重い武器・重いキャラは連打できない（熟練度バフ＋必殺技バフはスピードにも効く）
     lastSwingAt = now;
     combo = (now - lastHitAt <= 1000 || now < comboProtectUntil) ? combo + 1 + agg.comboPerHit : 1;
@@ -1769,7 +2027,7 @@
     comboEl.style.opacity = 1;
 
     var wStar = starOf(weaponHits[weaponKey]);
-    var cStar = starOf(charHits[charKey]);
+    var cStar = charStarOf(charKey);
     var crit = Math.random() < ((W.critRate * WSTAR_MULT[wStar-1] + C.critAdd) * charStarMult(cStar) + agg.critAdd + 0.006 * stats.crit);  // 熟練度バフはクリティカルにも効く（武器＋キャラ＋必殺技バフ。キャラのクリティカル加算分にもキャラ熟練度が乗る）
     var base = W.power * WSTAR_MULT[wStar-1] * charStarMult(cStar) * C.dmgMult * (1 + 0.03 * stats.power) * (0.85 + Math.random()*0.3) * agg.dmg;
     var comboMult = Math.min(1 + combo * 0.01, 1.5 + 0.02 * stats.renda);       // コンボ倍率（上限はれんだで伸びる）
@@ -1859,7 +2117,7 @@
     holdTimer = setInterval(function(){
       if (mode === "ta" && taState === "ended") { stopHold(); return; }
       onHit(holdX, holdY);
-    }, Math.max(40, Math.round(W.holdMs / (WSTAR_MULT[starOf(weaponHits[weaponKey]) - 1] * charStarMult(starOf(charHits[charKey]))))));  // 長押し連打の間隔にも熟練度バフ（武器＋キャラ）
+    }, Math.max(40, Math.round(W.holdMs / (WSTAR_MULT[starOf(weaponHits[weaponKey]) - 1] * charStarMult(charStarOf(charKey))))));  // 長押し連打の間隔にも熟練度バフ（武器＋キャラ）
   }
   window.addEventListener("pointerup", stopHold);
   window.addEventListener("pointercancel", stopHold);
@@ -1960,6 +2218,215 @@
     sndBoom();
     vibrate([60,40,60]);
   }
+  /* ---------- GACHA（スクラップで引くキャラガチャ＋召喚演出） ---------- */
+  var gachaPanel = document.getElementById("gachaPanel");
+  var GACHA_POOL = { rare:["akari","jinya","mio","gorou","yuki"], super:["mike","hisui","hakase"], ssr:["reika","shou"], ur:["rinne"] };
+  var GACHA_RARITY_ORDER = ["rare","super","ssr","ur"];
+  var RARITY_LABEL = { rare:"レア", super:"スーパーレア", ssr:"SSR", ur:"UR" };
+  var RARITY_COLOR = { rare:"#3a9bff", super:"#b45cff", ssr:"#ffd94d", ur:"#ff5e8a" };
+  var DUPE_HITS = { rare:2500, super:3300, ssr:5000, ur:8300 };  // 被り→熟練度ヒット変換（素体+3体でカンストする量）
+  function rollRarity(){
+    var r = Math.random();
+    if (r < 0.0025) return "ur";
+    if (r < 0.0325) return "ssr";
+    if (r < 0.1125) return "super";
+    return "rare";
+  }
+  function drawOne(){
+    var rar = rollRarity();
+    var pool = GACHA_POOL[rar];
+    var key = pool[Math.floor(Math.random() * pool.length)];
+    if (ownedChars[key]) {
+      charHits[key] = (charHits[key] || 0) + DUPE_HITS[rar];
+      return { key:key, rarity:rar, dupe:true };
+    }
+    ownedChars[key] = true;
+    return { key:key, rarity:rar, dupe:false };
+  }
+  function renderGacha(){
+    document.getElementById("gachaScrapVal").textContent = scrap;
+    document.getElementById("gachaOne").classList.toggle("off", scrap < 100);
+    document.getElementById("gachaTen").classList.toggle("off", scrap < 1000);
+  }
+  function doGacha(n){
+    var cost = n * 100;
+    if (scrap < cost) { showBanner("スクラップ不足", "クルマを壊してスクラップを集めよう", 1100); return; }
+    scrap -= cost;
+    var results = [];
+    for (var i=0;i<n;i++) results.push(drawOne());
+    var top = results[0];
+    results.forEach(function(r){ if (GACHA_RARITY_ORDER.indexOf(r.rarity) > GACHA_RARITY_ORDER.indexOf(top.rarity)) top = r; });
+    saveGame(); renderGrowth(); renderGacha();
+    gachaPanel.classList.remove("open");
+    playGachaFx(top, function(){ showGachaResults(results, top); });
+  }
+  function showGachaResults(results, top){
+    gachaPanel.classList.add("open");
+    var box = document.getElementById("gachaResult");
+    if (results.length === 1) { box.innerHTML = ""; renderGacha(); return; }
+    var html = '<div class="gachaGrid">';
+    results.forEach(function(r){
+      html += '<div class="gachaCell' + (r === top ? " top" : "") + '"><img src="' + IMG.gacha[r.key] + '" alt=""><div class="gname">' + CHARS[r.key].name + '</div><div class="grar rar-' + r.rarity + '">' + RARITY_LABEL[r.rarity] + (r.dupe ? " 被り" : " NEW!") + '</div></div>';
+    });
+    html += "</div>";
+    box.innerHTML = html;
+    renderGacha();
+  }
+  document.getElementById("gachaOne").addEventListener("click", function(e){ e.stopPropagation(); audio(); doGacha(1); });
+  document.getElementById("gachaTen").addEventListener("click", function(e){ e.stopPropagation(); audio(); doGacha(10); });
+  document.getElementById("closeGacha").addEventListener("click", function(e){
+    e.stopPropagation();
+    gachaPanel.classList.remove("open");
+    applyModeUI();
+    menuPanel.classList.add("open");
+  });
+
+  /* ===== 召喚演出：イメージ動画の再現（暗転→スクラップ螺旋→魔法陣→光の柱→シルエット→放射バースト→登場） ===== */
+  var gachaFx = document.getElementById("gachaFx");
+  var gachaCanvas = document.getElementById("gachaCanvas");
+  var gachaCharImg = document.getElementById("gachaChar");
+  var fxDone = null, fxRunning = false;
+  function finishGachaFx(){
+    if (!fxRunning) return;
+    fxRunning = false;
+    gachaFx.classList.remove("open");
+    var d = fxDone; fxDone = null;
+    if (d) d();
+  }
+  gachaFx.addEventListener("pointerdown", function(e){ e.stopPropagation(); finishGachaFx(); });  // タップでスキップ
+  function playGachaFx(top, done){
+    var rar = top.rarity;
+    var color = RARITY_COLOR[rar];
+    fxDone = done; fxRunning = true;
+    gachaFx.classList.toggle("rainbow", rar === "ur");
+    gachaFx.style.setProperty("--fxc", color);
+    var bgEl = document.getElementById("gachaFxBg");
+    bgEl.style.backgroundImage = "url(" + bgImgEl.src + ")";
+    bgEl.style.transition = "none"; bgEl.style.opacity = 0;
+    var circleEl = document.getElementById("gachaCircle");
+    var pillarEl = document.getElementById("gachaPillar");
+    var flashEl = document.getElementById("gachaFlashFx");
+    var revealEl = document.getElementById("gachaReveal");
+    circleEl.style.transition = "none"; circleEl.style.opacity = 0; circleEl.style.transform = "scale(.6)";
+    pillarEl.style.transition = "none"; pillarEl.style.opacity = 0; pillarEl.style.height = "0";
+    flashEl.style.transition = "none"; flashEl.style.opacity = 0;
+    revealEl.style.transition = "none"; revealEl.style.opacity = 0;
+    gachaCharImg.src = IMG.gacha[top.key];
+    gachaCharImg.style.transition = "none";
+    gachaCharImg.style.opacity = 0;
+    gachaCharImg.style.filter = "brightness(0) drop-shadow(0 0 22px " + color + ")";
+    gachaCharImg.style.transform = "translateX(-50%) scale(.94)";
+    var rarBig = document.getElementById("gachaRarBig");
+    rarBig.textContent = RARITY_LABEL[rar];
+    rarBig.className = "grarBig rar-" + rar;
+    document.getElementById("gachaNameBig").textContent = CHARS[top.key].name;
+    document.getElementById("gachaNoteBig").textContent = top.dupe ? ("被り！ 熟練度 +" + DUPE_HITS[rar] + "ヒット") : "NEW キャラクター！";
+    gachaFx.classList.add("open");
+
+    var W = gachaFx.clientWidth || 800, H = gachaFx.clientHeight || 450;
+    gachaCanvas.width = W; gachaCanvas.height = H;
+    var ctx = gachaCanvas.getContext("2d");
+    var cx = W / 2, floorY = H * 0.88;
+    var METALS = ["#d8dde3", "#aab2bc", "#7e8894", "#c9a86a", "#8a8f98", "#e8ecf0"];
+    var spiral = [], confetti = [];
+    function spawnSpiral(n){
+      for (var i=0;i<n;i++){
+        spiral.push({
+          th: Math.random() * Math.PI * 2,
+          r: 130 + Math.random() * 190,
+          y: floorY + 30 - Math.random() * 60,
+          vy: 1.1 + Math.random() * 1.6,
+          s: 2.5 + Math.random() * 5.5,
+          rot: Math.random() * Math.PI,
+          vr: (Math.random() - 0.5) * 0.3,
+          col: Math.random() < 0.22 ? color : METALS[(Math.random() * METALS.length)|0],
+          gear: Math.random() < 0.3
+        });
+      }
+    }
+    function spawnConfetti(){
+      for (var i=0;i<120;i++){
+        var ang = Math.random() * Math.PI * 2, v = 2.5 + Math.random() * 8.5;
+        confetti.push({
+          x: cx + (Math.random() - 0.5) * 60, y: floorY - H * 0.3 + (Math.random() - 0.5) * 80,
+          vx: Math.cos(ang) * v, vy: Math.sin(ang) * v - 3.2,
+          s: 2.5 + Math.random() * 6, rot: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.45,
+          col: Math.random() < 0.45 ? color : METALS[(Math.random() * METALS.length)|0],
+          life: 1
+        });
+      }
+    }
+    function drawShard(x, y, s, rot, col, gear){
+      ctx.save(); ctx.translate(x, y); ctx.rotate(rot);
+      ctx.fillStyle = col;
+      if (gear) { ctx.fillRect(-s, -s * 0.32, s * 2, s * 0.64); ctx.fillRect(-s * 0.32, -s, s * 0.64, s * 2); }
+      else ctx.fillRect(-s / 2, -s * 0.3, s, s * 0.6);
+      ctx.fillStyle = "rgba(255,255,255,.55)";
+      ctx.fillRect(-s / 2, -s * 0.3, s, s * 0.16);
+      ctx.restore();
+    }
+    var t0 = performance.now(), phase = 0;
+    requestAnimationFrame(function(){ bgEl.style.transition = "opacity .55s"; bgEl.style.opacity = 0.92; });
+    tone("sawtooth", 160, 880, 1.5, 0.05);
+    function frame(now){
+      if (!fxRunning) { ctx.clearRect(0, 0, W, H); return; }
+      var t = now - t0;
+      ctx.clearRect(0, 0, W, H);
+      // フェーズ1：スクラップが螺旋状に渦巻いて上昇・収束（0.25〜1.5秒）
+      if (t > 250 && t < 1550) spawnSpiral(5);
+      for (var i = spiral.length - 1; i >= 0; i--){
+        var p = spiral[i];
+        p.th += 0.115; p.r *= 0.962; p.y -= p.vy + (1550 - Math.min(t, 1550)) * 0.0012; p.rot += p.vr;
+        if (p.r < 7 || p.y < floorY - H * 0.82) { spiral.splice(i, 1); continue; }
+        drawShard(cx + Math.cos(p.th) * p.r, p.y, p.s, p.rot, p.col, p.gear);
+      }
+      // フェーズ2：魔法陣が光る（1.1秒〜）
+      if (phase < 1 && t >= 1100) {
+        phase = 1;
+        circleEl.style.transition = "opacity .35s, transform .35s";
+        circleEl.style.opacity = 1; circleEl.style.transform = "scale(1)";
+        tone("sine", 520, 1040, 0.4, 0.12);
+      }
+      // フェーズ3：光の柱が噴き上がる（1.25秒〜）
+      if (phase < 2 && t >= 1250) {
+        phase = 2;
+        pillarEl.style.transition = "height .38s cubic-bezier(.2,.8,.3,1), opacity .2s";
+        pillarEl.style.opacity = 0.95; pillarEl.style.height = "82%";
+        sndSkillPower();
+      }
+      // フェーズ4：光の中でシルエットが浮かび上がる（1.5秒〜）
+      if (phase < 3 && t >= 1500) {
+        phase = 3;
+        gachaCharImg.style.transition = "opacity .55s";
+        gachaCharImg.style.opacity = 1;
+      }
+      // フェーズ5：放射状に弾けて金属紙吹雪、キャラ完全登場（2.35秒）
+      if (phase < 4 && t >= 2350) {
+        phase = 4;
+        spawnConfetti();
+        flashEl.style.transition = "opacity .5s"; flashEl.style.opacity = 0.92;
+        requestAnimationFrame(function(){ flashEl.style.opacity = 0; });
+        pillarEl.style.transition = "opacity .45s"; pillarEl.style.opacity = 0;
+        gachaCharImg.style.transition = "filter .45s, transform .45s cubic-bezier(.2,.8,.3,1)";
+        gachaCharImg.style.filter = "brightness(1) drop-shadow(0 0 18px " + color + ")";
+        gachaCharImg.style.transform = "translateX(-50%) scale(1.03)";
+        revealEl.style.transition = "opacity .4s"; revealEl.style.opacity = 1;
+        sndBoom(); sndJingle(); vibrate([40, 30, 70]);
+      }
+      for (var j = confetti.length - 1; j >= 0; j--){
+        var q = confetti[j];
+        q.x += q.vx; q.y += q.vy; q.vy += 0.16; q.vx *= 0.985; q.rot += q.vr; q.life -= 0.008;
+        if (q.life <= 0 || q.y > H + 20) { confetti.splice(j, 1); continue; }
+        ctx.globalAlpha = Math.max(0, Math.min(1, q.life));
+        drawShard(q.x, q.y, q.s, q.rot, q.col, false);
+        ctx.globalAlpha = 1;
+      }
+      if (t >= 3500) { finishGachaFx(); return; }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
   loadGame();
   if (TEST_MODE) {
     document.getElementById("testBadge").style.display = "block";
@@ -1980,6 +2447,13 @@
     });
     document.getElementById("tCharMax").addEventListener("click", function(){
       Object.keys(CHARS).forEach(function(k){ charHits[k] = Math.max(charHits[k] || 0, 5000); });
+      saveGame(); renderGrowth();
+    });
+    document.getElementById("tScrap").addEventListener("click", function(){
+      scrap += 1000; saveGame(); renderGrowth();
+    });
+    document.getElementById("tCharAll").addEventListener("click", function(){
+      CHAR_KEYS.forEach(function(k){ ownedChars[k] = true; });
       saveGame(); renderGrowth();
     });
     document.getElementById("tStage").addEventListener("click", function(){
