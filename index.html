@@ -67,12 +67,14 @@
   #partsBar { display:flex; gap:4px; margin-top:4px; flex-wrap:wrap; }
   .pchip { font-size:10px; padding:2px 7px; border-radius:8px; background:rgba(10,16,28,.72); color:#cfe6ff; border:1px solid rgba(140,190,255,.45); letter-spacing:.5px; }
   .pchip.broken { background:rgba(70,14,8,.8); color:#ff9a8a; border-color:rgba(255,110,90,.6); text-decoration:line-through; }
-  #skillBar { display:flex; gap:6px; justify-content:center; margin-top:4px; }
-  .skillChip { flex:1; max-width:320px; background:rgba(10,10,30,.55); border:1px solid #4a4a86; border-radius:6px; padding:2px 6px; font-size:10px; color:#cfd2ff; min-height:14px; }
+  #skillBar { display:flex; gap:8px; margin:6px 2px 0; }
+  .skillChip { flex:1; background:rgba(10,10,30,.72); border:1px solid #4a4a86; border-radius:8px; padding:5px 10px; font-size:12px; color:#cfd2ff; min-height:16px; }
   .skillChip .skRow { display:flex; justify-content:space-between; gap:6px; white-space:nowrap; }
-  .skillChip .skGauge { height:4px; background:#23233f; border-radius:2px; overflow:hidden; margin:1px 0 2px; }
+  .skillChip .skRow span:first-child { font-weight:bold; }
+  .skillChip .skGauge { height:6px; background:#23233f; border-radius:3px; overflow:hidden; margin:2px 0 3px; }
   .skillChip .skFill { height:100%; background:linear-gradient(90deg,#2fd35f,#b6ffb0); }
-  .skillChip.ready { border-color:#ffd94d; color:#ffd94d; }
+  .skillChip.ready { border-color:#ffd94d; color:#ffd94d; animation:skillPulse .6s ease-in-out infinite alternate; }
+  @keyframes skillPulse { from { box-shadow:0 0 2px rgba(255,217,77,.4); } to { box-shadow:0 0 12px rgba(255,217,77,.95); } }
   #skillFlash { position:absolute; inset:0; background:#fff8d0; opacity:0; pointer-events:none; z-index:30; }
   .sprite { position:absolute; pointer-events:none; image-rendering:pixelated; }
   #fighterWrap { position:absolute; right:50%; margin-right:19%; bottom:11%; height:54%; z-index:3; transition:transform .06s ease-out; }
@@ -294,7 +296,6 @@
       <div id="carName">軽自動車</div>
       <div id="hpBarOuter"><div id="hpBar"></div></div>
       <div id="partsBar"></div>
-  <div id="skillBar"><div class="skillChip" id="skillChipC"></div><div class="skillChip" id="skillChipW"></div></div>
     </div>
     <div class="hud-block">
       <div class="hud-label">CARS</div>
@@ -308,6 +309,7 @@
       <button id="soundBtn">SOUND ON</button>
     </div>
   </div>
+  <div id="skillBar"><div class="skillChip" id="skillChipC"></div><div class="skillChip" id="skillChipW"></div></div>
 
   <div id="stage">
     <div id="testBadge" style="display:none; position:absolute; top:6px; left:50%; transform:translateX(-50%); z-index:40; background:#c62828; color:#fff; font-size:12px; font-weight:bold; padding:2px 12px; border-radius:4px; letter-spacing:2px; pointer-events:none;">TEST環境</div>
@@ -391,9 +393,9 @@
               <div class="dName" id="chName">レン</div>
               <div class="dSub"><span id="chDesc">バランス型／全て平均的で扱いやすい</span></div>
               <div class="dSub">熟練度 <span class="dStars" id="chStars">★☆☆☆☆</span></div>
-              <div class="barRow"><span class="blab">パワー</span><div class="btrack"><div class="bfill" id="chBarPower"></div></div></div>
-              <div class="barRow"><span class="blab">スピード</span><div class="btrack"><div class="bfill" id="chBarSpeed"></div></div></div>
-              <div class="barRow"><span class="blab">クリティカル</span><div class="btrack"><div class="bfill" id="chBarCrit"></div></div></div>
+              <div class="barRow"><span class="blab">パワー</span><div class="btrack"><div class="bfill" id="chBarPower"></div><div class="bfill buff" id="chBarPowerBuff"></div></div></div>
+              <div class="barRow"><span class="blab">スピード</span><div class="btrack"><div class="bfill" id="chBarSpeed"></div><div class="bfill buff" id="chBarSpeedBuff"></div></div></div>
+              <div class="barRow"><span class="blab">クリティカル</span><div class="btrack"><div class="bfill" id="chBarCrit"></div><div class="bfill buff" id="chBarCritBuff"></div></div></div>
               <div class="barRow"><span class="blab">ボーナス</span><div class="btrack"><div class="bfill" id="chBarBonus"></div></div></div>
               <div class="dNote" id="chNote"></div>
               <div class="dNote" id="chSkill"></div>
@@ -416,7 +418,8 @@
             <button class="sbtn" id="tLvUp" style="width:auto; padding:0 10px;">Lv+1</button>
             <button class="sbtn" id="tLv50" style="width:auto; padding:0 10px;">Lv50にする</button>
             <button class="sbtn" id="tTicket" style="width:auto; padding:0 10px;">チケット+10</button>
-            <button class="sbtn" id="tUnlock" style="width:auto; padding:0 10px;">全武器解放</button>
+            <button class="sbtn" id="tUnlock" style="width:auto; padding:0 10px;">全武器解放＋熟練度MAX</button>
+            <button class="sbtn" id="tCharMax" style="width:auto; padding:0 10px;">全キャラ熟練度MAX</button>
             <button class="sbtn" id="tStage" style="width:auto; padding:0 10px;">ステージ+100（背景切替）</button>
             <button class="sbtn" id="tWipe" style="width:auto; padding:0 10px;">テストセーブ消去</button>
           </div>
@@ -456,7 +459,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.20（必殺技を実装：基本技＋奥義、チャージはヒット数制／新ステータス「技クールタイム減少」）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.21（全技クールタイム半減／キャラにもバフのゲージ表示／必殺技カウンターをHUD下の横幅いっぱいに移動）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
 </div>
 
 <script>
@@ -912,9 +915,18 @@
     var cStarNow = starOf(charHits[selChar]);
     var cMultNow = charStarMult(cStarNow);
     document.getElementById("chStars").textContent = starText(cStarNow) + (cMultNow > 1 ? "（全ステータス+" + Math.round((cMultNow - 1) * 100) + "%）" : "");
-    document.getElementById("chBarPower").style.width = barPct((C.dmgMult - 0.7) / 0.6 * 100);
-    document.getElementById("chBarSpeed").style.width = barPct(((1 / C.cdMult) - 0.6) / 1.22 * 100);
-    document.getElementById("chBarCrit").style.width = barPct((0.05 + C.critAdd) / 0.15 * 100);
+    var chPowBase = (C.dmgMult - 0.7) / 0.6 * 100;
+    document.getElementById("chBarPower").style.width = barPct(chPowBase);
+    var chPowBuff = Math.max(0, Math.min(C.dmgMult * (cMultNow - 1) / 0.6 * 100, 100 - Math.min(100, chPowBase)));
+    document.getElementById("chBarPowerBuff").style.width = (cMultNow > 1 && chPowBuff > 0 ? Math.max(2, Math.round(chPowBuff)) : 0) + "%";
+    var chSpdBase = ((1 / C.cdMult) - 0.6) / 1.22 * 100;
+    document.getElementById("chBarSpeed").style.width = barPct(chSpdBase);
+    var chSpdBuff = Math.max(0, Math.min(((cMultNow - 1) / C.cdMult) / 1.22 * 100, 100 - Math.min(100, chSpdBase)));
+    document.getElementById("chBarSpeedBuff").style.width = (cMultNow > 1 && chSpdBuff > 0 ? Math.max(2, Math.round(chSpdBuff)) : 0) + "%";
+    var chCritBase = (0.05 + C.critAdd) / 0.15 * 100;
+    document.getElementById("chBarCrit").style.width = barPct(chCritBase);
+    var chCritBuff = Math.max(0, Math.min((0.05 + C.critAdd) * (cMultNow - 1) / 0.15 * 100, 100 - Math.min(100, chCritBase)));
+    document.getElementById("chBarCritBuff").style.width = (cMultNow > 1 && chCritBuff > 0 ? Math.max(2, Math.round(chCritBuff)) : 0) + "%";
     document.getElementById("chBarBonus").style.width = barPct((C.bonusMult - 0.9) / 0.5 * 100);
     document.getElementById("chNote").textContent = masteryNote(charHits[selChar]);
     document.getElementById("chSkill").textContent = skillInfo("c", selChar, charHits[selChar]);
@@ -1429,6 +1441,10 @@
     monkey:    { name:"万能の顎", cd:750, kind:"part", part:"max" },
     leather:   { name:"紳士の鉄拳", cd:750, kind:"pct", pct:0.05, crit:true }
   };
+  // 2026年11月25日ユーザー決定：全技のクールタイム（必要ヒット数）を半分にする。端数は10単位で切り捨て（例：250→120）
+  [CHAR_BASIC, CHAR_ORIG, WP_BASIC_DEFS, WP_ORIG].forEach(function(tbl){
+    Object.keys(tbl).forEach(function(k){ tbl[k].cd = Math.max(10, Math.floor(tbl[k].cd / 2 / 10) * 10); });
+  });
   var skillCharge = { cb:{}, co:{}, wb:{}, wo:{} };
   function effCd(base){ return Math.max(1, Math.ceil(base * (1 - 0.01 * (stats.skillCd || 0)))); }  // 技クールタイム減少：必要ヒット数 -1%/pt
   var activeBuffs = [];
@@ -1906,7 +1922,11 @@
       tickets += 10; saveGame(); renderGrowth();
     });
     document.getElementById("tUnlock").addEventListener("click", function(){
-      WEAPON_KEYS.forEach(function(k){ ownedWeapons[k] = true; });
+      WEAPON_KEYS.forEach(function(k){ ownedWeapons[k] = true; weaponHits[k] = Math.max(weaponHits[k] || 0, 5000); });
+      saveGame(); renderGrowth();
+    });
+    document.getElementById("tCharMax").addEventListener("click", function(){
+      Object.keys(CHARS).forEach(function(k){ charHits[k] = Math.max(charHits[k] || 0, 5000); });
       saveGame(); renderGrowth();
     });
     document.getElementById("tStage").addEventListener("click", function(){
