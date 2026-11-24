@@ -394,9 +394,9 @@
     </div>
   </div>
     <div id="testBadge" style="display:none; position:absolute; top:62px; left:50%; transform:translateX(-50%); z-index:40; background:#c62828; color:#fff; font-size:12px; font-weight:bold; padding:2px 12px; border-radius:4px; letter-spacing:2px; pointer-events:none;">TEST環境</div>
-    <img id="bgImg" src="assets/bg0.webp?v=39" alt="">
-    <div id="carWrap"><img id="carImg" src="assets/car0.webp?v=39" alt="" draggable="false"></div>
-    <div id="fighterWrap"><img id="fighterImg" src="assets/fighter_idle.webp?v=39" alt="" draggable="false"></div>
+    <img id="bgImg" src="assets/bg0.webp?v=40" alt="">
+    <div id="carWrap"><img id="carImg" src="assets/car0.webp?v=40" alt="" draggable="false"></div>
+    <div id="fighterWrap"><img id="fighterImg" src="assets/fighter_idle.webp?v=40" alt="" draggable="false"></div>
     <div id="combo"><div id="comboNum">0</div><div id="comboTxt">HITS!</div></div>
     <div id="banner"><div id="bannerMain"></div><div id="bannerSub"></div></div>
     <div id="skillFlash"></div>
@@ -415,27 +415,27 @@
     <div id="menuCard">
       <h2>メニュー <button id="closeMenu">閉じる</button></h2>
       <div class="menuItem" data-act="solo">
-        <img class="micon" src="assets/icon_solo.webp?v=39" alt="">
+        <img class="micon" src="assets/icon_solo.webp?v=40" alt="">
         <div class="wname">ソロ<small>壊すたびに次のクルマが大きくなる階段制</small></div>
         <div class="weq" id="eqSolo">選択中</div>
       </div>
       <div class="menuItem" data-act="ta">
-        <img class="micon" src="assets/icon_ta.webp?v=39" alt="">
+        <img class="micon" src="assets/icon_ta.webp?v=40" alt="">
         <div class="wname">タイムアタック<small>60秒でスコアを競う／ベスト：<span id="taBestVal">0</span></small></div>
         <div class="weq" id="eqTa"></div>
       </div>
       <div class="menuItem locked" data-act="raid">
-        <img class="micon" src="assets/icon_raid.webp?v=39" alt="">
+        <img class="micon" src="assets/icon_raid.webp?v=40" alt="">
         <div class="wname">レイド<small>世界で1台のクルマを全員で壊す</small></div>
         <div class="weq">準備中</div>
       </div>
       <div class="menuItem" data-act="status">
-        <img class="micon" src="assets/icon_status.webp?v=39" alt="">
+        <img class="micon" src="assets/icon_status.webp?v=40" alt="">
         <div class="wname">ステータス<small>振り分け・キャラ・武器・熟練度</small></div>
         <div class="weq"></div>
       </div>
       <div class="menuItem" data-act="gacha">
-        <img class="micon" src="assets/icon_status.webp?v=39" alt="">
+        <img class="micon" src="assets/icon_status.webp?v=40" alt="">
         <div class="wname">キャラガチャ<small>スクラップ100で1回／10連1,000　所持スクラップ：<span id="menuScrapVal">0</span></small></div>
         <div class="weq">NEW</div>
       </div>
@@ -455,7 +455,7 @@
 
       <div id="tabWeapon" class="tabPage">
         <div class="shopArea">
-          <img class="shopBg" src="assets/bg_shop.webp?v=39" alt="">
+          <img class="shopBg" src="assets/bg_shop.webp?v=40" alt="">
           <div class="shopInner">
             <div class="detailBox">
               <div class="dName" id="wpName">素手</div>
@@ -467,7 +467,7 @@
               <div class="dNote" id="wpSkill"></div>
               <button class="actionBtn" id="wpAction">装備する</button>
             </div>
-            <div class="charStand"><img id="wpStand" src="assets/fighter_idle.webp?v=39" alt=""></div>
+            <div class="charStand"><img id="wpStand" src="assets/fighter_idle.webp?v=40" alt=""></div>
           </div>
         </div>
         <div class="cardRow" id="wpCards"></div>
@@ -476,7 +476,7 @@
 
       <div id="tabChar" class="tabPage" style="display:none">
         <div class="shopArea">
-          <img class="shopBg" src="assets/bg_shop.webp?v=39" alt="">
+          <img class="shopBg" src="assets/bg_shop.webp?v=40" alt="">
           <div class="shopInner">
             <div class="detailBox">
               <div class="dName" id="chName">レン</div>
@@ -489,7 +489,7 @@
               <div class="dNote" id="chSkill"></div>
               <button class="actionBtn" id="chAction">このキャラにする</button>
             </div>
-            <div class="charStand"><img id="chStand" src="assets/fighter_idle.webp?v=39" alt=""></div>
+            <div class="charStand"><img id="chStand" src="assets/fighter_idle.webp?v=40" alt=""></div>
           </div>
         </div>
         <div class="cardRow" id="chCards"></div>
@@ -574,185 +574,204 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.38（長押し部位判定：指の位置に追従＋削り部位ハイライト／召喚動画：青をシルエット版に差し替え）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー6）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.39（アカリの武器絵を全21種に拡充）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー6）</span></div>
 </div>
 
 <script>
 (function(){
   "use strict";
   var IMG = {
-    car:  ["assets/car0.webp?v=39","assets/car1.webp?v=39","assets/car2.webp?v=39","assets/car3.webp?v=39"],
-    car2: ["assets/car2_0.webp?v=39","assets/car2_1.webp?v=39","assets/car2_2.webp?v=39","assets/car2_3.webp?v=39"],
-    sedan: ["assets/sedan0.webp?v=39","assets/sedan1.webp?v=39","assets/sedan2.webp?v=39","assets/sedan3.webp?v=39"],
-    sport: ["assets/sport0.webp?v=39","assets/sport1.webp?v=39","assets/sport2.webp?v=39","assets/sport3.webp?v=39"],
-    suv:   ["assets/suv0.webp?v=39","assets/suv1.webp?v=39","assets/suv2.webp?v=39","assets/suv3.webp?v=39"],
-    truck: ["assets/truck0.webp?v=39","assets/truck1.webp?v=39","assets/truck2.webp?v=39","assets/truck3.webp?v=39"],
-    icons: { fist:"assets/icon_w_fist.webp?v=39", harisen:"assets/icon_w_harisen.webp?v=39", pan:"assets/icon_w_pan.webp?v=39", hammer:"assets/icon_w_hammer.webp?v=39", kakuzai:"assets/icon_w_kakuzai.webp?v=39", driver:"assets/icon_w_driver.webp?v=39", gunte:"assets/icon_w_gunte.webp?v=39", drill:"assets/icon_w_drill.webp?v=39", shinai:"assets/icon_w_shinai.webp?v=39", glove2:"assets/icon_w_glove2.webp?v=39", pliers:"assets/icon_w_pliers.webp?v=39", bokken:"assets/icon_w_bokken.webp?v=39", slipper:"assets/icon_w_slipper.webp?v=39", boxglove:"assets/icon_w_boxglove.webp?v=39", wrench:"assets/icon_w_wrench.webp?v=39", shinbunshi:"assets/icon_w_shinbunshi.webp?v=39", pikopiko:"assets/icon_w_pikopiko.webp?v=39", grinder:"assets/icon_w_grinder.webp?v=39", bat:"assets/icon_w_bat.webp?v=39", monkey:"assets/icon_w_monkey.webp?v=39", leather:"assets/icon_w_leather.webp?v=39" },
+    car:  ["assets/car0.webp?v=40","assets/car1.webp?v=40","assets/car2.webp?v=40","assets/car3.webp?v=40"],
+    car2: ["assets/car2_0.webp?v=40","assets/car2_1.webp?v=40","assets/car2_2.webp?v=40","assets/car2_3.webp?v=40"],
+    sedan: ["assets/sedan0.webp?v=40","assets/sedan1.webp?v=40","assets/sedan2.webp?v=40","assets/sedan3.webp?v=40"],
+    sport: ["assets/sport0.webp?v=40","assets/sport1.webp?v=40","assets/sport2.webp?v=40","assets/sport3.webp?v=40"],
+    suv:   ["assets/suv0.webp?v=40","assets/suv1.webp?v=40","assets/suv2.webp?v=40","assets/suv3.webp?v=40"],
+    truck: ["assets/truck0.webp?v=40","assets/truck1.webp?v=40","assets/truck2.webp?v=40","assets/truck3.webp?v=40"],
+    icons: { fist:"assets/icon_w_fist.webp?v=40", harisen:"assets/icon_w_harisen.webp?v=40", pan:"assets/icon_w_pan.webp?v=40", hammer:"assets/icon_w_hammer.webp?v=40", kakuzai:"assets/icon_w_kakuzai.webp?v=40", driver:"assets/icon_w_driver.webp?v=40", gunte:"assets/icon_w_gunte.webp?v=40", drill:"assets/icon_w_drill.webp?v=40", shinai:"assets/icon_w_shinai.webp?v=40", glove2:"assets/icon_w_glove2.webp?v=40", pliers:"assets/icon_w_pliers.webp?v=40", bokken:"assets/icon_w_bokken.webp?v=40", slipper:"assets/icon_w_slipper.webp?v=40", boxglove:"assets/icon_w_boxglove.webp?v=40", wrench:"assets/icon_w_wrench.webp?v=40", shinbunshi:"assets/icon_w_shinbunshi.webp?v=40", pikopiko:"assets/icon_w_pikopiko.webp?v=40", grinder:"assets/icon_w_grinder.webp?v=40", bat:"assets/icon_w_bat.webp?v=40", monkey:"assets/icon_w_monkey.webp?v=40", leather:"assets/icon_w_leather.webp?v=40" },
     chars: {
       ren: {
-        fist:    ["assets/fighter_idle.webp?v=39", "assets/fighter_punch.webp?v=39"],
-        harisen: ["assets/fighter_harisen_idle.webp?v=39", "assets/fighter_harisen_punch.webp?v=39"],
-        pan:     ["assets/fighter_pan_idle.webp?v=39", "assets/fighter_pan_punch.webp?v=39"],
-        hammer:  ["assets/fighter_hammer_idle.webp?v=39", "assets/fighter_hammer_punch.webp?v=39"],
-        kakuzai: ["assets/fighter_kakuzai_idle.webp?v=39", "assets/fighter_kakuzai_punch.webp?v=39"],
-        driver:  ["assets/fighter_driver_idle.webp?v=39", "assets/fighter_driver_punch.webp?v=39"],
-        gunte:   ["assets/fighter_gunte_idle.webp?v=39", "assets/fighter_gunte_punch.webp?v=39"],
-        drill:   ["assets/fighter_drill_idle.webp?v=39", "assets/fighter_drill_punch.webp?v=39"],
-        shinai:  ["assets/fighter_shinai_idle.webp?v=39", "assets/fighter_shinai_punch.webp?v=39"],
-        glove2:  ["assets/fighter_glove2_idle.webp?v=39", "assets/fighter_glove2_punch.webp?v=39"],
-        pliers:  ["assets/fighter_pliers_idle.webp?v=39", "assets/fighter_pliers_punch.webp?v=39"],
-        bokken:  ["assets/fighter_bokken_idle.webp?v=39", "assets/fighter_bokken_punch.webp?v=39"],
-        slipper: ["assets/fighter_slipper_idle.webp?v=39", "assets/fighter_slipper_punch.webp?v=39"],
-        boxglove:["assets/fighter_boxglove_idle.webp?v=39", "assets/fighter_boxglove_punch.webp?v=39"],
-        wrench:  ["assets/fighter_wrench_idle.webp?v=39", "assets/fighter_wrench_punch.webp?v=39"],
-        shinbunshi:["assets/fighter_shinbunshi_idle.webp?v=39", "assets/fighter_shinbunshi_punch.webp?v=39"],
-        pikopiko:["assets/fighter_pikopiko_idle.webp?v=39", "assets/fighter_pikopiko_punch.webp?v=39"],
-        grinder: ["assets/fighter_grinder_idle.webp?v=39", "assets/fighter_grinder_punch.webp?v=39"],
-        bat:     ["assets/fighter_bat_idle.webp?v=39", "assets/fighter_bat_punch.webp?v=39"],
-        monkey:  ["assets/fighter_monkey_idle.webp?v=39", "assets/fighter_monkey_punch.webp?v=39"],
-        leather: ["assets/fighter_leather_idle.webp?v=39", "assets/fighter_leather_punch.webp?v=39"]
+        fist:    ["assets/fighter_idle.webp?v=40", "assets/fighter_punch.webp?v=40"],
+        harisen: ["assets/fighter_harisen_idle.webp?v=40", "assets/fighter_harisen_punch.webp?v=40"],
+        pan:     ["assets/fighter_pan_idle.webp?v=40", "assets/fighter_pan_punch.webp?v=40"],
+        hammer:  ["assets/fighter_hammer_idle.webp?v=40", "assets/fighter_hammer_punch.webp?v=40"],
+        kakuzai: ["assets/fighter_kakuzai_idle.webp?v=40", "assets/fighter_kakuzai_punch.webp?v=40"],
+        driver:  ["assets/fighter_driver_idle.webp?v=40", "assets/fighter_driver_punch.webp?v=40"],
+        gunte:   ["assets/fighter_gunte_idle.webp?v=40", "assets/fighter_gunte_punch.webp?v=40"],
+        drill:   ["assets/fighter_drill_idle.webp?v=40", "assets/fighter_drill_punch.webp?v=40"],
+        shinai:  ["assets/fighter_shinai_idle.webp?v=40", "assets/fighter_shinai_punch.webp?v=40"],
+        glove2:  ["assets/fighter_glove2_idle.webp?v=40", "assets/fighter_glove2_punch.webp?v=40"],
+        pliers:  ["assets/fighter_pliers_idle.webp?v=40", "assets/fighter_pliers_punch.webp?v=40"],
+        bokken:  ["assets/fighter_bokken_idle.webp?v=40", "assets/fighter_bokken_punch.webp?v=40"],
+        slipper: ["assets/fighter_slipper_idle.webp?v=40", "assets/fighter_slipper_punch.webp?v=40"],
+        boxglove:["assets/fighter_boxglove_idle.webp?v=40", "assets/fighter_boxglove_punch.webp?v=40"],
+        wrench:  ["assets/fighter_wrench_idle.webp?v=40", "assets/fighter_wrench_punch.webp?v=40"],
+        shinbunshi:["assets/fighter_shinbunshi_idle.webp?v=40", "assets/fighter_shinbunshi_punch.webp?v=40"],
+        pikopiko:["assets/fighter_pikopiko_idle.webp?v=40", "assets/fighter_pikopiko_punch.webp?v=40"],
+        grinder: ["assets/fighter_grinder_idle.webp?v=40", "assets/fighter_grinder_punch.webp?v=40"],
+        bat:     ["assets/fighter_bat_idle.webp?v=40", "assets/fighter_bat_punch.webp?v=40"],
+        monkey:  ["assets/fighter_monkey_idle.webp?v=40", "assets/fighter_monkey_punch.webp?v=40"],
+        leather: ["assets/fighter_leather_idle.webp?v=40", "assets/fighter_leather_punch.webp?v=40"]
       },
       gou: {
-        fist:    ["assets/fighter_gou_fist_idle.webp?v=39", "assets/fighter_gou_fist_punch.webp?v=39"],
-        harisen: ["assets/fighter_gou_harisen_idle.webp?v=39", "assets/fighter_gou_harisen_punch.webp?v=39"],
-        pan:     ["assets/fighter_gou_pan_idle.webp?v=39", "assets/fighter_gou_pan_punch.webp?v=39"],
-        hammer:  ["assets/fighter_gou_hammer_idle.webp?v=39", "assets/fighter_gou_hammer_punch.webp?v=39"],
-        kakuzai: ["assets/fighter_gou_kakuzai_idle.webp?v=39", "assets/fighter_gou_kakuzai_punch.webp?v=39"],
-        driver:  ["assets/fighter_gou_driver_idle.webp?v=39", "assets/fighter_gou_driver_punch.webp?v=39"],
-        gunte:   ["assets/fighter_gou_gunte_idle.webp?v=39", "assets/fighter_gou_gunte_punch.webp?v=39"],
-        drill:   ["assets/fighter_gou_drill_idle.webp?v=39", "assets/fighter_gou_drill_punch.webp?v=39"],
-        shinai:  ["assets/fighter_gou_shinai_idle.webp?v=39", "assets/fighter_gou_shinai_punch.webp?v=39"],
-        glove2:  ["assets/fighter_gou_glove2_idle.webp?v=39", "assets/fighter_gou_glove2_punch.webp?v=39"],
-        pliers:  ["assets/fighter_gou_pliers_idle.webp?v=39", "assets/fighter_gou_pliers_punch.webp?v=39"],
-        bokken:  ["assets/fighter_gou_bokken_idle.webp?v=39", "assets/fighter_gou_bokken_punch.webp?v=39"],
-        slipper: ["assets/fighter_gou_slipper_idle.webp?v=39", "assets/fighter_gou_slipper_punch.webp?v=39"],
-        boxglove:["assets/fighter_gou_boxglove_idle.webp?v=39", "assets/fighter_gou_boxglove_punch.webp?v=39"],
-        wrench:  ["assets/fighter_gou_wrench_idle.webp?v=39", "assets/fighter_gou_wrench_punch.webp?v=39"],
-        shinbunshi:["assets/fighter_gou_shinbunshi_idle.webp?v=39", "assets/fighter_gou_shinbunshi_punch.webp?v=39"],
-        pikopiko:["assets/fighter_gou_pikopiko_idle.webp?v=39", "assets/fighter_gou_pikopiko_punch.webp?v=39"],
-        grinder: ["assets/fighter_gou_grinder_idle.webp?v=39", "assets/fighter_gou_grinder_punch.webp?v=39"],
-        bat:     ["assets/fighter_gou_bat_idle.webp?v=39", "assets/fighter_gou_bat_punch.webp?v=39"],
-        monkey:  ["assets/fighter_gou_monkey_idle.webp?v=39", "assets/fighter_gou_monkey_punch.webp?v=39"],
-        leather: ["assets/fighter_gou_leather_idle.webp?v=39", "assets/fighter_gou_leather_punch.webp?v=39"]
+        fist:    ["assets/fighter_gou_fist_idle.webp?v=40", "assets/fighter_gou_fist_punch.webp?v=40"],
+        harisen: ["assets/fighter_gou_harisen_idle.webp?v=40", "assets/fighter_gou_harisen_punch.webp?v=40"],
+        pan:     ["assets/fighter_gou_pan_idle.webp?v=40", "assets/fighter_gou_pan_punch.webp?v=40"],
+        hammer:  ["assets/fighter_gou_hammer_idle.webp?v=40", "assets/fighter_gou_hammer_punch.webp?v=40"],
+        kakuzai: ["assets/fighter_gou_kakuzai_idle.webp?v=40", "assets/fighter_gou_kakuzai_punch.webp?v=40"],
+        driver:  ["assets/fighter_gou_driver_idle.webp?v=40", "assets/fighter_gou_driver_punch.webp?v=40"],
+        gunte:   ["assets/fighter_gou_gunte_idle.webp?v=40", "assets/fighter_gou_gunte_punch.webp?v=40"],
+        drill:   ["assets/fighter_gou_drill_idle.webp?v=40", "assets/fighter_gou_drill_punch.webp?v=40"],
+        shinai:  ["assets/fighter_gou_shinai_idle.webp?v=40", "assets/fighter_gou_shinai_punch.webp?v=40"],
+        glove2:  ["assets/fighter_gou_glove2_idle.webp?v=40", "assets/fighter_gou_glove2_punch.webp?v=40"],
+        pliers:  ["assets/fighter_gou_pliers_idle.webp?v=40", "assets/fighter_gou_pliers_punch.webp?v=40"],
+        bokken:  ["assets/fighter_gou_bokken_idle.webp?v=40", "assets/fighter_gou_bokken_punch.webp?v=40"],
+        slipper: ["assets/fighter_gou_slipper_idle.webp?v=40", "assets/fighter_gou_slipper_punch.webp?v=40"],
+        boxglove:["assets/fighter_gou_boxglove_idle.webp?v=40", "assets/fighter_gou_boxglove_punch.webp?v=40"],
+        wrench:  ["assets/fighter_gou_wrench_idle.webp?v=40", "assets/fighter_gou_wrench_punch.webp?v=40"],
+        shinbunshi:["assets/fighter_gou_shinbunshi_idle.webp?v=40", "assets/fighter_gou_shinbunshi_punch.webp?v=40"],
+        pikopiko:["assets/fighter_gou_pikopiko_idle.webp?v=40", "assets/fighter_gou_pikopiko_punch.webp?v=40"],
+        grinder: ["assets/fighter_gou_grinder_idle.webp?v=40", "assets/fighter_gou_grinder_punch.webp?v=40"],
+        bat:     ["assets/fighter_gou_bat_idle.webp?v=40", "assets/fighter_gou_bat_punch.webp?v=40"],
+        monkey:  ["assets/fighter_gou_monkey_idle.webp?v=40", "assets/fighter_gou_monkey_punch.webp?v=40"],
+        leather: ["assets/fighter_gou_leather_idle.webp?v=40", "assets/fighter_gou_leather_punch.webp?v=40"]
       },
       hayate: {
-        fist:    ["assets/fighter_hayate_fist_idle.webp?v=39", "assets/fighter_hayate_fist_punch.webp?v=39"],
-        harisen: ["assets/fighter_hayate_harisen_idle.webp?v=39", "assets/fighter_hayate_harisen_punch.webp?v=39"],
-        pan:     ["assets/fighter_hayate_pan_idle.webp?v=39", "assets/fighter_hayate_pan_punch.webp?v=39"],
-        hammer:  ["assets/fighter_hayate_hammer_idle.webp?v=39", "assets/fighter_hayate_hammer_punch.webp?v=39"],
-        kakuzai: ["assets/fighter_hayate_kakuzai_idle.webp?v=39", "assets/fighter_hayate_kakuzai_punch.webp?v=39"],
-        driver:  ["assets/fighter_hayate_driver_idle.webp?v=39", "assets/fighter_hayate_driver_punch.webp?v=39"],
-        gunte:   ["assets/fighter_hayate_gunte_idle.webp?v=39", "assets/fighter_hayate_gunte_punch.webp?v=39"],
-        drill:   ["assets/fighter_hayate_drill_idle.webp?v=39", "assets/fighter_hayate_drill_punch.webp?v=39"],
-        shinai:  ["assets/fighter_hayate_shinai_idle.webp?v=39", "assets/fighter_hayate_shinai_punch.webp?v=39"],
-        glove2:  ["assets/fighter_hayate_glove2_idle.webp?v=39", "assets/fighter_hayate_glove2_punch.webp?v=39"],
-        pliers:  ["assets/fighter_hayate_pliers_idle.webp?v=39", "assets/fighter_hayate_pliers_punch.webp?v=39"],
-        bokken:  ["assets/fighter_hayate_bokken_idle.webp?v=39", "assets/fighter_hayate_bokken_punch.webp?v=39"],
-        slipper: ["assets/fighter_hayate_slipper_idle.webp?v=39", "assets/fighter_hayate_slipper_punch.webp?v=39"],
-        boxglove:["assets/fighter_hayate_boxglove_idle.webp?v=39", "assets/fighter_hayate_boxglove_punch.webp?v=39"],
-        wrench:  ["assets/fighter_hayate_wrench_idle.webp?v=39", "assets/fighter_hayate_wrench_punch.webp?v=39"],
-        shinbunshi:["assets/fighter_hayate_shinbunshi_idle.webp?v=39", "assets/fighter_hayate_shinbunshi_punch.webp?v=39"],
-        pikopiko:["assets/fighter_hayate_pikopiko_idle.webp?v=39", "assets/fighter_hayate_pikopiko_punch.webp?v=39"],
-        grinder: ["assets/fighter_hayate_grinder_idle.webp?v=39", "assets/fighter_hayate_grinder_punch.webp?v=39"],
-        bat:     ["assets/fighter_hayate_bat_idle.webp?v=39", "assets/fighter_hayate_bat_punch.webp?v=39"],
-        monkey:  ["assets/fighter_hayate_monkey_idle.webp?v=39", "assets/fighter_hayate_monkey_punch.webp?v=39"],
-        leather: ["assets/fighter_hayate_leather_idle.webp?v=39", "assets/fighter_hayate_leather_punch.webp?v=39"]
+        fist:    ["assets/fighter_hayate_fist_idle.webp?v=40", "assets/fighter_hayate_fist_punch.webp?v=40"],
+        harisen: ["assets/fighter_hayate_harisen_idle.webp?v=40", "assets/fighter_hayate_harisen_punch.webp?v=40"],
+        pan:     ["assets/fighter_hayate_pan_idle.webp?v=40", "assets/fighter_hayate_pan_punch.webp?v=40"],
+        hammer:  ["assets/fighter_hayate_hammer_idle.webp?v=40", "assets/fighter_hayate_hammer_punch.webp?v=40"],
+        kakuzai: ["assets/fighter_hayate_kakuzai_idle.webp?v=40", "assets/fighter_hayate_kakuzai_punch.webp?v=40"],
+        driver:  ["assets/fighter_hayate_driver_idle.webp?v=40", "assets/fighter_hayate_driver_punch.webp?v=40"],
+        gunte:   ["assets/fighter_hayate_gunte_idle.webp?v=40", "assets/fighter_hayate_gunte_punch.webp?v=40"],
+        drill:   ["assets/fighter_hayate_drill_idle.webp?v=40", "assets/fighter_hayate_drill_punch.webp?v=40"],
+        shinai:  ["assets/fighter_hayate_shinai_idle.webp?v=40", "assets/fighter_hayate_shinai_punch.webp?v=40"],
+        glove2:  ["assets/fighter_hayate_glove2_idle.webp?v=40", "assets/fighter_hayate_glove2_punch.webp?v=40"],
+        pliers:  ["assets/fighter_hayate_pliers_idle.webp?v=40", "assets/fighter_hayate_pliers_punch.webp?v=40"],
+        bokken:  ["assets/fighter_hayate_bokken_idle.webp?v=40", "assets/fighter_hayate_bokken_punch.webp?v=40"],
+        slipper: ["assets/fighter_hayate_slipper_idle.webp?v=40", "assets/fighter_hayate_slipper_punch.webp?v=40"],
+        boxglove:["assets/fighter_hayate_boxglove_idle.webp?v=40", "assets/fighter_hayate_boxglove_punch.webp?v=40"],
+        wrench:  ["assets/fighter_hayate_wrench_idle.webp?v=40", "assets/fighter_hayate_wrench_punch.webp?v=40"],
+        shinbunshi:["assets/fighter_hayate_shinbunshi_idle.webp?v=40", "assets/fighter_hayate_shinbunshi_punch.webp?v=40"],
+        pikopiko:["assets/fighter_hayate_pikopiko_idle.webp?v=40", "assets/fighter_hayate_pikopiko_punch.webp?v=40"],
+        grinder: ["assets/fighter_hayate_grinder_idle.webp?v=40", "assets/fighter_hayate_grinder_punch.webp?v=40"],
+        bat:     ["assets/fighter_hayate_bat_idle.webp?v=40", "assets/fighter_hayate_bat_punch.webp?v=40"],
+        monkey:  ["assets/fighter_hayate_monkey_idle.webp?v=40", "assets/fighter_hayate_monkey_punch.webp?v=40"],
+        leather: ["assets/fighter_hayate_leather_idle.webp?v=40", "assets/fighter_hayate_leather_punch.webp?v=40"]
       },
       kirara: {
-        fist:    ["assets/fighter_kirara_fist_idle.webp?v=39", "assets/fighter_kirara_fist_punch.webp?v=39"],
-        harisen: ["assets/fighter_kirara_harisen_idle.webp?v=39", "assets/fighter_kirara_harisen_punch.webp?v=39"],
-        pan:     ["assets/fighter_kirara_pan_idle.webp?v=39", "assets/fighter_kirara_pan_punch.webp?v=39"],
-        hammer:  ["assets/fighter_kirara_hammer_idle.webp?v=39", "assets/fighter_kirara_hammer_punch.webp?v=39"],
-        kakuzai: ["assets/fighter_kirara_kakuzai_idle.webp?v=39", "assets/fighter_kirara_kakuzai_punch.webp?v=39"],
-        driver:  ["assets/fighter_kirara_driver_idle.webp?v=39", "assets/fighter_kirara_driver_punch.webp?v=39"],
-        gunte:   ["assets/fighter_kirara_gunte_idle.webp?v=39", "assets/fighter_kirara_gunte_punch.webp?v=39"],
-        drill:   ["assets/fighter_kirara_drill_idle.webp?v=39", "assets/fighter_kirara_drill_punch.webp?v=39"],
-        shinai:  ["assets/fighter_kirara_shinai_idle.webp?v=39", "assets/fighter_kirara_shinai_punch.webp?v=39"],
-        glove2:  ["assets/fighter_kirara_glove2_idle.webp?v=39", "assets/fighter_kirara_glove2_punch.webp?v=39"],
-        pliers:  ["assets/fighter_kirara_pliers_idle.webp?v=39", "assets/fighter_kirara_pliers_punch.webp?v=39"],
-        bokken:  ["assets/fighter_kirara_bokken_idle.webp?v=39", "assets/fighter_kirara_bokken_punch.webp?v=39"],
-        slipper: ["assets/fighter_kirara_slipper_idle.webp?v=39", "assets/fighter_kirara_slipper_punch.webp?v=39"],
-        boxglove:["assets/fighter_kirara_boxglove_idle.webp?v=39", "assets/fighter_kirara_boxglove_punch.webp?v=39"],
-        wrench:  ["assets/fighter_kirara_wrench_idle.webp?v=39", "assets/fighter_kirara_wrench_punch.webp?v=39"],
-        shinbunshi:["assets/fighter_kirara_shinbunshi_idle.webp?v=39", "assets/fighter_kirara_shinbunshi_punch.webp?v=39"],
-        pikopiko:["assets/fighter_kirara_pikopiko_idle.webp?v=39", "assets/fighter_kirara_pikopiko_punch.webp?v=39"],
-        grinder: ["assets/fighter_kirara_grinder_idle.webp?v=39", "assets/fighter_kirara_grinder_punch.webp?v=39"],
-        bat:     ["assets/fighter_kirara_bat_idle.webp?v=39", "assets/fighter_kirara_bat_punch.webp?v=39"],
-        monkey:  ["assets/fighter_kirara_monkey_idle.webp?v=39", "assets/fighter_kirara_monkey_punch.webp?v=39"],
-        leather: ["assets/fighter_kirara_leather_idle.webp?v=39", "assets/fighter_kirara_leather_punch.webp?v=39"]
+        fist:    ["assets/fighter_kirara_fist_idle.webp?v=40", "assets/fighter_kirara_fist_punch.webp?v=40"],
+        harisen: ["assets/fighter_kirara_harisen_idle.webp?v=40", "assets/fighter_kirara_harisen_punch.webp?v=40"],
+        pan:     ["assets/fighter_kirara_pan_idle.webp?v=40", "assets/fighter_kirara_pan_punch.webp?v=40"],
+        hammer:  ["assets/fighter_kirara_hammer_idle.webp?v=40", "assets/fighter_kirara_hammer_punch.webp?v=40"],
+        kakuzai: ["assets/fighter_kirara_kakuzai_idle.webp?v=40", "assets/fighter_kirara_kakuzai_punch.webp?v=40"],
+        driver:  ["assets/fighter_kirara_driver_idle.webp?v=40", "assets/fighter_kirara_driver_punch.webp?v=40"],
+        gunte:   ["assets/fighter_kirara_gunte_idle.webp?v=40", "assets/fighter_kirara_gunte_punch.webp?v=40"],
+        drill:   ["assets/fighter_kirara_drill_idle.webp?v=40", "assets/fighter_kirara_drill_punch.webp?v=40"],
+        shinai:  ["assets/fighter_kirara_shinai_idle.webp?v=40", "assets/fighter_kirara_shinai_punch.webp?v=40"],
+        glove2:  ["assets/fighter_kirara_glove2_idle.webp?v=40", "assets/fighter_kirara_glove2_punch.webp?v=40"],
+        pliers:  ["assets/fighter_kirara_pliers_idle.webp?v=40", "assets/fighter_kirara_pliers_punch.webp?v=40"],
+        bokken:  ["assets/fighter_kirara_bokken_idle.webp?v=40", "assets/fighter_kirara_bokken_punch.webp?v=40"],
+        slipper: ["assets/fighter_kirara_slipper_idle.webp?v=40", "assets/fighter_kirara_slipper_punch.webp?v=40"],
+        boxglove:["assets/fighter_kirara_boxglove_idle.webp?v=40", "assets/fighter_kirara_boxglove_punch.webp?v=40"],
+        wrench:  ["assets/fighter_kirara_wrench_idle.webp?v=40", "assets/fighter_kirara_wrench_punch.webp?v=40"],
+        shinbunshi:["assets/fighter_kirara_shinbunshi_idle.webp?v=40", "assets/fighter_kirara_shinbunshi_punch.webp?v=40"],
+        pikopiko:["assets/fighter_kirara_pikopiko_idle.webp?v=40", "assets/fighter_kirara_pikopiko_punch.webp?v=40"],
+        grinder: ["assets/fighter_kirara_grinder_idle.webp?v=40", "assets/fighter_kirara_grinder_punch.webp?v=40"],
+        bat:     ["assets/fighter_kirara_bat_idle.webp?v=40", "assets/fighter_kirara_bat_punch.webp?v=40"],
+        monkey:  ["assets/fighter_kirara_monkey_idle.webp?v=40", "assets/fighter_kirara_monkey_punch.webp?v=40"],
+        leather: ["assets/fighter_kirara_leather_idle.webp?v=40", "assets/fighter_kirara_leather_punch.webp?v=40"]
       },
       satoru: {
-        fist:    ["assets/fighter_satoru_fist_idle.webp?v=39", "assets/fighter_satoru_fist_punch.webp?v=39"],
-        harisen: ["assets/fighter_satoru_harisen_idle.webp?v=39", "assets/fighter_satoru_harisen_punch.webp?v=39"],
-        pan:     ["assets/fighter_satoru_pan_idle.webp?v=39", "assets/fighter_satoru_pan_punch.webp?v=39"],
-        hammer:  ["assets/fighter_satoru_hammer_idle.webp?v=39", "assets/fighter_satoru_hammer_punch.webp?v=39"],
-        kakuzai: ["assets/fighter_satoru_kakuzai_idle.webp?v=39", "assets/fighter_satoru_kakuzai_punch.webp?v=39"],
-        driver:  ["assets/fighter_satoru_driver_idle.webp?v=39", "assets/fighter_satoru_driver_punch.webp?v=39"],
-        gunte:   ["assets/fighter_satoru_gunte_idle.webp?v=39", "assets/fighter_satoru_gunte_punch.webp?v=39"],
-        drill:   ["assets/fighter_satoru_drill_idle.webp?v=39", "assets/fighter_satoru_drill_punch.webp?v=39"],
-        shinai:  ["assets/fighter_satoru_shinai_idle.webp?v=39", "assets/fighter_satoru_shinai_punch.webp?v=39"],
-        glove2:  ["assets/fighter_satoru_glove2_idle.webp?v=39", "assets/fighter_satoru_glove2_punch.webp?v=39"],
-        pliers:  ["assets/fighter_satoru_pliers_idle.webp?v=39", "assets/fighter_satoru_pliers_punch.webp?v=39"],
-        bokken:  ["assets/fighter_satoru_bokken_idle.webp?v=39", "assets/fighter_satoru_bokken_punch.webp?v=39"],
-        slipper: ["assets/fighter_satoru_slipper_idle.webp?v=39", "assets/fighter_satoru_slipper_punch.webp?v=39"],
-        boxglove:["assets/fighter_satoru_boxglove_idle.webp?v=39", "assets/fighter_satoru_boxglove_punch.webp?v=39"],
-        wrench:  ["assets/fighter_satoru_wrench_idle.webp?v=39", "assets/fighter_satoru_wrench_punch.webp?v=39"],
-        shinbunshi:["assets/fighter_satoru_shinbunshi_idle.webp?v=39", "assets/fighter_satoru_shinbunshi_punch.webp?v=39"],
-        pikopiko:["assets/fighter_satoru_pikopiko_idle.webp?v=39", "assets/fighter_satoru_pikopiko_punch.webp?v=39"],
-        grinder: ["assets/fighter_satoru_grinder_idle.webp?v=39", "assets/fighter_satoru_grinder_punch.webp?v=39"],
-        bat:     ["assets/fighter_satoru_bat_idle.webp?v=39", "assets/fighter_satoru_bat_punch.webp?v=39"],
-        monkey:  ["assets/fighter_satoru_monkey_idle.webp?v=39", "assets/fighter_satoru_monkey_punch.webp?v=39"],
-        leather: ["assets/fighter_satoru_leather_idle.webp?v=39", "assets/fighter_satoru_leather_punch.webp?v=39"]
+        fist:    ["assets/fighter_satoru_fist_idle.webp?v=40", "assets/fighter_satoru_fist_punch.webp?v=40"],
+        harisen: ["assets/fighter_satoru_harisen_idle.webp?v=40", "assets/fighter_satoru_harisen_punch.webp?v=40"],
+        pan:     ["assets/fighter_satoru_pan_idle.webp?v=40", "assets/fighter_satoru_pan_punch.webp?v=40"],
+        hammer:  ["assets/fighter_satoru_hammer_idle.webp?v=40", "assets/fighter_satoru_hammer_punch.webp?v=40"],
+        kakuzai: ["assets/fighter_satoru_kakuzai_idle.webp?v=40", "assets/fighter_satoru_kakuzai_punch.webp?v=40"],
+        driver:  ["assets/fighter_satoru_driver_idle.webp?v=40", "assets/fighter_satoru_driver_punch.webp?v=40"],
+        gunte:   ["assets/fighter_satoru_gunte_idle.webp?v=40", "assets/fighter_satoru_gunte_punch.webp?v=40"],
+        drill:   ["assets/fighter_satoru_drill_idle.webp?v=40", "assets/fighter_satoru_drill_punch.webp?v=40"],
+        shinai:  ["assets/fighter_satoru_shinai_idle.webp?v=40", "assets/fighter_satoru_shinai_punch.webp?v=40"],
+        glove2:  ["assets/fighter_satoru_glove2_idle.webp?v=40", "assets/fighter_satoru_glove2_punch.webp?v=40"],
+        pliers:  ["assets/fighter_satoru_pliers_idle.webp?v=40", "assets/fighter_satoru_pliers_punch.webp?v=40"],
+        bokken:  ["assets/fighter_satoru_bokken_idle.webp?v=40", "assets/fighter_satoru_bokken_punch.webp?v=40"],
+        slipper: ["assets/fighter_satoru_slipper_idle.webp?v=40", "assets/fighter_satoru_slipper_punch.webp?v=40"],
+        boxglove:["assets/fighter_satoru_boxglove_idle.webp?v=40", "assets/fighter_satoru_boxglove_punch.webp?v=40"],
+        wrench:  ["assets/fighter_satoru_wrench_idle.webp?v=40", "assets/fighter_satoru_wrench_punch.webp?v=40"],
+        shinbunshi:["assets/fighter_satoru_shinbunshi_idle.webp?v=40", "assets/fighter_satoru_shinbunshi_punch.webp?v=40"],
+        pikopiko:["assets/fighter_satoru_pikopiko_idle.webp?v=40", "assets/fighter_satoru_pikopiko_punch.webp?v=40"],
+        grinder: ["assets/fighter_satoru_grinder_idle.webp?v=40", "assets/fighter_satoru_grinder_punch.webp?v=40"],
+        bat:     ["assets/fighter_satoru_bat_idle.webp?v=40", "assets/fighter_satoru_bat_punch.webp?v=40"],
+        monkey:  ["assets/fighter_satoru_monkey_idle.webp?v=40", "assets/fighter_satoru_monkey_punch.webp?v=40"],
+        leather: ["assets/fighter_satoru_leather_idle.webp?v=40", "assets/fighter_satoru_leather_punch.webp?v=40"]
       },
       akari: {
-        fist:    ["assets/fighter_akari_fist_idle.webp?v=39", "assets/fighter_akari_fist_punch.webp?v=39"],
-        wrench:  ["assets/fighter_akari_wrench_idle.webp?v=39", "assets/fighter_akari_wrench_punch.webp?v=39"]
+        fist:    ["assets/fighter_akari_fist_idle.webp?v=40", "assets/fighter_akari_fist_punch.webp?v=40"],
+        harisen: ["assets/fighter_akari_harisen_idle.webp?v=40", "assets/fighter_akari_harisen_punch.webp?v=40"],
+        pan:     ["assets/fighter_akari_pan_idle.webp?v=40", "assets/fighter_akari_pan_punch.webp?v=40"],
+        hammer:  ["assets/fighter_akari_hammer_idle.webp?v=40", "assets/fighter_akari_hammer_punch.webp?v=40"],
+        kakuzai: ["assets/fighter_akari_kakuzai_idle.webp?v=40", "assets/fighter_akari_kakuzai_punch.webp?v=40"],
+        driver:  ["assets/fighter_akari_driver_idle.webp?v=40", "assets/fighter_akari_driver_punch.webp?v=40"],
+        gunte:   ["assets/fighter_akari_gunte_idle.webp?v=40", "assets/fighter_akari_gunte_punch.webp?v=40"],
+        drill:   ["assets/fighter_akari_drill_idle.webp?v=40", "assets/fighter_akari_drill_punch.webp?v=40"],
+        shinai:  ["assets/fighter_akari_shinai_idle.webp?v=40", "assets/fighter_akari_shinai_punch.webp?v=40"],
+        glove2:  ["assets/fighter_akari_glove2_idle.webp?v=40", "assets/fighter_akari_glove2_punch.webp?v=40"],
+        pliers:  ["assets/fighter_akari_pliers_idle.webp?v=40", "assets/fighter_akari_pliers_punch.webp?v=40"],
+        bokken:  ["assets/fighter_akari_bokken_idle.webp?v=40", "assets/fighter_akari_bokken_punch.webp?v=40"],
+        slipper: ["assets/fighter_akari_slipper_idle.webp?v=40", "assets/fighter_akari_slipper_punch.webp?v=40"],
+        boxglove:["assets/fighter_akari_boxglove_idle.webp?v=40", "assets/fighter_akari_boxglove_punch.webp?v=40"],
+        wrench:  ["assets/fighter_akari_wrench_idle.webp?v=40", "assets/fighter_akari_wrench_punch.webp?v=40"],
+        shinbunshi:["assets/fighter_akari_shinbunshi_idle.webp?v=40", "assets/fighter_akari_shinbunshi_punch.webp?v=40"],
+        pikopiko:["assets/fighter_akari_pikopiko_idle.webp?v=40", "assets/fighter_akari_pikopiko_punch.webp?v=40"],
+        grinder: ["assets/fighter_akari_grinder_idle.webp?v=40", "assets/fighter_akari_grinder_punch.webp?v=40"],
+        bat:     ["assets/fighter_akari_bat_idle.webp?v=40", "assets/fighter_akari_bat_punch.webp?v=40"],
+        monkey:  ["assets/fighter_akari_monkey_idle.webp?v=40", "assets/fighter_akari_monkey_punch.webp?v=40"],
+        leather: ["assets/fighter_akari_leather_idle.webp?v=40", "assets/fighter_akari_leather_punch.webp?v=40"]
       },
       jinya: {
-        fist:    ["assets/fighter_jinya_fist_idle.webp?v=39", "assets/fighter_jinya_fist_punch.webp?v=39"],
-        bat:     ["assets/fighter_jinya_bat_idle.webp?v=39", "assets/fighter_jinya_bat_punch.webp?v=39"]
+        fist:    ["assets/fighter_jinya_fist_idle.webp?v=40", "assets/fighter_jinya_fist_punch.webp?v=40"],
+        bat:     ["assets/fighter_jinya_bat_idle.webp?v=40", "assets/fighter_jinya_bat_punch.webp?v=40"]
       },
       mio: {
-        fist:    ["assets/fighter_mio_fist_idle.webp?v=39", "assets/fighter_mio_fist_punch.webp?v=39"],
-        shinai:  ["assets/fighter_mio_shinai_idle.webp?v=39", "assets/fighter_mio_shinai_punch.webp?v=39"]
+        fist:    ["assets/fighter_mio_fist_idle.webp?v=40", "assets/fighter_mio_fist_punch.webp?v=40"],
+        shinai:  ["assets/fighter_mio_shinai_idle.webp?v=40", "assets/fighter_mio_shinai_punch.webp?v=40"]
       },
       gorou: {
-        fist:    ["assets/fighter_gorou_fist_idle.webp?v=39", "assets/fighter_gorou_fist_punch.webp?v=39"],
-        hammer:  ["assets/fighter_gorou_hammer_idle.webp?v=39", "assets/fighter_gorou_hammer_punch.webp?v=39"]
+        fist:    ["assets/fighter_gorou_fist_idle.webp?v=40", "assets/fighter_gorou_fist_punch.webp?v=40"],
+        hammer:  ["assets/fighter_gorou_hammer_idle.webp?v=40", "assets/fighter_gorou_hammer_punch.webp?v=40"]
       },
       yuki: {
-        fist:    ["assets/fighter_yuki_fist_idle.webp?v=39", "assets/fighter_yuki_fist_punch.webp?v=39"],
-        monkey:  ["assets/fighter_yuki_monkey_idle.webp?v=39", "assets/fighter_yuki_monkey_punch.webp?v=39"]
+        fist:    ["assets/fighter_yuki_fist_idle.webp?v=40", "assets/fighter_yuki_fist_punch.webp?v=40"],
+        monkey:  ["assets/fighter_yuki_monkey_idle.webp?v=40", "assets/fighter_yuki_monkey_punch.webp?v=40"]
       },
       mike: {
-        fist:    ["assets/fighter_mike_fist_idle.webp?v=39", "assets/fighter_mike_fist_punch.webp?v=39"],
-        boxglove:["assets/fighter_mike_boxglove_idle.webp?v=39", "assets/fighter_mike_boxglove_punch.webp?v=39"]
+        fist:    ["assets/fighter_mike_fist_idle.webp?v=40", "assets/fighter_mike_fist_punch.webp?v=40"],
+        boxglove:["assets/fighter_mike_boxglove_idle.webp?v=40", "assets/fighter_mike_boxglove_punch.webp?v=40"]
       },
       hisui: {
-        fist:    ["assets/fighter_hisui_fist_idle.webp?v=39", "assets/fighter_hisui_fist_punch.webp?v=39"],
-        driver:  ["assets/fighter_hisui_driver_idle.webp?v=39", "assets/fighter_hisui_driver_punch.webp?v=39"]
+        fist:    ["assets/fighter_hisui_fist_idle.webp?v=40", "assets/fighter_hisui_fist_punch.webp?v=40"],
+        driver:  ["assets/fighter_hisui_driver_idle.webp?v=40", "assets/fighter_hisui_driver_punch.webp?v=40"]
       },
       hakase: {
-        fist:    ["assets/fighter_hakase_fist_idle.webp?v=39", "assets/fighter_hakase_fist_punch.webp?v=39"],
-        drill:   ["assets/fighter_hakase_drill_idle.webp?v=39", "assets/fighter_hakase_drill_punch.webp?v=39"]
+        fist:    ["assets/fighter_hakase_fist_idle.webp?v=40", "assets/fighter_hakase_fist_punch.webp?v=40"],
+        drill:   ["assets/fighter_hakase_drill_idle.webp?v=40", "assets/fighter_hakase_drill_punch.webp?v=40"]
       },
       reika: {
-        fist:    ["assets/fighter_reika_fist_idle.webp?v=39", "assets/fighter_reika_fist_punch.webp?v=39"],
-        wrench:  ["assets/fighter_reika_wrench_idle.webp?v=39", "assets/fighter_reika_wrench_punch.webp?v=39"]
+        fist:    ["assets/fighter_reika_fist_idle.webp?v=40", "assets/fighter_reika_fist_punch.webp?v=40"],
+        wrench:  ["assets/fighter_reika_wrench_idle.webp?v=40", "assets/fighter_reika_wrench_punch.webp?v=40"]
       },
       shou: {
-        fist:    ["assets/fighter_shou_fist_idle.webp?v=39", "assets/fighter_shou_fist_punch.webp?v=39"],
-        bat:     ["assets/fighter_shou_bat_idle.webp?v=39", "assets/fighter_shou_bat_punch.webp?v=39"]
+        fist:    ["assets/fighter_shou_fist_idle.webp?v=40", "assets/fighter_shou_fist_punch.webp?v=40"],
+        bat:     ["assets/fighter_shou_bat_idle.webp?v=40", "assets/fighter_shou_bat_punch.webp?v=40"]
       },
       rinne: {
-        fist:    ["assets/fighter_rinne_fist_idle.webp?v=39", "assets/fighter_rinne_fist_punch.webp?v=39"],
-        hammer:  ["assets/fighter_rinne_hammer_idle.webp?v=39", "assets/fighter_rinne_hammer_punch.webp?v=39"]
+        fist:    ["assets/fighter_rinne_fist_idle.webp?v=40", "assets/fighter_rinne_fist_punch.webp?v=40"],
+        hammer:  ["assets/fighter_rinne_hammer_idle.webp?v=40", "assets/fighter_rinne_hammer_punch.webp?v=40"]
       }
     },
     gacha: {
-      akari:"assets/gacha_akari.webp?v=39", jinya:"assets/gacha_jinya.webp?v=39", mio:"assets/gacha_mio.webp?v=39", gorou:"assets/gacha_gorou.webp?v=39", yuki:"assets/gacha_yuki.webp?v=39",
-      mike:"assets/gacha_mike.webp?v=39", hisui:"assets/gacha_hisui.webp?v=39", hakase:"assets/gacha_hakase.webp?v=39",
-      reika:"assets/gacha_reika.webp?v=39", shou:"assets/gacha_shou.webp?v=39", rinne:"assets/gacha_rinne.webp?v=39"
+      akari:"assets/gacha_akari.webp?v=40", jinya:"assets/gacha_jinya.webp?v=40", mio:"assets/gacha_mio.webp?v=40", gorou:"assets/gacha_gorou.webp?v=40", yuki:"assets/gacha_yuki.webp?v=40",
+      mike:"assets/gacha_mike.webp?v=40", hisui:"assets/gacha_hisui.webp?v=40", hakase:"assets/gacha_hakase.webp?v=40",
+      reika:"assets/gacha_reika.webp?v=40", shou:"assets/gacha_shou.webp?v=40", rinne:"assets/gacha_rinne.webp?v=40"
     }
   };
   // スプライト解決：そのキャラ×武器の絵が無い組み合わせは素手スプライトで代替する（性能は装備武器どおり）
@@ -1615,7 +1634,7 @@
     renderParts();
   }
   // ===== 背景：100ステージごとに世界各地の実写へ =====
-  var BG_SRCS = ["assets/bg0.webp?v=39", "assets/bg1.webp?v=39", "assets/bg2.webp?v=39", "assets/bg3.webp?v=39", "assets/bg4.webp?v=39", "assets/bg5.webp?v=39", "assets/bg6.webp?v=39", "assets/bg7.webp?v=39", "assets/bg8.webp?v=39", "assets/bg9.webp?v=39"];
+  var BG_SRCS = ["assets/bg0.webp?v=40", "assets/bg1.webp?v=40", "assets/bg2.webp?v=40", "assets/bg3.webp?v=40", "assets/bg4.webp?v=40", "assets/bg5.webp?v=40", "assets/bg6.webp?v=40", "assets/bg7.webp?v=40", "assets/bg8.webp?v=40", "assets/bg9.webp?v=40"];
   var BG_PLACES = ["横浜みなとみらい", "ニューヨーク", "サンフランシスコ", "パリ", "ロンドン", "シドニー", "ドバイ", "リオデジャネイロ", "ローマ", "富士山"];
   var bgImgEl = document.getElementById("bgImg");
   var curBgTheme = -1;
@@ -2246,7 +2265,7 @@
   var RARITY_COLOR = { rare:"#3a9bff", super:"#b45cff", ssr:"#ffd94d", ur:"#ff5e8a" };
   var DUPE_HITS = { rare:2500, super:3300, ssr:5000, ur:8300 };  // 被り→熟練度ヒット変換（素体+3体でカンストする量）
   /* 召喚演出の実動画URL（Web版のみビルド時に assets/summon_*.mp4 への参照が差し込まれる。単体版では空文字になり、従来のCanvas演出にフォールバックする） */
-  var SUMMON_VIDEO = { rare:"assets/summon_rare.mp4?v=39", super:"assets/summon_rare.mp4?v=39", ssr:"assets/summon_ssr.mp4?v=39", ur:"assets/summon_ur.mp4?v=39" };
+  var SUMMON_VIDEO = { rare:"assets/summon_rare.mp4?v=40", super:"assets/summon_rare.mp4?v=40", ssr:"assets/summon_ssr.mp4?v=40", ur:"assets/summon_ur.mp4?v=40" };
   var summonPreloaded = false;
   function preloadSummonVideos(){
     if (summonPreloaded) return;
