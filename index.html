@@ -1597,18 +1597,18 @@
     document.getElementById("testBadge").style.display = "block";
     document.getElementById("testTools").style.display = "block";
     document.getElementById("tLvUp").addEventListener("click", function(){
-      if (level < 50) { level++; statPts += 3; tickets += 1; saveGame(); renderShop(); }
+      if (level < 50) { level++; statPts += 3; tickets += 1; saveGame(); renderGrowth(); }
     });
     document.getElementById("tLv50").addEventListener("click", function(){
       while (level < 50) { level++; statPts += 3; tickets += 1; }
-      saveGame(); renderShop();
+      saveGame(); renderGrowth();
     });
     document.getElementById("tTicket").addEventListener("click", function(){
-      tickets += 10; saveGame(); renderShop();
+      tickets += 10; saveGame(); renderGrowth();
     });
     document.getElementById("tUnlock").addEventListener("click", function(){
       WEAPON_KEYS.forEach(function(k){ ownedWeapons[k] = true; });
-      saveGame(); renderShop();
+      saveGame(); renderGrowth();
     });
     document.getElementById("tStage").addEventListener("click", function(){
       if (mode !== "solo") setMode("solo");
