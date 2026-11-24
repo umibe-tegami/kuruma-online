@@ -202,13 +202,13 @@
   .shopBg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.5; }
   .shopInner { position:relative; display:flex; gap:10px; padding:10px; align-items:stretch; }
   .detailBox {
-    flex:1 1 auto; min-width:0; background:rgba(8,8,24,.85); border:2px solid #6e6ea8; border-radius:8px; padding:10px 12px;
+    flex:1 1 auto; min-width:0; background:rgba(8,8,24,.85); border:2px solid #6e6ea8; border-radius:8px; padding:8px 9px;
   }
-  .dName { font-size:22px; font-weight:bold; color:#fff; letter-spacing:1px; text-shadow:2px 2px 0 #7a2d00; }
+  .dName { font-size:20px; font-weight:bold; color:#fff; letter-spacing:1px; text-shadow:2px 2px 0 #7a2d00; }
   .dSub { font-size:12px; color:#bdbde8; margin:2px 0 6px; }
   .dStars { color:#ffd94d; font-size:14px; letter-spacing:1px; }
   .barRow { display:flex; align-items:center; gap:8px; margin:4px 0; }
-  .blab { width:76px; font-size:12px; color:#9fe8ff; font-weight:bold; }
+  .blab { width:60px; font-size:11px; color:#9fe8ff; font-weight:bold; }
   .btrack { flex:1; height:10px; background:#20060a; border:1px solid #000; outline:1px solid #6e6ea8; overflow:hidden; }
   .bfill { height:100%; width:0%; background:linear-gradient(#ffe97a,#f5a623 60%,#c77400); transition:width .2s; }
   .dNote { font-size:11px; color:#7a7ab0; margin-top:6px; min-height:14px; }
@@ -217,8 +217,8 @@
     background:#3a2d6e; color:#ffd94d; border:2px solid #ffd94d; border-radius:8px; cursor:pointer;
   }
   .actionBtn.off { background:#1b1b3a; color:#7a7ab0; border-color:#2c2c52; cursor:default; }
-  .charStand { flex:0 0 32%; display:flex; align-items:flex-end; justify-content:center; }
-  .charStand img { max-width:100%; max-height:250px; object-fit:contain; filter:drop-shadow(0 6px 6px rgba(0,0,0,.6)); }
+  .charStand { flex:0 0 44%; display:flex; align-items:flex-end; justify-content:center; }
+  .charStand img { max-width:100%; max-height:270px; object-fit:contain; filter:drop-shadow(0 6px 6px rgba(0,0,0,.6)); }
   .cardRow { display:flex; gap:8px; overflow-x:auto; padding:10px 2px 4px; }
   .shopCard {
     flex:0 0 auto; width:92px; background:#1b1b3a; border:2px solid #2c2c52; border-radius:8px;
@@ -294,9 +294,9 @@
   </div>
 
   <div id="stage">
-    <img id="bgImg" src="assets/bg.webp" alt="">
-    <div id="carWrap"><img id="carImg" src="assets/car0.webp" alt=""></div>
-    <div id="fighterWrap"><img id="fighterImg" src="assets/fighter_idle.webp" alt=""></div>
+    <img id="bgImg" src="assets/bg.webp?v=24" alt="">
+    <div id="carWrap"><img id="carImg" src="assets/car0.webp?v=24" alt=""></div>
+    <div id="fighterWrap"><img id="fighterImg" src="assets/fighter_idle.webp?v=24" alt=""></div>
     <div id="combo"><div id="comboNum">0</div><div id="comboTxt">HITS!</div></div>
     <div id="banner"><div id="bannerMain"></div><div id="bannerSub"></div></div>
   </div>
@@ -311,22 +311,22 @@
     <div id="menuCard">
       <h2>メニュー <button id="closeMenu">閉じる</button></h2>
       <div class="menuItem" data-act="solo">
-        <img class="micon" src="assets/icon_solo.webp" alt="">
+        <img class="micon" src="assets/icon_solo.webp?v=24" alt="">
         <div class="wname">ソロ<small>壊すたびに次のクルマが大きくなる階段制</small></div>
         <div class="weq" id="eqSolo">選択中</div>
       </div>
       <div class="menuItem" data-act="ta">
-        <img class="micon" src="assets/icon_ta.webp" alt="">
+        <img class="micon" src="assets/icon_ta.webp?v=24" alt="">
         <div class="wname">タイムアタック<small>60秒でスコアを競う／ベスト：<span id="taBestVal">0</span></small></div>
         <div class="weq" id="eqTa"></div>
       </div>
       <div class="menuItem locked" data-act="raid">
-        <img class="micon" src="assets/icon_raid.webp" alt="">
+        <img class="micon" src="assets/icon_raid.webp?v=24" alt="">
         <div class="wname">レイド<small>世界で1台のクルマを全員で壊す</small></div>
         <div class="weq">準備中</div>
       </div>
       <div class="menuItem" data-act="status">
-        <img class="micon" src="assets/icon_status.webp" alt="">
+        <img class="micon" src="assets/icon_status.webp?v=24" alt="">
         <div class="wname">ステータス<small>振り分け・キャラ・武器・熟練度</small></div>
         <div class="weq"></div>
       </div>
@@ -345,7 +345,7 @@
 
       <div id="tabWeapon" class="tabPage">
         <div class="shopArea">
-          <img class="shopBg" src="assets/bg_shop.webp" alt="">
+          <img class="shopBg" src="assets/bg_shop.webp?v=24" alt="">
           <div class="shopInner">
             <div class="detailBox">
               <div class="dName" id="wpName">素手</div>
@@ -356,7 +356,7 @@
               <div class="dNote" id="wpNote"></div>
               <button class="actionBtn" id="wpAction">装備する</button>
             </div>
-            <div class="charStand"><img id="wpStand" src="assets/fighter_idle.webp" alt=""></div>
+            <div class="charStand"><img id="wpStand" src="assets/fighter_idle.webp?v=24" alt=""></div>
           </div>
         </div>
         <div class="cardRow" id="wpCards"></div>
@@ -365,7 +365,7 @@
 
       <div id="tabChar" class="tabPage" style="display:none">
         <div class="shopArea">
-          <img class="shopBg" src="assets/bg_shop.webp" alt="">
+          <img class="shopBg" src="assets/bg_shop.webp?v=24" alt="">
           <div class="shopInner">
             <div class="detailBox">
               <div class="dName" id="chName">レン</div>
@@ -378,7 +378,7 @@
               <div class="dNote" id="chNote"></div>
               <button class="actionBtn" id="chAction">このキャラにする</button>
             </div>
-            <div class="charStand"><img id="chStand" src="assets/fighter_idle.webp" alt=""></div>
+            <div class="charStand"><img id="chStand" src="assets/fighter_idle.webp?v=24" alt=""></div>
           </div>
         </div>
         <div class="cardRow" id="chCards"></div>
@@ -423,50 +423,50 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.3（キャラ表示サイズを統一）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.4（立ち絵エリア拡大）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
 </div>
 
 <script>
 (function(){
   "use strict";
   var IMG = {
-    car:  ["assets/car0.webp","assets/car1.webp","assets/car2.webp","assets/car3.webp"],
-    car2: ["assets/car2_0.webp","assets/car2_1.webp","assets/car2_2.webp","assets/car2_3.webp"],
-    sedan: ["assets/sedan0.webp","assets/sedan1.webp","assets/sedan2.webp","assets/sedan3.webp"],
-    sport: ["assets/sport0.webp","assets/sport1.webp","assets/sport2.webp","assets/sport3.webp"],
-    suv:   ["assets/suv0.webp","assets/suv1.webp","assets/suv2.webp","assets/suv3.webp"],
-    truck: ["assets/truck0.webp","assets/truck1.webp","assets/truck2.webp","assets/truck3.webp"],
-    icons: { fist:"assets/icon_w_fist.webp", harisen:"assets/icon_w_harisen.webp", pan:"assets/icon_w_pan.webp", hammer:"assets/icon_w_hammer.webp" },
+    car:  ["assets/car0.webp?v=24","assets/car1.webp?v=24","assets/car2.webp?v=24","assets/car3.webp?v=24"],
+    car2: ["assets/car2_0.webp?v=24","assets/car2_1.webp?v=24","assets/car2_2.webp?v=24","assets/car2_3.webp?v=24"],
+    sedan: ["assets/sedan0.webp?v=24","assets/sedan1.webp?v=24","assets/sedan2.webp?v=24","assets/sedan3.webp?v=24"],
+    sport: ["assets/sport0.webp?v=24","assets/sport1.webp?v=24","assets/sport2.webp?v=24","assets/sport3.webp?v=24"],
+    suv:   ["assets/suv0.webp?v=24","assets/suv1.webp?v=24","assets/suv2.webp?v=24","assets/suv3.webp?v=24"],
+    truck: ["assets/truck0.webp?v=24","assets/truck1.webp?v=24","assets/truck2.webp?v=24","assets/truck3.webp?v=24"],
+    icons: { fist:"assets/icon_w_fist.webp?v=24", harisen:"assets/icon_w_harisen.webp?v=24", pan:"assets/icon_w_pan.webp?v=24", hammer:"assets/icon_w_hammer.webp?v=24" },
     chars: {
       ren: {
-        fist:    ["assets/fighter_idle.webp", "assets/fighter_punch.webp"],
-        harisen: ["assets/fighter_harisen_idle.webp", "assets/fighter_harisen_punch.webp"],
-        pan:     ["assets/fighter_pan_idle.webp", "assets/fighter_pan_punch.webp"],
-        hammer:  ["assets/fighter_hammer_idle.webp", "assets/fighter_hammer_punch.webp"]
+        fist:    ["assets/fighter_idle.webp?v=24", "assets/fighter_punch.webp?v=24"],
+        harisen: ["assets/fighter_harisen_idle.webp?v=24", "assets/fighter_harisen_punch.webp?v=24"],
+        pan:     ["assets/fighter_pan_idle.webp?v=24", "assets/fighter_pan_punch.webp?v=24"],
+        hammer:  ["assets/fighter_hammer_idle.webp?v=24", "assets/fighter_hammer_punch.webp?v=24"]
       },
       gou: {
-        fist:    ["assets/fighter_gou_fist_idle.webp", "assets/fighter_gou_fist_punch.webp"],
-        harisen: ["assets/fighter_gou_harisen_idle.webp", "assets/fighter_gou_harisen_punch.webp"],
-        pan:     ["assets/fighter_gou_pan_idle.webp", "assets/fighter_gou_pan_punch.webp"],
-        hammer:  ["assets/fighter_gou_hammer_idle.webp", "assets/fighter_gou_hammer_punch.webp"]
+        fist:    ["assets/fighter_gou_fist_idle.webp?v=24", "assets/fighter_gou_fist_punch.webp?v=24"],
+        harisen: ["assets/fighter_gou_harisen_idle.webp?v=24", "assets/fighter_gou_harisen_punch.webp?v=24"],
+        pan:     ["assets/fighter_gou_pan_idle.webp?v=24", "assets/fighter_gou_pan_punch.webp?v=24"],
+        hammer:  ["assets/fighter_gou_hammer_idle.webp?v=24", "assets/fighter_gou_hammer_punch.webp?v=24"]
       },
       hayate: {
-        fist:    ["assets/fighter_hayate_fist_idle.webp", "assets/fighter_hayate_fist_punch.webp"],
-        harisen: ["assets/fighter_hayate_harisen_idle.webp", "assets/fighter_hayate_harisen_punch.webp"],
-        pan:     ["assets/fighter_hayate_pan_idle.webp", "assets/fighter_hayate_pan_punch.webp"],
-        hammer:  ["assets/fighter_hayate_hammer_idle.webp", "assets/fighter_hayate_hammer_punch.webp"]
+        fist:    ["assets/fighter_hayate_fist_idle.webp?v=24", "assets/fighter_hayate_fist_punch.webp?v=24"],
+        harisen: ["assets/fighter_hayate_harisen_idle.webp?v=24", "assets/fighter_hayate_harisen_punch.webp?v=24"],
+        pan:     ["assets/fighter_hayate_pan_idle.webp?v=24", "assets/fighter_hayate_pan_punch.webp?v=24"],
+        hammer:  ["assets/fighter_hayate_hammer_idle.webp?v=24", "assets/fighter_hayate_hammer_punch.webp?v=24"]
       },
       kirara: {
-        fist:    ["assets/fighter_kirara_fist_idle.webp", "assets/fighter_kirara_fist_punch.webp"],
-        harisen: ["assets/fighter_kirara_harisen_idle.webp", "assets/fighter_kirara_harisen_punch.webp"],
-        pan:     ["assets/fighter_kirara_pan_idle.webp", "assets/fighter_kirara_pan_punch.webp"],
-        hammer:  ["assets/fighter_kirara_hammer_idle.webp", "assets/fighter_kirara_hammer_punch.webp"]
+        fist:    ["assets/fighter_kirara_fist_idle.webp?v=24", "assets/fighter_kirara_fist_punch.webp?v=24"],
+        harisen: ["assets/fighter_kirara_harisen_idle.webp?v=24", "assets/fighter_kirara_harisen_punch.webp?v=24"],
+        pan:     ["assets/fighter_kirara_pan_idle.webp?v=24", "assets/fighter_kirara_pan_punch.webp?v=24"],
+        hammer:  ["assets/fighter_kirara_hammer_idle.webp?v=24", "assets/fighter_kirara_hammer_punch.webp?v=24"]
       },
       satoru: {
-        fist:    ["assets/fighter_satoru_fist_idle.webp", "assets/fighter_satoru_fist_punch.webp"],
-        harisen: ["assets/fighter_satoru_harisen_idle.webp", "assets/fighter_satoru_harisen_punch.webp"],
-        pan:     ["assets/fighter_satoru_pan_idle.webp", "assets/fighter_satoru_pan_punch.webp"],
-        hammer:  ["assets/fighter_satoru_hammer_idle.webp", "assets/fighter_satoru_hammer_punch.webp"]
+        fist:    ["assets/fighter_satoru_fist_idle.webp?v=24", "assets/fighter_satoru_fist_punch.webp?v=24"],
+        harisen: ["assets/fighter_satoru_harisen_idle.webp?v=24", "assets/fighter_satoru_harisen_punch.webp?v=24"],
+        pan:     ["assets/fighter_satoru_pan_idle.webp?v=24", "assets/fighter_satoru_pan_punch.webp?v=24"],
+        hammer:  ["assets/fighter_satoru_hammer_idle.webp?v=24", "assets/fighter_satoru_hammer_punch.webp?v=24"]
       }
     }
   };
