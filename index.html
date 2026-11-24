@@ -361,14 +361,10 @@
 
   <div id="statusPanel">
     <div id="statusCard">
-      <h2>ステータス <button id="closeStatus">閉じる</button></h2>
-      <div class="stTabs">
-        <button class="stTab sel" data-tab="weapon">ぶき</button>
-        <button class="stTab" data-tab="char">キャラ</button>
-        <button class="stTab" data-tab="stat">ステータス</button>
-      </div>
+      <h2>装備・ステータス <button id="closeStatus">閉じる</button></h2>
 
       <div id="tabWeapon" class="tabPage">
+        <div class="secTitle">ぶき</div>
         <div class="shopArea">
           <img class="shopBg" src="assets/bg_shop.webp?v=35" alt="">
           <div class="shopInner">
@@ -389,7 +385,8 @@
         <div class="noteLine">※ 武器はレベル到達で解放され、チケット1枚と交換して入手。レベル未達でもチケット3枚で先行入手できる（チケットはレベルアップで+1枚）</div>
       </div>
 
-      <div id="tabChar" class="tabPage" style="display:none">
+      <div id="tabChar" class="tabPage">
+        <div class="secTitle">キャラ</div>
         <div class="shopArea">
           <img class="shopBg" src="assets/bg_shop.webp?v=35" alt="">
           <div class="shopInner">
@@ -409,10 +406,11 @@
           </div>
         </div>
         <div class="cardRow" id="chCards"></div>
-        <div class="noteLine">※ 熟練度：使うほどヒット数が貯まって星が上がる（星2=300／星3=1,000／星4=2,500／星5=5,000ヒット）。キャラはダメージ+8%/星</div>
+        <div class="noteLine">※ 熟練度：使うほどヒット数が貯まって星が上がる（星2=300／星3=1,000／星4=2,500／星5=5,000ヒット）。バフは武器・キャラ共通で星2+10%／星3+20%／星4+30%／星5+50%（全ステータス）</div>
       </div>
 
-      <div id="tabStat" class="tabPage" style="display:none">
+      <div id="tabStat" class="tabPage">
+        <div class="secTitle">ステータス</div>
         <div class="lvLine">レベル <b id="stLevel">1</b> ／ 次のレベルまで</div>
         <div id="xpBarOuter"><div id="xpBar"></div></div>
         <div id="ptsLine">ステータスポイント：<b id="stPts">0</b>　／　チケット：<b id="stTickets">0</b>枚</div>
@@ -435,7 +433,7 @@
         <div class="srow"><div class="sname">れんだ<small>コンボ倍率の上限 +0.02 / pt</small></div><button class="sbtn" data-stat="renda" data-d="-1">−</button><div class="sval" id="sv-renda">0</div><button class="sbtn" data-stat="renda" data-d="1">＋</button></div>
         <div class="srow"><div class="sname">テクニック<small>完破ボーナス（得点・経験値）+6% / pt</small></div><button class="sbtn" data-stat="tech" data-d="-1">−</button><div class="sval" id="sv-tech">0</div><button class="sbtn" data-stat="tech" data-d="1">＋</button></div>
         <div class="srow"><div class="sname">技クールタイム減少<small>必殺技の必要ヒット数 -1% / pt</small></div><button class="sbtn" data-stat="skillCd" data-d="-1">−</button><div class="sval" id="sv-skillCd">0</div><button class="sbtn" data-stat="skillCd" data-d="1">＋</button></div>
-        <div class="noteLine">※ 武器の熟練度は威力倍率（最大×2.0）、キャラの熟練度はダメージ+8%/星</div>
+        <div class="noteLine">※ 熟練度バフは武器・キャラ共通で星2+10%／星3+20%／星4+30%／星5+50%（全ステータスに効き、武器とキャラで乗算）</div>
       </div>
     </div>
   </div>
@@ -463,7 +461,7 @@
   </div>
 
   <div id="hint">クルマを<b>タップ</b>して壊そう！ 連続タップでコンボ倍率アップ</div>
-  <div id="foot">クルマを壊すオンライン 試作v2.28（ノーマルの基礎ステータスをゲージ半分まで弱体化）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
+  <div id="foot">クルマを壊すオンライン 試作v2.29（ぶき・キャラ・ステータスをタブ無しの1画面に統合）／ モード：<span id="modeInfo">ソロ</span>／ キャラ：<span id="charInfo">レン</span>／ 武器：<span id="weaponInfo">素手（パワー10）</span></div>
 </div>
 
 <script>
@@ -985,18 +983,7 @@
     audio();
     setChar(selChar);
   });
-  var stTabBtns = document.querySelectorAll(".stTab");
-  for (var ti=0; ti<stTabBtns.length; ti++){
-    stTabBtns[ti].addEventListener("click", function(e){
-      e.stopPropagation();
-      var t = this.getAttribute("data-tab");
-      for (var i=0;i<stTabBtns.length;i++) stTabBtns[i].classList.toggle("sel", stTabBtns[i] === this);
-      document.getElementById("tabWeapon").style.display = t === "weapon" ? "" : "none";
-      document.getElementById("tabChar").style.display = t === "char" ? "" : "none";
-      document.getElementById("tabStat").style.display = t === "stat" ? "" : "none";
-      audio();
-    });
-  }
+  // 画面はタブを廃止し、ぶき→キャラ→ステータスを1画面に縦並び（スクロール）で表示する（2026年11月25日ユーザー指示）
 
   /* ---------- GROWTH（レベル／ステータス振り分け） ---------- */
   var TEST_MODE = /[?&]test=1/.test(location.search);
@@ -1149,6 +1136,7 @@
         selChar = charKey;
         renderGrowth();
         statusPanel.classList.add("open");
+        statusPanel.scrollTop = 0;
       } else if (act === "raid") {
         showBanner("レイドは準備中", "サーバー接続の実装後に開放されます", 1400);
       }
